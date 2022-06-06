@@ -1,15 +1,8 @@
 <script setup lang="ts">
-import { useUserStore } from '~/stores/user'
-
-const user = useUserStore()
-const name = ref(user.savedName)
 
 const router = useRouter()
 const go = () => {
-  if (name.value){
-    console.log(name.value)
-    router.push(`/hi/${encodeURIComponent(name.value)}`)
-  }
+
 }
 const goGame = () => {
   router.push('/game')
@@ -59,8 +52,8 @@ const { t } = useI18n()
         {{ t('button.go') }}
       </button>
       <button
-          btn m-3 text-sm
-          @click="goGame"
+        btn m-3 text-sm
+        @click="goGame"
       >
         游戏
       </button>

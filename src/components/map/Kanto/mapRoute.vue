@@ -37,7 +37,7 @@ Parameters:
   >
     <rect
       :data-route=" locals.route "
-      :class="rectClass"
+      :class="rectClass()"
       :height=" locals.height * 16 "
       :width=" locals.width * 16 "
       :x=" locals.x * 16 "
@@ -66,13 +66,14 @@ const props = defineProps<{
     y: 0
   }
 }>()
-onMounted(() => {
-})
+
 const gClick = () => {
   MapHelper.moveToRoute(props.locals.route, props.locals.region)
 }
 const rectClass = () => {
   console.log('rectClass')
-  MapHelper.calculateRouteCssClass(props.locals.route, props.locals.region)
+  return MapHelper.calculateRouteCssClass(props.locals.route, props.locals.region)
 }
+onMounted(() => {
+})
 </script>

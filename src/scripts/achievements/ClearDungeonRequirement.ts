@@ -3,6 +3,7 @@
 import AchievementRequirement from '~/scripts/achievements/AchievementRequirement'
 import * as GameConstants from '~/enums/GameConstants'
 import App from '~/scripts/App'
+import { useStatisticsStore } from '~/stores/statistics'
 export default class ClearDungeonRequirement extends AchievementRequirement {
   public dungeonIndex: number // Gym name index in array GameConstants.Gyms
 
@@ -12,7 +13,9 @@ export default class ClearDungeonRequirement extends AchievementRequirement {
   }
 
   public getProgress() {
-    return Math.min(App.game.statistics.dungeonsCleared[this.dungeonIndex](), this.requiredValue)
+    const statistics = useStatisticsStore()
+    // return Math.min(statistics.dungeonsCleared[this.dungeonIndex], this.requiredValue)
+    return Math.min(0, this.requiredValue)
   }
 
   public hint(): string {

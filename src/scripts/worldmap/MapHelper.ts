@@ -1,6 +1,12 @@
 import { usePlayerStore } from '~/stores/player'
 import * as GameConstants from '~/enums/GameConstants'
 import Routes from '~/scripts/wildBattle/Routes'
+import App from '~/scripts/App'
+import { RouteHelper } from '~/scripts/wildBattle/RouteHelper'
+import { Battle } from '~/scripts/Battle'
+import { useGameStore } from '~/stores/game'
+import Notifier from '~/modules/notifications/Notifier'
+import NotificationConstants from '~/modules/notifications/NotificationConstants'
 export default class MapHelper {
   public static moveToRoute = function(route: number, region: GameConstants.Region) {
     if (isNaN(route))
@@ -11,6 +17,7 @@ export default class MapHelper {
       genNewEnemy = true
 
     if (this.accessToRoute(route, region)) {
+      console.log('accessToRoute', route, region)
       player.setRoute(route)
       if (player.region != region) {
         player.region = region
@@ -20,7 +27,8 @@ export default class MapHelper {
       if (genNewEnemy && !Battle.catching())
         Battle.generateNewEnemy()
 
-      App.game.gameState = GameConstants.GameState.fighting
+      const gameStore = useGameStore()
+      gameStore.setGameState(GameConstants.GameState.fighting)
     }
     else {
       if (!MapHelper.routeExist(route, region)) {
@@ -73,8 +81,8 @@ export default class MapHelper {
 
   public static calculateRouteCssClass(route: number, region: GameConstants.Region): string {
     let cls = ''
-
-    if (player.route() == route && player.region == region)
+    const player = usePlayerStore()
+    if (player.route == route && player.region == region)
       cls = 'currentLocation'
     else if (!MapHelper.accessToRoute(route, region))
       cls = 'locked'
