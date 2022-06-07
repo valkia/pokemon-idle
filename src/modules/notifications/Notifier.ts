@@ -1,31 +1,22 @@
 import type Sound from '../utilities/Sound'
 import Rand from '../utilities/Rand'
-import type NotificationSetting from '../settings/NotificationSetting'
-import NotificationOption from './NotificationOption'
+import NotificationTypeOption from './NotificationTypeOption'
+import type NotificationOption from '~/modules/notifications/NotificationOption'
+import { useNotificationStore } from '~/stores/notification'
 
 export default class Notifier {
   public static notify({
     message,
-    type = NotificationOption.primary,
+    type = NotificationTypeOption.primary,
     title = '',
     timeout = 3000,
     time = 'just now',
-    sound = null,
-    setting = null,
-    image = null,
-    strippedMessage = null,
-  }: {
-    message: string
-    type?: NotificationOption
-    title?: string
-    timeout?: number
-    time?: string
-    sound?: Sound
-    setting?: NotificationSetting
-    image?: string
-    strippedMessage?: string
-  }): void {
-    $(document).ready(() => {
+    sound = undefined,
+    setting = undefined,
+    image = undefined,
+    strippedMessage = undefined,
+  }: NotificationOption): void {
+    window.onload = () => {
       // If we have sounds enabled for this, play it now
       if (sound)
         sound.play()
@@ -49,52 +40,30 @@ export default class Notifier {
         return
 
       // Get the notification ready to display
-      const toastID = Rand.string(7)
-      const toastHTML = `<div id="${toastID}" class="toast bg-${NotificationOption[type]}" data-autohide="false">
-                ${title
-    ? `<div class="toast-header">
-                    ${image ? `<img src="${image}" class="icon" />` : ''}
-                    <strong class="mr-auto text-primary">${title || ''}</strong>
-                    <small class="text-muted">${time}</small>
-                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">×</button>
-                </div>`
-    : ''}
-                <div class="toast-body text-light">
-                    ${!title && image ? `<img src="${image}" class="icon" />` : ''}
-                    ${message.replace(/\n/g, '<br/>')}
-                    ${title ? '' : '<button type="button" class="ml-2 mb-1 close" data-dismiss="toast">×</button>'}
-                </div>
-                </div>`
-
-      $('#toaster').prepend(toastHTML)
-
-      // Show the notification
-      $(`#${toastID}`)?.toast('show')
-
-      // Once the notification is shown, hide it after specified timeout
-      $(`#${toastID}`).on('shown.bs.toast', () => {
-        setTimeout(() => {
-          $(`#${toastID}`).toast('hide')
-        }, timeout)
+      useNotificationStore().addNotification({
+        message,
+        type,
+        title,
+        timeout,
+        time,
+        sound,
+        setting,
+        image,
+        strippedMessage,
       })
-
-      // Once hidden remove the element
-      $(`#${toastID}`).on('hidden.bs.toast', () => {
-        document.getElementById(toastID).remove()
-      })
-    })
+    }
   }
 
   public static prompt({
     title,
     message,
-    type = NotificationOption.primary,
+    type = NotificationTypeOption.primary,
     timeout = 0,
     sound = null,
   }: {
     title: string
     message: string
-    type?: NotificationOption
+    type?: NotificationTypeOption
     timeout?: number
     sound?: Sound
   }): Promise<string> {
@@ -109,7 +78,7 @@ export default class Notifier {
 <div class="modal fade noselect" id="modal${modalID}" tabindex="-1" role="dialog" aria-badgeledby="prompt">
     <div class="modal-dialog modal-dialog-scrollable modal-sm" role="document">
         <div class="modal-content">
-            <div class="modal-header modal-header pb-0 pt-2 px-2 bg-${NotificationOption[type]}">
+            <div class="modal-header modal-header pb-0 pt-2 px-2 bg-${NotificationTypeOption[type]}">
                 <h5>${title}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -122,7 +91,7 @@ export default class Notifier {
                 <input class="outline-dark form-control" placeholder="Type here.." id="promptInput${modalID}" type="text">
             </div>
             <div class="modal-footer p-2">
-                <button class="btn btn-block outline-dark btn-${NotificationOption[type]}" data-dismiss="modal">Submit</button>
+                <button class="btn btn-block outline-dark btn-${NotificationTypeOption[type]}" data-dismiss="modal">Submit</button>
             </div>
         </div>
     </div>
@@ -164,7 +133,7 @@ export default class Notifier {
     message,
     confirm = 'ok',
     cancel = 'cancel',
-    type = NotificationOption.primary,
+    type = NotificationTypeOption.primary,
     timeout = 0,
     sound = null,
   }: {
@@ -172,7 +141,7 @@ export default class Notifier {
     message: string
     confirm?: string
     cancel?: string
-    type?: NotificationOption
+    type?: NotificationTypeOption
     timeout?: number
     sound?: Sound
   }): Promise<boolean> {
@@ -187,7 +156,7 @@ export default class Notifier {
 <div class="modal fade noselect" id="modal${modalID}" tabindex="-1" role="dialog" aria-badgeledby="prompt">
     <div class="modal-dialog modal-dialog-scrollable modal-sm" role="document">
         <div class="modal-content">
-            <div class="modal-header modal-header pb-0 pt-2 px-2 bg-${NotificationOption[type]}">
+            <div class="modal-header modal-header pb-0 pt-2 px-2 bg-${NotificationTypeOption[type]}">
                 <h5>${title}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -197,7 +166,7 @@ export default class Notifier {
                 ${message.replace(/\n/g, '<br/>')}
             </div>
             <div class="modal-footer p-2">
-                <button class="btn col outline-dark btn-${NotificationOption[type]}" data-dismiss="modal" id="modalConfirm${modalID}">${confirm}</button>
+                <button class="btn col outline-dark btn-${NotificationTypeOption[type]}" data-dismiss="modal" id="modalConfirm${modalID}">${confirm}</button>
                 <button class="btn col outline-dark btn-secondary" data-dismiss="modal">${cancel}</button>
             </div>
         </div>

@@ -1,6 +1,6 @@
 import NotificationSetting from '../settings/NotificationSetting'
 import Sound from '../utilities/Sound'
-import NotificationOption from './NotificationOption'
+import NotificationOption from './NotificationTypeOption'
 
 /**
  * Contains all notification constants for easy access.

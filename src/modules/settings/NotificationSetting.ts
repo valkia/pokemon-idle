@@ -1,4 +1,4 @@
-import NotificationOption from '../notifications/NotificationOption'
+import NotificationOption from '../notifications/NotificationTypeOption'
 import Notifier from '../notifications/Notifier'
 import BooleanSetting from './BooleanSetting'
 

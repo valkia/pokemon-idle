@@ -13,6 +13,7 @@ declare module 'vue' {
     MapPOI: typeof import('./components/map/Kanto/mapPOI.vue')['default']
     MapRoute: typeof import('./components/map/Kanto/mapRoute.vue')['default']
     MapTown: typeof import('./components/map/Kanto/mapTown.vue')['default']
+    Notification: typeof import('./components/Notification.vue')['default']
     README: typeof import('./components/README.md')['default']
   }
 }
