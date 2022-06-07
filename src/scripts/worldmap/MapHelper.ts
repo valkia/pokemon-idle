@@ -7,6 +7,7 @@ import { Battle } from '~/scripts/Battle'
 import { useGameStore } from '~/stores/game'
 import Notifier from '~/modules/notifications/Notifier'
 import NotificationConstants from '~/modules/notifications/NotificationConstants'
+import TownList from '~/scripts/towns/TownList'
 export default class MapHelper {
   public static moveToRoute = function(route: number, region: GameConstants.Region) {
     if (isNaN(route))

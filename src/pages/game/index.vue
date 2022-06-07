@@ -1,9 +1,9 @@
 
 <template>
   <div>
-<!--    <Enemy :pokemon="enemy" />
-    <KantoSVG />-->
-    <Notificaton></Notificaton>
+    <Enemy :pokemon="enemy" />
+    <KantoSVG />
+    <Notificaton />
   </div>
 </template>
 

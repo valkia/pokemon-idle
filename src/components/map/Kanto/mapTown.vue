@@ -29,18 +29,24 @@
     :y=" locals.y * 16 "
     :height=" (locals.height || 4) * 16 "
     :width=" (locals.width || 4) * 16 "
+    @click="ok"
   />
 </template>
 
-<!--click:function(){MapHelper.moveToTown(' locals.name.replace(/'/g, '\\\'') ')},
+<!--click:function(){},
 attr: { class: MapHelper.calculateTownCssClass(' locals.name.replace(/'/g, '\\\'') ') },
 if (locals.home) {
     css: { flash: MapHelper.ableToTravel() }
 }-->
 <script setup lang="ts">
+import MapHelper from '~/scripts/worldmap/MapHelper'
+
 const props = defineProps<{
   locals: {}
 }>()
 onMounted(() => {
 })
+const ok = () => {
+  MapHelper.moveToTown(props.locals.name.replace(/'/g, '\\\''))
+}
 </script>
