@@ -1,5 +1,12 @@
 /// <reference path="../shop/ShopHandler.ts"/>
+import type { Ref } from 'vue'
 import * as GameConstants from '~/enums/GameConstants'
+import { usePlayerStore } from '~/stores/player'
+import Notifier from '~/modules/notifications/Notifier'
+import NotificationConstants from '~/modules/notifications/NotificationConstants'
+import App from '~/scripts/App'
+import Amount from '~/modules/wallet/Amount'
+import GameHelper from '~/enums/GameHelper'
 /**
  * Source event for decreasing shop multipliers
  */
@@ -24,7 +31,7 @@ export class Item {
   type: any
 
   // Shop Details
-  price: KnockoutObservable<number>
+  price: Ref<number>
   multiplier: number
   multiplierDecrease: boolean
   multiplierDecreaser: MultiplierDecreaser
@@ -48,7 +55,7 @@ export class Item {
     displayName?: string,
     description?: string,
     imageDirectory?: string) {
-    this.price = ko.observable(this.basePrice)
+    this.price = ref(this.basePrice)
     // If no custom save name specified, default to item name
     this.saveName = saveName || name || `${name}|${GameConstants.Currency[currency]}`
     this.maxAmount = maxAmount || Number.MAX_SAFE_INTEGER
@@ -69,6 +76,7 @@ export class Item {
       return Math.max(0, this.basePrice * amount)
     }
     else {
+      const player = usePlayerStore()
       // multiplier should be capped at 100, so work out how many to buy at increasing price and how many at max
       //    (m_start) * (m^k) = 100
       // => k = (2 - log(m_start)) / log(m)
@@ -133,6 +141,7 @@ export class Item {
   }
 
   gain(n: number) {
+    const player = usePlayerStore()
     player.gainItem(this.name, n)
 
     if (this.name == 'Protein')
@@ -144,6 +153,7 @@ export class Item {
   }
 
   checkCanUse(): boolean {
+    const player = usePlayerStore()
     if (!player.itemList[this.name]()) {
       Notifier.notify({
         message: `You don't have any ${ItemList[this.name].displayName}s left...`,

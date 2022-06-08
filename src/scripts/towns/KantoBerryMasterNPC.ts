@@ -1,48 +1,47 @@
-///<reference path="./NPC.ts"/>
+/// <reference path="./NPC.ts"/>
 
-class KantoBerryMasterNPC extends NPC {
+import { NPC } from '~/scripts/towns/NPC'
+import App from '~/scripts/App'
+import SeededRand from '~/modules/utilities/SeededRand'
 
-    constructor(
-        public name: string,
-        public dialog: string[]
-    ) {
-        super(name, dialog);
+export class KantoBerryMasterNPC extends NPC {
+  constructor(
+    public name: string,
+    public dialog: string[],
+  ) {
+    super(name, dialog)
+  }
+
+  get dialogHTML(): string {
+    // Before the player has unlocked the farm
+    if (!App.game.farming.canAccess())
+      return super.dialogHTML
+
+    // After the farm is unlocked
+    return `<p>${KantoBerryMasterNPC.generateMessage(new Date())}</p>`
+  }
+
+  public static generateMessage(date: Date): string {
+    if (App.game.farming.unlockedBerries.every(berry => berry()))
+      return 'The disciple has surpassed the master. I have nothing more to teach you.'
+
+    const possibleMutations = App.game.farming.mutations.filter(mut => mut.unlocked && mut.showHint && !App.game.farming.unlockedBerries[mut.mutatedBerry]())
+
+    if (possibleMutations.length === 0)
+      return 'It seems as though you have hit a roadblock in your Berry progress. Focus on other areas before returning.'
+
+    SeededRand.seedWithDate(date)
+    possibleMutations.forEach(b => SeededRand.boolean())
+    const mutationToShow = SeededRand.fromArray(possibleMutations)
+    mutationToShow.hintSeen = true
+
+    if (mutationToShow instanceof EnigmaMutation) {
+      if (App.game.discord.ID())
+        mutationToShow.hintsSeen[mutationToShow.hintIndex](true)
+
+      return mutationToShow.partialHint
     }
 
-    get dialogHTML(): string {
-        // Before the player has unlocked the farm
-        if (!App.game.farming.canAccess()) {
-            return super.dialogHTML;
-        }
-
-        // After the farm is unlocked
-        return `<p>${KantoBerryMasterNPC.generateMessage(new Date())}</p>`;
-    }
-
-    public static generateMessage(date: Date): string {
-        if (App.game.farming.unlockedBerries.every(berry => berry())) {
-            return 'The disciple has surpassed the master. I have nothing more to teach you.';
-        }
-
-        const possibleMutations = App.game.farming.mutations.filter((mut) => mut.unlocked && mut.showHint && !App.game.farming.unlockedBerries[mut.mutatedBerry]());
-
-        if (possibleMutations.length === 0) {
-            return 'It seems as though you have hit a roadblock in your Berry progress. Focus on other areas before returning.';
-        }
-
-        SeededRand.seedWithDate(date);
-        possibleMutations.forEach(b => SeededRand.boolean());
-        const mutationToShow = SeededRand.fromArray(possibleMutations);
-        mutationToShow.hintSeen = true;
-
-        if (mutationToShow instanceof EnigmaMutation) {
-            if (App.game.discord.ID()) {
-                mutationToShow.hintsSeen[mutationToShow.hintIndex](true);
-            }
-            return mutationToShow.partialHint;
-        }
-
-        return mutationToShow.hint;
-    }
-
+    return mutationToShow.hint
+  }
 }

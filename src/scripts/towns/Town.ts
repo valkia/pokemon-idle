@@ -1,6 +1,10 @@
 import * as GameConstants from '~/enums/GameConstants'
 import type OneFromManyRequirement from '~/scripts/achievements/OneFromManyRequirement'
 import type Requirement from '~/scripts/achievements/Requirement'
+import { GymList } from '~/scripts/gym/GymList'
+import type { TownContent } from '~/scripts/towns/TownContent'
+import { DockTownContent } from '~/scripts/towns/TownContent'
+import type { NPC } from '~/scripts/towns/NPC'
 
 interface TownOptionalArgument {
   requirements?: (Requirement | OneFromManyRequirement)[]
@@ -51,7 +55,7 @@ export class Town {
   }
 }
 
-class DungeonTown extends Town {
+export class DungeonTown extends Town {
   dungeon: Dungeon
 
   constructor(name: string, region: GameConstants.Region, requirements: (Requirement | OneFromManyRequirement)[] = [], content: TownContent[] = []) {

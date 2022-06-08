@@ -1,9 +1,13 @@
+import type Requirement from '~/scripts/achievements/Requirement'
+import type MultiRequirement from '~/scripts/achievements/MultiRequirement'
+import type OneFromManyRequirement from '~/scripts/achievements/OneFromManyRequirement'
+
 interface NPCOptionalArgument {
   requirement?: Requirement | MultiRequirement | OneFromManyRequirement
   image?: string
 }
 
-class NPC {
+export class NPC {
   constructor(
     public name: string,
     public dialog: string[],

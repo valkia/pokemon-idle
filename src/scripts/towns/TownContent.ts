@@ -7,6 +7,7 @@ import MapHelper from '~/scripts/worldmap/MapHelper'
 import App from '~/scripts/App'
 import * as GameConstants from '~/enums/GameConstants'
 import TownList from '~/scripts/towns/TownList'
+import { usePlayerStore } from '~/stores/player'
 export abstract class TownContent {
   public abstract cssClass(): string
   public abstract text(): string
@@ -57,12 +58,13 @@ export abstract class TownContent {
   }
 }
 
-class DockTownContent extends TownContent {
+export class DockTownContent extends TownContent {
   public cssClass() {
     return 'btn btn-info'
   }
 
   public isVisible() {
+    const player = usePlayerStore()
     return player.highestRegion() > 0
   }
 
@@ -93,7 +95,7 @@ class BattleFrontierTownContent extends TownContent {
   }
 }
 
-class NextRegionTownContent extends TownContent {
+export class NextRegionTownContent extends TownContent {
   public cssClass() {
     return 'btn btn-warning'
   }
@@ -111,7 +113,7 @@ class NextRegionTownContent extends TownContent {
   }
 }
 
-class MoveToDungeon extends TownContent {
+export class MoveToDungeon extends TownContent {
   dungeon: Dungeon
   constructor(dungeon: Dungeon) {
     super([])

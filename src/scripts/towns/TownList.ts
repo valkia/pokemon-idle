@@ -7,8 +7,18 @@ import { PokeballItem } from '~/scripts/items/PokeballItem'
 import RouteKillRequirement from '~/scripts/achievements/RouteKillRequirement'
 import ClearDungeonRequirement from '~/scripts/achievements/ClearDungeonRequirement'
 import MultiRequirement from '~/scripts/achievements/MultiRequirement'
+import { Item, ItemList } from '~/scripts/items/Item'
+import { ProfNPC } from '~/scripts/towns/ProfNPC'
+import GymBadgeRequirement from '~/scripts/achievements/GymBadgeRequirement'
+import BadgeEnums from '~/enums/Badges'
+import { NPC } from '~/scripts/towns/NPC'
+import { KantoBerryMasterNPC } from '~/scripts/towns/KantoBerryMasterNPC'
+import { RoamerNPC } from '~/scripts/towns/RoamerNPC'
+import NullRequirement from "~/scripts/achievements/NullRequirement";
+import {MoveToDungeon} from "~/scripts/towns/TownContent";
+import OneFromManyRequirement from "~/scripts/achievements/OneFromManyRequirement";
+import {GymList} from "~/scripts/gym/GymList";
 const TownList: Record<string, Town> = {}
-
 const pokeMartShop = new Shop([
   ItemList.Pokeball,
   ItemList.Greatball,

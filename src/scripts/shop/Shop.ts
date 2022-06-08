@@ -1,4 +1,3 @@
-/// <reference path="../towns/TownContent.ts"/>
 
 import type Requirement from '~/scripts/achievements/Requirement'
 import type OneFromManyRequirement from '~/scripts/achievements/OneFromManyRequirement'

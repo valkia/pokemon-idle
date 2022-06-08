@@ -1,6 +1,7 @@
 import { RoamingPokemonList } from '~/scripts/pokemons/RoamingPokemonList'
-
-class RoamerNPC extends NPC {
+import { NPC } from '~/scripts/towns/NPC'
+import * as GameConstants from '~/enums/GameConstants'
+export class RoamerNPC extends NPC {
   constructor(
     public name: string,
     public dialog: string[],
