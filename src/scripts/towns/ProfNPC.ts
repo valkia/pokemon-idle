@@ -1,6 +1,6 @@
 import * as GameConstants from '~/enums/GameConstants'
 import App from '~/scripts/App'
-import TownList from '~/scripts/towns/TownList'
+import { TownList } from '~/scripts/towns/TownList'
 import { NPC } from '~/scripts/towns/NPC'
 export class ProfNPC extends NPC {
   constructor(

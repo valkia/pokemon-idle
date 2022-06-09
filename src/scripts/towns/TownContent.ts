@@ -6,7 +6,7 @@ import NotificationConstants from '~/modules/notifications/NotificationConstants
 import MapHelper from '~/scripts/worldmap/MapHelper'
 import App from '~/scripts/App'
 import * as GameConstants from '~/enums/GameConstants'
-import TownList from '~/scripts/towns/TownList'
+import { TownList } from '~/scripts/towns/TownList'
 import { usePlayerStore } from '~/stores/player'
 export abstract class TownContent {
   public abstract cssClass(): string

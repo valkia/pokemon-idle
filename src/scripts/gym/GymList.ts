@@ -8,6 +8,8 @@ import RouteKillRequirement from '~/scripts/achievements/RouteKillRequirement'
 import BadgeEnums from '~/modules/enums/Badges'
 import * as GameConstants from '~/enums/GameConstants'
 import { Gym } from '~/scripts/gym/Gym'
+import { GymPokemon } from '~/scripts/gym/GymPokemon'
+import { Champion } from '~/scripts/gym/Champion'
 export const GymList: Record<string, Gym> = {}
 
 // Kanto Gyms

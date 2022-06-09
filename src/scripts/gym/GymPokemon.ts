@@ -1,11 +1,13 @@
-class GymPokemon {
-    name: PokemonNameType;
-    maxHealth: number;
-    level: number;
+import type { PokemonNameType } from '~/enums/PokemonNameType'
 
-    constructor(name: PokemonNameType, maxHealth: number, level: number) {
-        this.name = name;
-        this.maxHealth = maxHealth;
-        this.level = level;
-    }
+export class GymPokemon {
+  name: PokemonNameType
+  maxHealth: number
+  level: number
+
+  constructor(name: PokemonNameType, maxHealth: number, level: number) {
+    this.name = name
+    this.maxHealth = maxHealth
+    this.level = level
+  }
 }

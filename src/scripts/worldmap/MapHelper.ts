@@ -7,7 +7,10 @@ import { Battle } from '~/scripts/Battle'
 import { useGameStore } from '~/stores/game'
 import Notifier from '~/modules/notifications/Notifier'
 import NotificationConstants from '~/modules/notifications/NotificationConstants'
-import TownList from '~/scripts/towns/TownList'
+import { init } from '~/scripts/towns/init'
+import { useDataStore } from '~/stores/data'
+import { useStatisticsStore } from '~/stores/statistics'
+
 export default class MapHelper {
   public static moveToRoute = function(route: number, region: GameConstants.Region) {
     if (isNaN(route))
@@ -87,8 +90,8 @@ export default class MapHelper {
       cls = 'currentLocation'
     else if (!MapHelper.accessToRoute(route, region))
       cls = 'locked'
-    else if (App.game.statistics.routeKills[region][route]() < GameConstants.ROUTE_KILLS_NEEDED)
-      cls = 'unlockedUnfinished'
+    /* else if (useStatisticsStore().routeKills[region][route] < GameConstants.ROUTE_KILLS_NEEDED)
+      cls = 'unlockedUnfinished' */
     else if (!RouteHelper.routeCompleted(route, region, false))
       cls = 'uncaughtPokemon'
     else if (!RouteHelper.routeCompleted(route, region, true))
@@ -147,7 +150,8 @@ export default class MapHelper {
   }
 
   public static accessToTown(townName: string): boolean {
-    const town = TownList[townName]
+    const dataStore = useDataStore()
+    const town = dataStore.TownList[townName]
     if (!town)
       return false
 
@@ -156,8 +160,10 @@ export default class MapHelper {
 
   public static moveToTown(townName: string) {
     if (MapHelper.accessToTown(townName)) {
-      App.game.gameState = GameConstants.GameState.idle
-      player.route(0)
+      const player = usePlayerStore()
+      const gameStore = useGameStore()
+      gameStore.setGameState(GameConstants.GameState.idle)
+      player.setRoute(0)
       const town = TownList[townName]
       player.town(town)
       Battle.enemyPokemon(null)

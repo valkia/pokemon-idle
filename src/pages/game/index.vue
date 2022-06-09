@@ -19,9 +19,12 @@ import { Battle } from '~/scripts/Battle'
 import KantoSVG from '~/components/map/Kanto/KantoSVG.vue'
 import Enemy from '~/components/pokemon/Enemy.vue'
 import Notificaton from '~/components/Notification.vue'
+import { useDataStore } from '~/stores/data'
+import { init } from '~/scripts/towns/init'
 const { t } = useI18n()
 console.log(Battle.generateNewEnemy())
 const enemy = ref(Battle.generateNewEnemy())
 // eslint-disable-next-line no-console
 console.log(t)
+useDataStore().setTownList(init())
 </script>
