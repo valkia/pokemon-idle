@@ -15,7 +15,7 @@ import OakItemType from '~/modules/enums/OakItemType'
  * Handles all logic related to battling
  */
 export class Battle {
-  static enemyPokemon: BattlePokemon
+  static enemyPokemon: BattlePokemon | null
 
   static counter = 0
   static catching = ref(false)

@@ -3,6 +3,7 @@ import type { PokemonNameType } from '~/enums/PokemonNameType'
 import App from '~/scripts/App'
 import { PokemonHelper } from '~/scripts/pokemons/PokemonHelper'
 import Routes from '~/scripts/wildBattle/Routes'
+import { usePartyStore } from '~/stores/party'
 /**
  * Helper class to retrieve information from RoutePokemon
  */
@@ -53,10 +54,11 @@ export class RouteHelper {
 
   public static listCompleted(possiblePokemon: PokemonNameType[], includeShiny: boolean) {
     for (let i = 0; i < possiblePokemon.length; i++) {
-      if (!App.game.party.alreadyCaughtPokemon(PokemonHelper.getPokemonByName(possiblePokemon[i]).id))
+      const partyStore = usePartyStore()
+      if (!partyStore.alreadyCaughtPokemon(PokemonHelper.getPokemonByName(possiblePokemon[i]).id))
         return false
 
-      if (includeShiny && !App.game.party.alreadyCaughtPokemon(PokemonHelper.getPokemonByName(possiblePokemon[i]).id, true))
+      if (includeShiny && !partyStore.alreadyCaughtPokemon(PokemonHelper.getPokemonByName(possiblePokemon[i]).id, true))
         return false
     }
     return true

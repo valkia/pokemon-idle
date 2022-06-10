@@ -19,6 +19,9 @@ export const usePlayerStore = defineStore({
     setRoute(route: number) {
       this.route = route
     },
+    setTown(town: Town) {
+      this.town = town
+    },
     /**
      * Add item to the cart
      * @param {string} name

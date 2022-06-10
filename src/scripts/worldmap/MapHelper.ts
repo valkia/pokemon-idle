@@ -10,6 +10,10 @@ import NotificationConstants from '~/modules/notifications/NotificationConstants
 import { init } from '~/scripts/towns/init'
 import { useDataStore } from '~/stores/data'
 import { useStatisticsStore } from '~/stores/statistics'
+import GameHelper from '~/enums/GameHelper'
+import { Gym } from '~/scripts/gym/Gym'
+import { DungeonTown } from '~/scripts/towns/Town'
+import { PokemonHelper } from '~/scripts/pokemons/PokemonHelper'
 
 export default class MapHelper {
   public static moveToRoute = function(route: number, region: GameConstants.Region) {
@@ -159,21 +163,23 @@ export default class MapHelper {
   }
 
   public static moveToTown(townName: string) {
+    const TownList = useDataStore().TownList
     if (MapHelper.accessToTown(townName)) {
       const player = usePlayerStore()
       const gameStore = useGameStore()
       gameStore.setGameState(GameConstants.GameState.idle)
       player.setRoute(0)
+
       const town = TownList[townName]
-      player.town(town)
-      Battle.enemyPokemon(null)
+      player.setTown(town)
+      Battle.enemyPokemon = null
       // this should happen last, so all the values all set beforehand
-      App.game.gameState = GameConstants.GameState.town
+      gameStore.setGameState(GameConstants.GameState.town)
     }
     else {
       const town = TownList[townName]
       const reqsList = []
-
+      console.log('else town', town)
       town.requirements?.forEach((requirement) => {
         if (!requirement.isCompleted())
           reqsList.push(requirement.hint())
