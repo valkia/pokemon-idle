@@ -455,7 +455,7 @@ export const TypeColor = [
   '#D685AD', // Fairy
 ]
 
-export const ROUTE_KILLS_NEEDED = 10
+export const ROUTE_KILLS_NEEDED = 0
 export const ACHIEVEMENT_DEFEAT_ROUTE_VALUES = [
   100,
   1000,

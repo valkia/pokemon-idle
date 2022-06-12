@@ -673,6 +673,7 @@ import mapPOI from './mapPOI.vue'
 import mapRoute from './mapRoute.vue'
 import mapTown from './mapTown.vue'
 import App from '~/scripts/App.ts'
+
 </script>
 <style lang="scss">
 // Map
@@ -703,32 +704,32 @@ text {
 }
 
 .currentLocation {
-  fill: var(--currentPlace);
+  fill: $currentPlace;
   opacity: 0.5;
 }
 
 .locked {
-  fill: var(--locked);
+  fill: $locked;
   opacity: 0.5;
 }
 
 .unlockedUnfinished {
-  fill: var(--incomplete);
+  fill: $incomplete;
   opacity: 0.6;
 }
 
 .uncaughtPokemon {
-  fill: var(--uncaughtPokemon);
+  fill: $uncaughtPokemon;
   opacity: 0.6;
 }
 
 .uncaughtShinyPokemon {
-  fill: var(--uncaughtShinyPokemon);
+  fill: $uncaughtShinyPokemon;
   opacity: 0.6;
 }
 
 .completed {
-  fill: var(--completed);
+  fill: $completed;
   opacity: 0.6;
 }
 

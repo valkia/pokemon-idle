@@ -32,7 +32,7 @@ export default class MapHelper {
         // Always go back to the main island when changing regions
         player.subregion = 0
       }
-      if (genNewEnemy && !Battle.catching())
+      if (genNewEnemy && !Battle.catching.value)
         Battle.generateNewEnemy()
 
       const gameStore = useGameStore()
@@ -49,10 +49,10 @@ export default class MapHelper {
       const routeData = Routes.getRoute(region, route)
       const reqsList = []
 
-      routeData.requirements?.forEach((requirement) => {
+      /* routeData.requirements?.forEach((requirement) => {
         if (!requirement.isCompleted())
           reqsList.push(requirement.hint())
-      })
+      }) */
 
       Notifier.notify({
         message: `You don't have access to that route yet.<br/>${reqsList.join('<br/>')}`,
@@ -96,10 +96,10 @@ export default class MapHelper {
       cls = 'locked'
     /* else if (useStatisticsStore().routeKills[region][route] < GameConstants.ROUTE_KILLS_NEEDED)
       cls = 'unlockedUnfinished' */
-    else if (!RouteHelper.routeCompleted(route, region, false))
+    /* else if (!RouteHelper.routeCompleted(route, region, false))
       cls = 'uncaughtPokemon'
     else if (!RouteHelper.routeCompleted(route, region, true))
-      cls = 'uncaughtShinyPokemon'
+      cls = 'uncaughtShinyPokemon' */
     else
       cls = 'completed'
 

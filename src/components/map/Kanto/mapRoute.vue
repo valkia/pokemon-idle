@@ -37,7 +37,7 @@ Parameters:
   >
     <rect
       :data-route=" locals.route "
-      :class="rectClass()"
+      :class="rectClass"
       :height=" locals.height * 16 "
       :width=" locals.width * 16 "
       :x=" locals.x * 16 "
@@ -54,6 +54,7 @@ Parameters:
   </g>
 </template>
 <script setup lang="ts">
+import { computed } from 'vue'
 import MapHelper from '~/scripts/worldmap/MapHelper'
 
 const props = defineProps<{
@@ -70,10 +71,10 @@ const props = defineProps<{
 const gClick = () => {
   MapHelper.moveToRoute(props.locals.route, props.locals.region)
 }
-const rectClass = () => {
+const rectClass = computed(() => {
   console.log('rectClass')
   return MapHelper.calculateRouteCssClass(props.locals.route, props.locals.region)
-}
+})
 onMounted(() => {
 })
 </script>

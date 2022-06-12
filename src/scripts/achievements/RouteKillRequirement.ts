@@ -24,5 +24,9 @@ export default class RouteKillRequirement extends AchievementRequirement {
       return `${this.requiredValue} Pokémon need to be defeated on ${Routes.getName(this.route, this.region)}.`
     else
       return `${Routes.getName(this.route, this.region)} still needs to be completed.` */
+    if (this.requiredValue != GameConstants.ROUTE_KILLS_NEEDED)
+      return `${this.requiredValue} Pokémon need to be defeated on .`
+    else
+      return 'still needs to be completed.'
   }
 }

@@ -11,6 +11,7 @@ import MapHelper from '~/scripts/worldmap/MapHelper'
 import Rand from '~/utilities/Rand'
 import { LogBookTypes } from '~/modules/logbook/LogBookTypes'
 import OakItemType from '~/modules/enums/OakItemType'
+import { useBattleStore } from '~/stores/battle'
 /**
  * Handles all logic related to battling
  */
@@ -119,6 +120,8 @@ export class Battle {
     this.counter = 0
     this.enemyPokemon = (PokemonFactory.generateWildPokemon(player.route, player.region))
     const enemyPokemon = this.enemyPokemon
+    const battleStore = useBattleStore()
+    battleStore.setEnemyPokemon(enemyPokemon)
     return enemyPokemon
     /* GameHelper.incrementObservable(App.game.statistics.pokemonEncountered[enemyPokemon.id])
     GameHelper.incrementObservable(App.game.statistics.totalPokemonEncountered)

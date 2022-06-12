@@ -34,6 +34,7 @@ export abstract class TownContent {
   }
 
   public protectedOnclick(): void {
+    console.log('protectedOnclick')
     if (!this.isVisible())
       return
 

@@ -1,7 +1,7 @@
 
 <template>
   <div>
-    <Enemy :pokemon="enemy" />
+    <Enemy />
     <KantoSVG />
     <Notificaton />
   </div>
@@ -23,7 +23,6 @@ import { useDataStore } from '~/stores/data'
 import { init } from '~/scripts/towns/init'
 const { t } = useI18n()
 console.log(Battle.generateNewEnemy())
-const enemy = ref(Battle.generateNewEnemy())
 // eslint-disable-next-line no-console
 console.log(t)
 useDataStore().setTownList(init())

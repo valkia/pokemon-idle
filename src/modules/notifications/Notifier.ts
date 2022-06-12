@@ -16,42 +16,40 @@ export default class Notifier {
     image = undefined,
     strippedMessage = undefined,
   }: NotificationOption): void {
-    window.onload = () => {
-      // If we have sounds enabled for this, play it now
-      if (sound)
-        sound.play()
+    // If we have sounds enabled for this, play it now
+    if (sound)
+      sound.play()
 
-      if (setting && setting.desktopNotification.value && Notification.permission === 'granted') {
-        const tempEl = document.createElement('div')
-        tempEl.innerHTML = strippedMessage ?? message.replace(/<br\s*[/]?>/gi, '\n')
-        const msg = tempEl.innerText.replace(/  +/g, ' ')
-        const desktopNotification = new Notification(title, {
-          body: msg,
-          icon: image,
-          silent: true,
-        })
-        setTimeout(() => {
-          desktopNotification.close()
-        }, timeout)
-      }
-
-      // Check if this type of notification is disabled
-      if (setting && setting.inGameNotification && !setting.inGameNotification.value)
-        return
-
-      // Get the notification ready to display
-      useNotificationStore().addNotification({
-        message,
-        type,
-        title,
-        timeout,
-        time,
-        sound,
-        setting,
-        image,
-        strippedMessage,
+    if (setting && setting.desktopNotification.value && Notification.permission === 'granted') {
+      const tempEl = document.createElement('div')
+      tempEl.innerHTML = strippedMessage ?? message.replace(/<br\s*[/]?>/gi, '\n')
+      const msg = tempEl.innerText.replace(/  +/g, ' ')
+      const desktopNotification = new Notification(title, {
+        body: msg,
+        icon: image,
+        silent: true,
       })
+      setTimeout(() => {
+        desktopNotification.close()
+      }, timeout)
     }
+
+    // Check if this type of notification is disabled
+    /* if (setting && setting.inGameNotification && !setting.inGameNotification.value)
+      return */
+
+    // Get the notification ready to display
+    useNotificationStore().addNotification({
+      message,
+      type,
+      title,
+      timeout,
+      time,
+      sound,
+      setting,
+      image,
+      strippedMessage,
+    })
   }
 
   public static prompt({
