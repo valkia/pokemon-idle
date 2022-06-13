@@ -1,5 +1,7 @@
 <template>
   <img :src="pokemonImgUrl">
+  <div>{{ pokemon.name }}</div>
+  <div>{{ pokemon.health }}/{{ pokemon.maxHealth }}</div>
 </template>
 
 <script setup lang="ts">
