@@ -10,10 +10,13 @@ import App from '~/scripts/App'
 import type { EnemyPokemonInterface } from '~/scripts/pokemons/EnemyPokemonInterface'
 import Amount from '~/modules/wallet/Amount'
 import * as GameConstants from '~/enums/GameConstants'
+import Notifier from '~/modules/notifications/Notifier'
+import NotificationConstants from '~/modules/notifications/NotificationConstants'
+import { LogBookTypes } from '~/modules/logbook/LogBookTypes'
 export class BattlePokemon implements EnemyPokemonInterface {
-  health: Ref<number>
-  maxHealth: Ref<number>
-  healthPercentage: Ref<number>
+  health: number
+  maxHealth: number
+  healthPercentage: number
 
   /**
      * In case you want to manually create a Pokémon instead of generating it from the route number
@@ -44,13 +47,13 @@ export class BattlePokemon implements EnemyPokemonInterface {
     public gemReward = 1,
     public heldItem?: BagItem,
   ) {
-    this.health = ref(maxHealth)
-    this.maxHealth = ref(maxHealth)
-    this.healthPercentage = ref(100)
+    this.health = (maxHealth)
+    this.maxHealth = (maxHealth)
+    this.healthPercentage = (100)
   }
 
   public isAlive(): boolean {
-    return this.health.value > 0
+    return this.health > 0
   }
 
   /**
@@ -58,8 +61,8 @@ export class BattlePokemon implements EnemyPokemonInterface {
      * @param damage
      */
   public damage(damage: number): void {
-    this.health.value = (Math.max(0, this.health.value - damage))
-    this.healthPercentage.value = (Math.floor(this.health.value / this.maxHealth.value * 100))
+    this.health = (Math.max(0, this.health - damage))
+    this.healthPercentage = (Math.floor(this.health / this.maxHealth * 100))
   }
 
   public defeat(trainer = false): void {

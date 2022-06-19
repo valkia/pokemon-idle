@@ -1,6 +1,5 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import type { BattlePokemon } from '~/scripts/pokemons/BattlePokemon'
-
 export const useBattleStore = defineStore('battle', {
 
   state: () => ({
@@ -20,7 +19,7 @@ export const useBattleStore = defineStore('battle', {
       this._enemyPokemon = value
       console.log('enemyPokemon', this._enemyPokemon)
     },
-    setCatching(value: Boolean) {
+    setCatching(value: boolean) {
       this._catching = value
     },
   },
