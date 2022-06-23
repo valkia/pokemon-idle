@@ -21,7 +21,8 @@ import Enemy from '~/components/pokemon/Enemy.vue'
 import Notificaton from '~/components/Notification.vue'
 import { useDataStore } from '~/stores/data'
 import { init } from '~/scripts/towns/init'
-const { t } = useI18n()
+const { t, locale } = useI18n()
+locale.value = 'zh-CN'
 console.log(Battle.generateNewEnemy())
 // eslint-disable-next-line no-console
 console.log(t)
