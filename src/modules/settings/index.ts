@@ -1,8 +1,5 @@
 import PokemonType from '../enums/PokemonType'
 import NotificationConstants from '../notifications/NotificationConstants'
-import DynamicBackground from '../background/DynamicBackground'
-import { AchievementSortOptionConfigs, AchievementSortOptions } from '../achievements/AchievementSortOptions'
-import { AchievementType, Region } from '../GameConstants'
 import Settings from './Settings'
 import Setting from './Setting'
 import SettingOption from './SettingOption'
@@ -11,6 +8,8 @@ import CssVariableSetting from './CssVariableSetting'
 import RangeSetting from './RangeSetting'
 import { SortOptionConfigs, SortOptions } from './SortOptions'
 import HotkeySetting from './HotkeySetting'
+import { AchievementType, Region } from '~/enums/GameConstants'
+import { AchievementSortOptionConfigs, AchievementSortOptions } from '~/modules/achievements/AchievementSortOptions'
 
 export default Settings
 
@@ -262,7 +261,7 @@ Settings.add(new HotkeySetting('hotkey.shop.increase', 'Increase amount', 'I'))
 /*
  * SUBSCRIBERS
  */
-Settings.getSetting('backgroundImage').observableValue.subscribe((newValue) => {
+/* Settings.getSetting('backgroundImage').observableValue.subscribe((newValue) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   newValue === 'background-dynamic' ? DynamicBackground.startScene() : DynamicBackground.stopScene()
-})
+}) */

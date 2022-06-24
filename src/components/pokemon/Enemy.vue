@@ -1,7 +1,9 @@
 <template>
-  <img :src="pokemonImgUrl" class="avatar">
-  <div>{{ t(`pokemon.${pokemon.name}`) }}</div>
-  <div>{{ pokemon.health }}/{{ pokemon.maxHealth }}</div>
+  <div @click="enemyClick">
+    <img :src="pokemonImgUrl" class="avatar">
+    <div>{{ t(`pokemon.${pokemon.name}`) }}</div>
+    <div>{{ pokemon.health }}/{{ pokemon.maxHealth }}</div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -17,7 +19,9 @@ const pokemon = computed(() => {
 const pokemonImgUrl = computed(() => {
   return `/src/asserts/images/pokemon/${pokemon.value.id}.png`
 })
-
+const enemyClick = () => {
+  Battle.clickAttack()
+}
 </script>
 
 <style scoped>

@@ -1,7 +1,7 @@
 // @ts-check
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import * as GameConstants from '~/enums/GameConstants'
-import { Town } from '~/scripts/towns/Town'
+import type { Town } from '~/scripts/towns/Town'
 export const usePlayerStore = defineStore({
   id: 'statistics',
   state: () => ({
@@ -16,7 +16,13 @@ export const usePlayerStore = defineStore({
   getters: {
     town: (state): Town | null => {
       return state._town
-    }
+    },
+    route: (state): Number | null => {
+      return state._route
+    },
+    region: (state): GameConstants.Region | null => {
+      return state._region
+    },
   },
   actions: {
     setRoute(route: number) {
@@ -24,6 +30,9 @@ export const usePlayerStore = defineStore({
     },
     setTown(town: Town | null) {
       this._town = town
+    },
+    setRegion(region: GameConstants.Region) {
+      this._region = region
     },
     /**
      * Add item to the cart

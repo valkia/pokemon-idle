@@ -18,6 +18,8 @@ import { RoamingPokemonList } from '~/scripts/pokemons/RoamingPokemonList'
 import { RouteHelper } from '~/scripts/wildBattle/RouteHelper'
 import OakItemType from '~/modules/enums/OakItemType'
 import Amount from '~/modules/wallet/Amount'
+import Notifier from '~/modules/notifications/Notifier'
+import NotificationConstants from '~/modules/notifications/NotificationConstants'
 export class PokemonFactory {
   /**
      * Generate a wild pokemon based on route, region and the dataList.
@@ -26,6 +28,7 @@ export class PokemonFactory {
      * @returns {any}
      */
   public static generateWildPokemon(route: number, region: GameConstants.Region): BattlePokemon {
+    console.log('!MapHelper.validRoute(route, region)', !MapHelper.validRoute(route, region))
     if (!MapHelper.validRoute(route, region))
       return new BattlePokemon('MissingNo.', 0, PokemonType.None, PokemonType.None, 0, 0, 0, 0, new Amount(0, GameConstants.Currency.money), false, 0)
 

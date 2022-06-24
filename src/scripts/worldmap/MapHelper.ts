@@ -14,7 +14,17 @@ import GameHelper from '~/enums/GameHelper'
 import { Gym } from '~/scripts/gym/Gym'
 import { DungeonTown } from '~/scripts/towns/Town'
 import { PokemonHelper } from '~/scripts/pokemons/PokemonHelper'
-
+enum areaStatus {
+  currentLocation,
+  locked,
+  unlockedUnfinished,
+  questAtLocation,
+  uncaughtPokemon,
+  uncaughtShinyPokemonAndMissingAchievement,
+  uncaughtShinyPokemon,
+  missingAchievement,
+  completed,
+}
 export default class MapHelper {
   public static moveToRoute = function(route: number, region: GameConstants.Region) {
     if (isNaN(route))
@@ -28,7 +38,7 @@ export default class MapHelper {
       console.log('accessToRoute', route, region)
       player.setRoute(route)
       if (player.region != region) {
-        player.region = region
+        player.setRegion(region)
         // Always go back to the main island when changing regions
         player.subregion = 0
       }
@@ -111,46 +121,41 @@ export default class MapHelper {
   }
 
   public static calculateTownCssClass(townName: string): string {
-    if (!player.route() && player.town().name == townName)
-      return 'currentLocation'
+    const player = usePlayerStore()
 
+    // Check if we are currently at this location
+    if (!player.route && player.town?.name == townName)
+      return areaStatus[areaStatus.currentLocation]
+
+    // Check if this location is locked
     if (!MapHelper.accessToTown(townName))
-      return 'locked'
+      return areaStatus[areaStatus.locked]
 
-    if (dungeonList[townName]) {
+    const states = []
+    // Is this location a dungeon
+    /* if (dungeonList[townName]) {
       if (!App.game.statistics.dungeonsCleared[GameConstants.getDungeonIndex(townName)]())
-        return 'unlockedUnfinished'
+        return areaStatus[areaStatus.unlockedUnfinished]
+      else if (DungeonRunner.isThereQuestAtLocation(dungeonList[townName]))
+        return areaStatus[areaStatus.questAtLocation]
       else if (!DungeonRunner.dungeonCompleted(dungeonList[townName], false))
-        return 'uncaughtPokemon'
+        return areaStatus[areaStatus.uncaughtPokemon]
+      else if (!DungeonRunner.dungeonCompleted(dungeonList[townName], true) && !DungeonRunner.isAchievementsComplete(dungeonList[townName]))
+        return areaStatus[areaStatus.uncaughtShinyPokemonAndMissingAchievement]
       else if (!DungeonRunner.dungeonCompleted(dungeonList[townName], true))
-        return 'uncaughtShinyPokemon'
-    }
-    if (gymList[townName]) {
-      const gym = gymList[townName]
-      if (Gym.isUnlocked(gym) && !App.game.badgeCase.hasBadge(gym.badgeReward))
-        return 'unlockedUnfinished'
-    }
+        return areaStatus[areaStatus.uncaughtShinyPokemon]
+      else if (!DungeonRunner.isAchievementsComplete(dungeonList[townName]))
+        return areaStatus[areaStatus.missingAchievement]
+    } */
+    const TownList = useDataStore().TownList
     const town = TownList[townName]
-    // We don't want to re-process DungeonTowns
-    if (!(town instanceof DungeonTown) && town?.dungeon) {
-      const dungeonAccess = MapHelper.calculateTownCssClass(town?.dungeon.name)
-      switch (dungeonAccess) {
-        // if dungeon completed or locked, ignore it
-        case 'completed':
-        case 'locked':
-          break
-          // Return the dungeons state
-        default:
-          return dungeonAccess
-      }
-    }
-    if (town instanceof PokemonLeague && (town as PokemonLeague)?.gymList) {
-      for (const gym of (town as PokemonLeague)?.gymList) {
-        if (Gym.isUnlocked(gym) && !App.game.badgeCase.hasBadge(gym.badgeReward))
-          return 'unlockedUnfinished'
-      }
-    }
-    return 'completed'
+    town.content.forEach((c) => {
+      states.push(c.areaStatus())
+    })
+    if (states.length)
+      return areaStatus[Math.min(...states)]
+
+    return areaStatus[areaStatus.completed]
   }
 
   public static accessToTown(townName: string): boolean {

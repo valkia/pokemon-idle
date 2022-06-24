@@ -20,6 +20,7 @@ import { ProfNPC } from '~/scripts/towns/ProfNPC'
 import { NPC } from '~/scripts/towns/NPC'
 import { KantoBerryMasterNPC } from '~/scripts/towns/KantoBerryMasterNPC'
 import { RoamerNPC } from '~/scripts/towns/RoamerNPC'
+import { useDataStore } from '~/stores/data'
 
 export const init = () => {
   // Kanto NPCs
@@ -212,6 +213,8 @@ export const init = () => {
       npcs: [ViridianCityOldMan],
     },
   )
+  const GymList = useDataStore().GymList
+  console.log(GymList)
   TownList['Indigo Plateau Kanto'] = new Town(
     'Indigo Plateau Kanto',
     GameConstants.Region.kanto,

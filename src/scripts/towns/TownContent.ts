@@ -8,6 +8,17 @@ import App from '~/scripts/App'
 import * as GameConstants from '~/enums/GameConstants'
 import { TownList } from '~/scripts/towns/TownList'
 import { usePlayerStore } from '~/stores/player'
+enum areaStatus {
+  currentLocation,
+  locked,
+  unlockedUnfinished,
+  questAtLocation,
+  uncaughtPokemon,
+  uncaughtShinyPokemonAndMissingAchievement,
+  uncaughtShinyPokemon,
+  missingAchievement,
+  completed,
+}
 export abstract class TownContent {
   public abstract cssClass(): string
   public abstract text(): string

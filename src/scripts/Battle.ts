@@ -12,7 +12,7 @@ import Rand from '~/utilities/Rand'
 import { LogBookTypes } from '~/modules/logbook/LogBookTypes'
 import OakItemType from '~/modules/enums/OakItemType'
 import { useBattleStore } from '~/stores/battle'
-import {usePartyStore} from "~/stores/party";
+import { usePartyStore } from '~/stores/party'
 /**
  * Handles all logic related to battling
  */
@@ -46,7 +46,7 @@ export class Battle {
       return
 
     this.lastPokemonAttack = now
-    let battleStore = useBattleStore()
+    const battleStore = useBattleStore()
     const enemyPokemon = battleStore.enemyPokemon
     if (!enemyPokemon?.isAlive())
       return
@@ -62,9 +62,9 @@ export class Battle {
   public static clickAttack() {
     const player = usePlayerStore()
     // click attacks disabled and we already beat the starter
-    if (App.game.challenges.list.disableClickAttack.active() && player.starter() != GameConstants.Starter.None)
+    /* if (App.game.challenges.list.disableClickAttack.active() && player.starter() != GameConstants.Starter.None)
       return
-
+*/
     // TODO: figure out a better way of handling this
     // Limit click attack speed, Only allow 1 attack per 50ms (20 per second)
     const now = Date.now()
@@ -72,12 +72,12 @@ export class Battle {
       return
 
     this.lastClickAttack = now
-    let battleStore = useBattleStore()
+    const battleStore = useBattleStore()
     const enemyPokemon = battleStore.enemyPokemon
     if (!enemyPokemon?.isAlive())
       return
 
-    GameHelper.incrementObservable(App.game.statistics.clickAttacks)
+    /* GameHelper.incrementObservable(App.game.statistics.clickAttacks) */
     const partyStore = usePartyStore()
     enemyPokemon.damage(partyStore.calculateClickAttack(true))
     if (!enemyPokemon.isAlive())
@@ -94,9 +94,9 @@ export class Battle {
     Battle.route = player.route
     enemyPokemon?.defeat()
 
-    //GameHelper.incrementObservable(App.game.statistics.routeKills[player.region][Battle.route])
+    // GameHelper.incrementObservable(App.game.statistics.routeKills[player.region][Battle.route])
 
-    //App.game.breeding.progressEggsBattle(Battle.route, player.region)
+    // App.game.breeding.progressEggsBattle(Battle.route, player.region)
     const isShiny: boolean = enemyPokemon.shiny
     const pokeBall: GameConstants.Pokeball = App.game.pokeballs.calculatePokeballToUse(enemyPokemon.id, isShiny)
 
@@ -125,7 +125,9 @@ export class Battle {
   public static generateNewEnemy() {
     const player = usePlayerStore()
     this.counter = 0
+    console.log('player', player.route, player.region)
     const enemyPokemon = (PokemonFactory.generateWildPokemon(player.route, player.region))
+    console.log('enemyPokemon', enemyPokemon)
     const battleStore = useBattleStore()
     battleStore.setEnemyPokemon(enemyPokemon)
     return enemyPokemon

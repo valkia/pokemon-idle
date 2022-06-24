@@ -8,6 +8,7 @@ import * as GameConstants from '~/enums/GameConstants'
 import App from '~/scripts/App'
 import Weather from '~/enums/Weather'
 import Multiplier from '~/modules/multiplier/Multiplier'
+import { AchievementHandler } from '~/scripts/achievements/AchievementHandler'
 export const usePartyStore = defineStore('party', {
   state: () => ({
     _caughtPokemon: [] as PartyPokemon[],
@@ -97,12 +98,13 @@ export const usePartyStore = defineStore('party', {
     calculateClickAttack(useItem = false): number {
       // Base power
       // Shiny pokemon help with a 50% boost
-      const clickAttack = Math.pow(this.caughtPokemon.length + (this.caughtPokemon.filter(p => p.shiny).length / 2) + 1, 1.4) * (1 + AchievementHandler.achievementBonus())
+      //  * (1 + AchievementHandler.achievementBonus())
+      const clickAttack = Math.pow(this.caughtPokemon.length + (this.caughtPokemon.filter(p => p.shiny).length / 2) + 1, 1.4)
 
       const bonus = new Multiplier().getBonus('clickAttack', useItem)
 
       return Math.floor(clickAttack * bonus)
-    }
+    },
   },
 })
 

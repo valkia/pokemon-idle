@@ -1,10 +1,10 @@
 import * as GameConstants from '~/enums/GameConstants'
 import type OneFromManyRequirement from '~/scripts/achievements/OneFromManyRequirement'
 import type Requirement from '~/scripts/achievements/Requirement'
-import { GymList } from '~/scripts/gym/GymList'
 import type { TownContent } from '~/scripts/towns/TownContent'
 import { DockTownContent, NextRegionTownContent } from '~/scripts/towns/TownContent'
 import type { NPC } from '~/scripts/towns/NPC'
+import { useDataStore } from '~/stores/data'
 
 interface TownOptionalArgument {
   requirements?: (Requirement | OneFromManyRequirement)[]
@@ -34,7 +34,7 @@ export class Town {
     this.npcs = optional.npcs
     this.startingTown = GameConstants.StartingTowns.includes(this.name)
     this.content = content
-
+    const GymList = useDataStore().GymList
     if (GymList[name]) {
       const gym = GymList[name]
       this.content.unshift(gym)

@@ -1,61 +1,65 @@
 /// <reference path="../../declarations/GameHelper.d.ts" />
 
-class AchievementHandler {
+import Settings from '~/modules/settings'
+import GameHelper from '~/enums/GameHelper'
+import * as GameConstants from '~/enums/GameConstants'
+import type AchievementRequirement from '~/scripts/achievements/AchievementRequirement'
+export class AchievementHandler {
   public static achievementList: Achievement[] = []
-  public static navigateIndex: KnockoutObservable<number> = ko.observable(0)
-  public static maxBonus: KnockoutObservableArray<number> = ko.observableArray([])
-  public static achievementListFiltered: KnockoutObservableArray<Achievement> = ko.observableArray([])
-  public static numberOfTabs: KnockoutObservable<number> = ko.observable(0)
+  public static navigateIndex = 0
+  public static maxBonus: []
+  public static achievementListFiltered: []
+  public static numberOfTabs = 0
 
   public static setNavigateIndex(index: number): void {
-    if (index < 0 || index >= AchievementHandler.numberOfTabs())
+    if (index < 0 || index >= AchievementHandler.numberOfTabs)
       return
 
-    AchievementHandler.navigateIndex(index)
+    AchievementHandler.navigateIndex = (index)
     Settings.setSettingByName('achievementsPage', index)
   }
 
   public static navigateRight() {
-    this.setNavigateIndex(AchievementHandler.navigateIndex() + 1)
+    this.setNavigateIndex(AchievementHandler.navigateIndex + 1)
   }
 
   public static navigateLeft() {
-    this.setNavigateIndex(AchievementHandler.navigateIndex() - 1)
+    this.setNavigateIndex(AchievementHandler.navigateIndex - 1)
   }
 
   public static isNavigateDirectionDisabled(navigateBackward: boolean): boolean {
     return navigateBackward
-      ? this.navigateIndex() === 0
-      : this.navigateIndex() + 1 === this.numberOfTabs()
+      ? this.navigateIndex === 0
+      : this.navigateIndex + 1 === this.numberOfTabs
   }
 
   public static calculateNumberOfTabs() {
-    this.numberOfTabs(Math.max(1, Math.ceil(this.achievementListFiltered().length / 10)))
+    this.numberOfTabs = (Math.max(1, Math.ceil(this.achievementListFiltered.length / 10)))
   }
 
   public static filter = {
-    status: ko.observable(-2).extend({ numeric: 0 }),
-    type: ko.observable(-2).extend({ numeric: 0 }),
-    region: ko.observable(-2).extend({ numeric: 0 }),
+    status: -2,
+    type: -2,
+    region: -2,
   }
 
   public static getAchievementListWithIndex() {
-    return this.achievementListFiltered().slice(this.navigateIndex() * 10, (this.navigateIndex() * 10) + 10)
+    return this.achievementListFiltered.slice(this.navigateIndex * 10, (this.navigateIndex * 10) + 10)
   }
 
   public static filterAchievementList(retainPage = false) {
-    this.achievementListFiltered(this.achievementList.filter(a => (
+    this.achievementListFiltered = (this.achievementList.filter(a => (
       a.region <= player.highestRegion()
             && a.achievable()
-            && (this.filter.status() == -2 || a.unlocked === !!this.filter.status())
-            && (this.filter.type() == -2 || a.property.achievementType === this.filter.type())
-            && (this.filter.region() == -2 || a.region === this.filter.region())
+            && (this.filter.status == -2 || a.unlocked === !!this.filter.status)
+            && (this.filter.type == -2 || a.property.achievementType === this.filter.type)
+            && (this.filter.region == -2 || a.region === this.filter.region)
     )))
     this.calculateNumberOfTabs()
     if (!retainPage)
       this.setNavigateIndex(0)
-    else if (this.getAchievementListWithIndex().length === 0 && this.navigateIndex() > 0)
-      this.setNavigateIndex(this.numberOfTabs() - 1)
+    else if (this.getAchievementListWithIndex().length === 0 && this.navigateIndex > 0)
+      this.setNavigateIndex(this.numberOfTabs - 1)
   }
 
   public static checkAchievements() {
