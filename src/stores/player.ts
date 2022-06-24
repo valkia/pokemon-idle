@@ -6,21 +6,24 @@ export const usePlayerStore = defineStore({
   id: 'statistics',
   state: () => ({
     /** @type {string[]} */
-    id: '',
-    name: '',
-    route: 1,
-    region: GameConstants.Region.kanto,
-    highestRegion: GameConstants.Region.kanto,
-    town: Town,
+    _id: '',
+    _name: '',
+    _route: 1,
+    _region: GameConstants.Region.kanto,
+    _highestRegion: GameConstants.Region.kanto,
+    _town: null as Town | null,
   }),
   getters: {
+    town: (state): Town | null => {
+      return state._town
+    }
   },
   actions: {
     setRoute(route: number) {
-      this.route = route
+      this._route = route
     },
-    setTown(town: Town) {
-      this.town = town
+    setTown(town: Town | null) {
+      this._town = town
     },
     /**
      * Add item to the cart

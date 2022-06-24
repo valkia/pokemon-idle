@@ -24,6 +24,7 @@
 <template>
   <rect
     class="city"
+    :class="rectClass()"
     :data-town=" locals.name "
     :x=" locals.x * 16 "
     :y=" locals.y * 16 "
@@ -42,11 +43,18 @@ if (locals.home) {
 import MapHelper from '~/scripts/worldmap/MapHelper'
 
 const props = defineProps<{
-  locals: {}
+  locals: {
+    name: string
+  }
 }>()
+
+const rectClass = () =>{
+  return MapHelper.calculateTownCssClass(props.locals.name.replace(/'/g, '\\\''))
+}
+
 onMounted(() => {
 })
 const ok = () => {
-  MapHelper.moveToTown(props.locals.name.replace(/'/g, '\\\''))
+  return MapHelper.moveToTown(props.locals.name.replace(/'/g, '\\\''))
 }
 </script>

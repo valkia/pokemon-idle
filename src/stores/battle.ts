@@ -5,6 +5,7 @@ export const useBattleStore = defineStore('battle', {
   state: () => ({
     _enemyPokemon: null as BattlePokemon | null,
     _catching: false,
+    _catchRateActual: 0,
   }),
   getters: {
     catching: (state): any => {
@@ -13,6 +14,9 @@ export const useBattleStore = defineStore('battle', {
     enemyPokemon: (state): any => {
       return state._enemyPokemon
     },
+    catchRateActual: (state): any => {
+      return state._catchRateActual
+    }
   },
   actions: {
     setEnemyPokemon(value: BattlePokemon | null) {
@@ -22,6 +26,9 @@ export const useBattleStore = defineStore('battle', {
     setCatching(value: boolean) {
       this._catching = value
     },
+    setCatchRateActual(value: number) {
+      this._catchRateActual = value
+    }
   },
 })
 

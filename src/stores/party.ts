@@ -94,6 +94,15 @@ export const usePartyStore = defineStore('party', {
       // between 0.2 -> 1 based on highest region
       return Math.min(1, Math.max(0.2, 0.1 + (highestRegion / 10)))
     },
+    calculateClickAttack(useItem = false): number {
+      // Base power
+      // Shiny pokemon help with a 50% boost
+      const clickAttack = Math.pow(this.caughtPokemon.length + (this.caughtPokemon.filter(p => p.shiny).length / 2) + 1, 1.4) * (1 + AchievementHandler.achievementBonus())
+
+      const bonus = new Multiplier().getBonus('clickAttack', useItem)
+
+      return Math.floor(clickAttack * bonus)
+    }
   },
 })
 

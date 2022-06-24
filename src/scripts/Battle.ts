@@ -12,6 +12,7 @@ import Rand from '~/utilities/Rand'
 import { LogBookTypes } from '~/modules/logbook/LogBookTypes'
 import OakItemType from '~/modules/enums/OakItemType'
 import { useBattleStore } from '~/stores/battle'
+import {usePartyStore} from "~/stores/party";
 /**
  * Handles all logic related to battling
  */
@@ -45,11 +46,13 @@ export class Battle {
       return
 
     this.lastPokemonAttack = now
-    if (!this.enemyPokemon?.isAlive())
+    let battleStore = useBattleStore()
+    const enemyPokemon = battleStore.enemyPokemon
+    if (!enemyPokemon?.isAlive())
       return
-
-    this.enemyPokemon.damage(App.game.party.calculatePokemonAttack(this.enemyPokemon.type1, this.enemyPokemon.type2))
-    if (!this.enemyPokemon.isAlive())
+    const partyStore = usePartyStore()
+    enemyPokemon.damage(partyStore.calculatePokemonAttack(enemyPokemon.type1, enemyPokemon.type2))
+    if (!enemyPokemon.isAlive())
       this.defeatPokemon()
   }
 
@@ -69,12 +72,15 @@ export class Battle {
       return
 
     this.lastClickAttack = now
-    if (!this.enemyPokemon?.isAlive())
+    let battleStore = useBattleStore()
+    const enemyPokemon = battleStore.enemyPokemon
+    if (!enemyPokemon?.isAlive())
       return
 
     GameHelper.incrementObservable(App.game.statistics.clickAttacks)
-    this.enemyPokemon.damage(App.game.party.calculateClickAttack(true))
-    if (!this.enemyPokemon.isAlive())
+    const partyStore = usePartyStore()
+    enemyPokemon.damage(partyStore.calculateClickAttack(true))
+    if (!enemyPokemon.isAlive())
       this.defeatPokemon()
   }
 
@@ -83,13 +89,14 @@ export class Battle {
      */
   public static defeatPokemon() {
     const player = usePlayerStore()
-    const enemyPokemon = this.enemyPokemon
+    const battleStore = useBattleStore()
+    const enemyPokemon = battleStore.enemyPokemon
     Battle.route = player.route
-    enemyPokemon.defeat()
+    enemyPokemon?.defeat()
 
-    GameHelper.incrementObservable(App.game.statistics.routeKills[player.region][Battle.route])
+    //GameHelper.incrementObservable(App.game.statistics.routeKills[player.region][Battle.route])
 
-    App.game.breeding.progressEggsBattle(Battle.route, player.region)
+    //App.game.breeding.progressEggsBattle(Battle.route, player.region)
     const isShiny: boolean = enemyPokemon.shiny
     const pokeBall: GameConstants.Pokeball = App.game.pokeballs.calculatePokeballToUse(enemyPokemon.id, isShiny)
 
@@ -118,8 +125,7 @@ export class Battle {
   public static generateNewEnemy() {
     const player = usePlayerStore()
     this.counter = 0
-    this.enemyPokemon = (PokemonFactory.generateWildPokemon(player.route, player.region))
-    const enemyPokemon = this.enemyPokemon
+    const enemyPokemon = (PokemonFactory.generateWildPokemon(player.route, player.region))
     const battleStore = useBattleStore()
     battleStore.setEnemyPokemon(enemyPokemon)
     return enemyPokemon
@@ -150,8 +156,10 @@ export class Battle {
   }
 
   protected static attemptCatch(enemyPokemon: BattlePokemon) {
+    const partyStore = usePartyStore()
+    const battleStore = useBattleStore()
     if (enemyPokemon == null) {
-      this.catching.value = (false)
+      battleStore.setCatching(false)
       return
     }
     if (Rand.chance(this.catchRateActual.value / 100)) { // Caught
@@ -160,16 +168,16 @@ export class Battle {
     else if (enemyPokemon.shiny) { // Failed to catch, Shiny
       App.game.logbook.newLog(LogBookTypes.ESCAPED, `The Shiny ${enemyPokemon.name} escaped!`)
     }
-    else if (!App.game.party.alreadyCaughtPokemon(enemyPokemon.id)) { // Failed to catch, Uncaught
+    else if (!partyStore.alreadyCaughtPokemon(enemyPokemon.id)) { // Failed to catch, Uncaught
       App.game.logbook.newLog(LogBookTypes.ESCAPED, `The wild ${enemyPokemon.name} escaped!`)
     }
-    this.catching.value = (false)
-    this.catchRateActual.value = (0)
+    battleStore.setCatching(false)
+    battleStore.setCatchRateActual(0)
   }
 
   public static catchPokemon(enemyPokemon: BattlePokemon) {
     const player = usePlayerStore()
-    const catchRoute = Battle.route || player.town()?.dungeon?.difficultyRoute || 1
+    const catchRoute = Battle.route || player.town?.dungeon?.difficultyRoute || 1
     App.game.wallet.gainDungeonTokens(PokemonFactory.routeDungeonTokens(catchRoute, player.region))
     App.game.oakItems.use(OakItemType.Magic_Ball)
     App.game.party.gainPokemonById(enemyPokemon.id, enemyPokemon.shiny)
