@@ -9,6 +9,12 @@ import App from '~/scripts/App'
 import Weather from '~/enums/Weather'
 import Multiplier from '~/modules/multiplier/Multiplier'
 import { AchievementHandler } from '~/scripts/achievements/AchievementHandler'
+import BadgeCase from '~/modules/DataStore/BadgeCase'
+import { PokemonFactory } from '~/scripts/pokemons/PokemonFactory'
+import GameHelper from '~/enums/GameHelper'
+import { LogBookTypes } from '~/modules/logbook/LogBookTypes'
+import Notifier from '~/modules/notifications/Notifier'
+import NotificationConstants from '~/modules/notifications/NotificationConstants'
 export const usePartyStore = defineStore('party', {
   state: () => ({
     _caughtPokemon: [] as PartyPokemon[],
@@ -104,6 +110,71 @@ export const usePartyStore = defineStore('party', {
       const bonus = new Multiplier().getBonus('clickAttack', useItem)
 
       return Math.floor(clickAttack * bonus)
+    },
+    gainExp(exp = 0, level = 1, trainer = false) {
+      const multBonus = new Multiplier().getBonus('exp', true)
+      const trainerBonus = trainer ? 1.5 : 1
+      const expTotal = Math.floor(exp * level * trainerBonus * multBonus / 9)
+
+      const maxLevel = new BadgeCase().maxLevel
+      for (const pokemon of this.caughtPokemon) {
+        if (pokemon.level < maxLevel.value)
+          pokemon.gainExp(expTotal)
+      }
+    },
+    gainPokemonById(id: number, shiny = false, suppressNotification = false) {
+      this.gainPokemon(PokemonFactory.generatePartyPokemon(id, shiny), suppressNotification)
+    },
+
+    gainPokemon(pokemon: PartyPokemon, suppressNotification = false) {
+      /* GameHelper.incrementObservable(App.game.statistics.pokemonCaptured[pokemon.id])
+      GameHelper.incrementObservable(App.game.statistics.totalPokemonCaptured) */
+
+      if (pokemon.shiny) {
+        /* GameHelper.incrementObservable(App.game.statistics.shinyPokemonCaptured[pokemon.id])
+        GameHelper.incrementObservable(App.game.statistics.totalShinyPokemonCaptured) */
+        // Add all shiny catches to the log book
+        // App.game.logbook.newLog(LogBookTypes.CAUGHT, `You have captured a shiny ${pokemon.name}!`)
+        // Already caught (shiny)
+        if (this.alreadyCaughtPokemon(pokemon.id, true))
+          return
+
+        // Notify if not already caught
+        Notifier.notify({
+          message: `✨ You have captured a shiny ${pokemon.name}! ✨`,
+          type: NotificationConstants.NotificationOption.warning,
+          sound: NotificationConstants.NotificationSound.General.new_catch,
+          setting: NotificationConstants.NotificationSetting.General.new_catch,
+        })
+
+        // Already caught (non shiny) we need to update the party pokemon directly
+        if (this.alreadyCaughtPokemon(pokemon.id, false)) {
+          this.getPokemon(pokemon.id).shiny = true
+          return
+        }
+      }
+
+      // Already caught (non shiny)
+      if (this.alreadyCaughtPokemon(pokemon.id, false))
+        return
+
+      if (!suppressNotification) {
+        Notifier.notify({
+          message: `You have captured ${GameHelper.anOrA(pokemon.name)} ${pokemon.name}!`,
+          type: NotificationConstants.NotificationOption.success,
+          sound: NotificationConstants.NotificationSound.General.new_catch,
+          setting: NotificationConstants.NotificationSetting.General.new_catch,
+        })
+      }
+
+      // App.game.logbook.newLog(LogBookTypes.CAUGHT, `You have captured ${GameHelper.anOrA(pokemon.name)} ${pokemon.name}!`)
+      this._caughtPokemon.push(pokemon)
+    },
+    getPokemon(id: number) {
+      for (let i = 0; i < this.caughtPokemon.length; i++) {
+        if (this.caughtPokemon[i].id === id)
+          return this.caughtPokemon[i]
+      }
     },
   },
 })

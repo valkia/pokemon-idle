@@ -26,7 +26,6 @@ const notificationList = computed(() => {
   return useNotificationStore().notification
 })
 console.log('notificationList', notificationList)
-window.add = useNotificationStore().addNotification
 </script>
 
 <style scoped lang="scss">

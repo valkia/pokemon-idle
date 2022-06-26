@@ -1,5 +1,13 @@
 import type { Saveable } from '~/modules/DataStore/common/Saveable'
-
+import { PokemonHelper } from '~/scripts/pokemons/PokemonHelper'
+import App from '~/scripts/App'
+import GameHelper from '~/enums/GameHelper'
+import NotificationConstants from '~/modules/notifications/NotificationConstants'
+import { levelRequirements } from '~/enums/LevelType'
+import type { PokemonNameType } from '~/enums/PokemonNameType'
+import Settings from '~/modules/settings'
+import Notifier from '~/modules/notifications/Notifier'
+import { LevelEvolution } from '~/enums/LevelEvolution'
 enum PartyPokemonSaveKeys {
   attackBonusPercent = 0,
   attackBonusAmount,
@@ -25,14 +33,14 @@ export class PartyPokemon implements Saveable {
     levelEvolutionTriggered: false,
   }
 
-  _breeding: KnockoutObservable<boolean>
-  _shiny: KnockoutObservable<boolean>
-  _level: KnockoutObservable<number>
-  _attack: KnockoutObservable<number>
-  _attackBonusPercent: KnockoutObservable<number>
-  _attackBonusAmount: KnockoutObservable<number>
-  _category: KnockoutObservable<number>
-  proteinsUsed: KnockoutObservable<number>
+  _breeding: boolean
+  _shiny: boolean
+  _level: number
+  _attack: number
+  _attackBonusPercent: number
+  _attackBonusAmount: number
+  _category: number
+  proteinsUsed: number
 
   constructor(
     public id: number,
@@ -47,14 +55,14 @@ export class PartyPokemon implements Saveable {
     shiny = false,
     category = 0,
   ) {
-    this.proteinsUsed = ko.observable(proteinsUsed)
-    this._breeding = ko.observable(breeding)
-    this._shiny = ko.observable(shiny)
-    this._level = ko.observable(1)
-    this._attackBonusPercent = ko.observable(attackBonusPercent)
-    this._attackBonusAmount = ko.observable(attackBonusAmount)
-    this._attack = ko.observable(this.calculateAttack())
-    this._category = ko.observable(category)
+    this.proteinsUsed = proteinsUsed
+    this._breeding = breeding
+    this._shiny = shiny
+    this._level = 1
+    this._attackBonusPercent = attackBonusPercent
+    this._attackBonusAmount = attackBonusAmount
+    this._attack = this.calculateAttack()
+    this._category = category
   }
 
   public calculateAttack(ignoreLevel = false): number {
@@ -154,7 +162,7 @@ export class PartyPokemon implements Saveable {
 
     this.attackBonusPercent = json[PartyPokemonSaveKeys.attackBonusPercent] ?? this.defaults.attackBonusPercent
     this.attackBonusAmount = json[PartyPokemonSaveKeys.attackBonusAmount] ?? this.defaults.attackBonusAmount
-    this.proteinsUsed = ko.observable(json[PartyPokemonSaveKeys.proteinsUsed] ?? this.defaults.proteinsUsed)
+    this.proteinsUsed = json[PartyPokemonSaveKeys.proteinsUsed] ?? this.defaults.proteinsUsed
     this.exp = json[PartyPokemonSaveKeys.exp] ?? this.defaults.exp
     this.breeding = json[PartyPokemonSaveKeys.breeding] ?? this.defaults.breeding
     this.shiny = json[PartyPokemonSaveKeys.shiny] ?? this.defaults.shiny
@@ -182,7 +190,7 @@ export class PartyPokemon implements Saveable {
       id: this.id,
       [PartyPokemonSaveKeys.attackBonusPercent]: this.attackBonusPercent,
       [PartyPokemonSaveKeys.attackBonusAmount]: this.attackBonusAmount,
-      [PartyPokemonSaveKeys.proteinsUsed]: this.proteinsUsed(),
+      [PartyPokemonSaveKeys.proteinsUsed]: this.proteinsUsed,
       [PartyPokemonSaveKeys.exp]: this.exp,
       [PartyPokemonSaveKeys.breeding]: this.breeding,
       [PartyPokemonSaveKeys.shiny]: this.shiny,
@@ -201,58 +209,58 @@ export class PartyPokemon implements Saveable {
 
   // Knockout getters/setter
   get level(): number {
-    return this._level()
+    return this._level
   }
 
   set level(level: number) {
-    this._level(level)
+    this._level = (level)
   }
 
   get attack(): number {
-    return this._attack()
+    return this._attack
   }
 
   set attack(attack: number) {
-    this._attack(attack)
+    this._attack = (attack)
   }
 
   get attackBonusAmount(): number {
-    return this._attackBonusAmount()
+    return this._attackBonusAmount
   }
 
   set attackBonusAmount(attackBonusAmount: number) {
-    this._attackBonusAmount(attackBonusAmount)
+    this._attackBonusAmount = (attackBonusAmount)
   }
 
   get attackBonusPercent(): number {
-    return this._attackBonusPercent()
+    return this._attackBonusPercent
   }
 
   set attackBonusPercent(attackBonusPercent: number) {
-    this._attackBonusPercent(attackBonusPercent)
+    this._attackBonusPercent = (attackBonusPercent)
   }
 
   get breeding(): boolean {
-    return this._breeding()
+    return this._breeding
   }
 
   set breeding(bool: boolean) {
-    this._breeding(bool)
+    this._breeding = (bool)
   }
 
   get shiny(): boolean {
-    return this._shiny()
+    return this._shiny
   }
 
   set shiny(bool: boolean) {
-    this._shiny(bool)
+    this._shiny = (bool)
   }
 
   get category(): number {
-    return this._category()
+    return this._category
   }
 
   set category(index: number) {
-    this._category(index)
+    this._category = (index)
   }
 }

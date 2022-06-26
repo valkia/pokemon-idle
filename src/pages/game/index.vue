@@ -4,6 +4,9 @@
     <Enemy />
     <KantoSVG />
     <Notificaton />
+    <pickStarterTutorialModal />
+    <starterCaught />
+    <BattleList />
   </div>
 </template>
 
@@ -18,6 +21,9 @@ import { pokemonMap } from '~/scripts/pokemons/PokemonList'
 import { Battle } from '~/scripts/Battle'
 import KantoSVG from '~/components/map/Kanto/KantoSVG.vue'
 import Enemy from '~/components/pokemon/Enemy.vue'
+import BattleList from '~/components/pokemon/BattleList.vue'
+import pickStarterTutorialModal from '~/components/pickStarterTutorialModal.vue'
+import starterCaught from '~/components/starterCaught.vue'
 import Notificaton from '~/components/Notification.vue'
 import { useDataStore } from '~/stores/data'
 import { init as townInit } from '~/scripts/towns/init'

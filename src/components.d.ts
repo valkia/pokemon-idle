@@ -4,6 +4,7 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
+    BattleList: typeof import('./components/pokemon/BattleList.vue')['default']
     Counter: typeof import('./components/Counter.vue')['default']
     Enemy: typeof import('./components/pokemon/Enemy.vue')['default']
     Footer: typeof import('./components/Footer.vue')['default']
@@ -14,7 +15,10 @@ declare module 'vue' {
     MapRoute: typeof import('./components/map/Kanto/mapRoute.vue')['default']
     MapTown: typeof import('./components/map/Kanto/mapTown.vue')['default']
     Notification: typeof import('./components/Notification.vue')['default']
+    PickStarterTutorialModal: typeof import('./components/pickStarterTutorialModal.vue')['default']
     README: typeof import('./components/README.md')['default']
+    StarterCaught: typeof import('./components/starterCaught.vue')['default']
+    StartSequence: typeof import('./components/startSequence.vue')['default']
   }
 }
 

@@ -2,8 +2,10 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import * as GameConstants from '~/enums/GameConstants'
 import type { Town } from '~/scripts/towns/Town'
+import { usePartyStore } from '~/stores/party'
+import type { BattlePokemon } from '~/scripts/pokemons/BattlePokemon'
 export const usePlayerStore = defineStore({
-  id: 'statistics',
+  id: 'player',
   state: () => ({
     /** @type {string[]} */
     _id: '',
@@ -12,6 +14,7 @@ export const usePlayerStore = defineStore({
     _region: GameConstants.Region.kanto,
     _highestRegion: GameConstants.Region.kanto,
     _town: null as Town | null,
+    _starter: null as GameConstants.Starter | null,
   }),
   getters: {
     town: (state): Town | null => {
@@ -22,6 +25,9 @@ export const usePlayerStore = defineStore({
     },
     region: (state): GameConstants.Region | null => {
       return state._region
+    },
+    starter: (state): GameConstants.Starter | null => {
+      return state._starter
     },
   },
   actions: {
@@ -34,30 +40,9 @@ export const usePlayerStore = defineStore({
     setRegion(region: GameConstants.Region) {
       this._region = region
     },
-    /**
-     * Add item to the cart
-     * @param {string} name
-     */
-    /* addItem(name) {
-      this.rawItems.push(name)
-    }, */
-
-    /**
-     * Remove item from the cart
-     * @param {string} name
-     */
-    /* removeItem(name) {
-      const i = this.rawItems.lastIndexOf(name)
-      if (i > -1) this.rawItems.splice(i, 1)
+    setStarter(starter: GameConstants.Starter) {
+      this._starter = starter
     },
-
-    async purchaseItems() {
-      console.log('Purchasing', this.items)
-      const n = this.items.length
-      this.rawItems = []
-
-      return n
-    }, */
   },
 })
 

@@ -20,6 +20,7 @@ import OakItemType from '~/modules/enums/OakItemType'
 import Amount from '~/modules/wallet/Amount'
 import Notifier from '~/modules/notifications/Notifier'
 import NotificationConstants from '~/modules/notifications/NotificationConstants'
+import { PartyPokemon } from '~/scripts/party/PartyPokemon'
 export class PokemonFactory {
   /**
      * Generate a wild pokemon based on route, region and the dataList.

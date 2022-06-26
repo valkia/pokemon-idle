@@ -3,6 +3,7 @@
 import type { PokemonNameType } from '~/enums/PokemonNameType'
 import { Evolution } from '~/enums/Evolution'
 import { EvolutionType } from '~/enums/EvolutionType'
+import { PokemonHelper } from '~/scripts/pokemons/PokemonHelper'
 
 export class LevelEvolution extends Evolution {
   triggered: boolean

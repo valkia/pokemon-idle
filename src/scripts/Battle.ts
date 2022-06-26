@@ -98,7 +98,7 @@ export class Battle {
 
     // App.game.breeding.progressEggsBattle(Battle.route, player.region)
     const isShiny: boolean = enemyPokemon.shiny
-    const pokeBall: GameConstants.Pokeball = App.game.pokeballs.calculatePokeballToUse(enemyPokemon.id, isShiny)
+    /*    const pokeBall: GameConstants.Pokeball = App.game.pokeballs.calculatePokeballToUse(enemyPokemon.id, isShiny)
 
     if (pokeBall !== GameConstants.Pokeball.None) {
       this.prepareCatch(enemyPokemon, pokeBall)
@@ -110,12 +110,12 @@ export class Battle {
         },
         App.game.pokeballs.calculateCatchTime(pokeBall),
       )
-    }
-    else {
-      this.generateNewEnemy()
-    }
+    } */
+    // else {
+    this.generateNewEnemy()
+    // }
     this.gainItem()
-    player.lowerItemMultipliers(MultiplierDecreaser.Battle)
+    // player.lowerItemMultipliers(MultiplierDecreaser.Battle)
   }
 
   /**

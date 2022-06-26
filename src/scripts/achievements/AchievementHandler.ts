@@ -76,7 +76,7 @@ export class AchievementHandler {
 
   public static calculateMaxBonus() {
     GameHelper.enumNumbers(GameConstants.Region).forEach((region) => {
-      AchievementHandler.maxBonus()[region] = AchievementHandler.achievementList.filter(a => a.region == region && a.achievable()).reduce((sum, a) => sum + a.bonus, 0)
+      this.maxBonus[region] = AchievementHandler.achievementList.filter(a => a.region == region && a.achievable()).reduce((sum, a) => sum + a.bonus, 0)
     })
   }
 

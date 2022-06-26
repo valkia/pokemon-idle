@@ -13,6 +13,8 @@ import * as GameConstants from '~/enums/GameConstants'
 import Notifier from '~/modules/notifications/Notifier'
 import NotificationConstants from '~/modules/notifications/NotificationConstants'
 import { LogBookTypes } from '~/modules/logbook/LogBookTypes'
+import { useWalletStore } from '~/stores/wallet'
+import { usePartyStore } from '~/stores/party'
 export class BattlePokemon implements EnemyPokemonInterface {
   health: number
   maxHealth: number
@@ -66,15 +68,15 @@ export class BattlePokemon implements EnemyPokemonInterface {
   }
 
   public defeat(trainer = false): void {
-    GameHelper.incrementObservable(App.game.statistics.pokemonDefeated[this.id])
+    /* GameHelper.incrementObservable(App.game.statistics.pokemonDefeated[this.id])
     GameHelper.incrementObservable(App.game.statistics.totalPokemonDefeated)
     if (this.shiny) {
       GameHelper.incrementObservable(App.game.statistics.shinyPokemonDefeated[this.id])
       GameHelper.incrementObservable(App.game.statistics.totalShinyPokemonDefeated)
-    }
-
+    } */
+    const wallet = useWalletStore()
     if (this.reward.amount > 0)
-      App.game.wallet.addAmount(this.reward)
+      wallet.addAmount(this.reward)
 
     if (this.heldItem) {
       const name = BagHandler.displayName(this.heldItem)
@@ -87,8 +89,9 @@ export class BattlePokemon implements EnemyPokemonInterface {
       })
       App.game.logbook.newLog(LogBookTypes.FOUND, `An enemy ${msg}`)
     }
-    App.game.party.gainExp(this.exp, this.level, trainer)
-    App.game.gems.gainGems(this.gemReward, this.type1)
-    App.game.gems.gainGems(this.gemReward, this.type2)
+    const partyStore = usePartyStore()
+    partyStore.gainExp(this.exp, this.level, trainer)
+    /*    App.game.gems.gainGems(this.gemReward, this.type1)
+    App.game.gems.gainGems(this.gemReward, this.type2) */
   }
 }
