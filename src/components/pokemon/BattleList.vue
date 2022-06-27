@@ -1,5 +1,4 @@
 <template>
-  <div>111</div>
   <div v-for="pokemon in pokemonList">
     <img :src="pokemonImgUrl(pokemon)" class="avatar">
     <div>{{ t(`pokemon.${pokemon.name}`) }}</div>
@@ -12,16 +11,14 @@ import type { BattlePokemon } from '~/scripts/pokemons/BattlePokemon'
 import { Battle } from '~/scripts/Battle'
 import { useBattleStore } from '~/stores/battle'
 import { usePartyStore } from '~/stores/party'
+import type { PartyPokemon } from '~/scripts/party/PartyPokemon'
 const { t, locale } = useI18n()
 console.log('locale', locale.value)
 const pokemonList = computed(() => {
   return usePartyStore().caughtPokemon
 })
-const pokemonImgUrl = (pokemon) => {
+const pokemonImgUrl = (pokemon: PartyPokemon) => {
   return `/src/assets/images/pokemon/${pokemon.id}.png`
-}
-const enemyClick = () => {
-  Battle.clickAttack()
 }
 </script>
 

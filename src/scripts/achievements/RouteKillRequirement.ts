@@ -14,8 +14,9 @@ export default class RouteKillRequirement extends AchievementRequirement {
 
   public getProgress() {
     const statistics = useStatisticsStore()
-    // const routeKills = statistics.routeKills[this.region][this.route]
-    return Math.min(0, this.requiredValue)
+    const routeKills = statistics.getRouteKills(this.region, this.route)
+    console.log('routeKills', routeKills)
+    return Math.min(routeKills, this.requiredValue)
   }
 
   public hint(): string {

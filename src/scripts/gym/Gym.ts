@@ -19,7 +19,17 @@ interface gymFlags {
   quest?: boolean
   achievement?: boolean
 }
-
+enum areaStatus {
+  currentLocation,
+  locked,
+  unlockedUnfinished,
+  questAtLocation,
+  uncaughtPokemon,
+  uncaughtShinyPokemonAndMissingAchievement,
+  uncaughtShinyPokemon,
+  missingAchievement,
+  completed,
+}
 /**
  * Gym class.
  */

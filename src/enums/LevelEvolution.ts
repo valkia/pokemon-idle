@@ -4,6 +4,7 @@ import type { PokemonNameType } from '~/enums/PokemonNameType'
 import { Evolution } from '~/enums/Evolution'
 import { EvolutionType } from '~/enums/EvolutionType'
 import { PokemonHelper } from '~/scripts/pokemons/PokemonHelper'
+import { usePartyStore } from '~/stores/party'
 
 export class LevelEvolution extends Evolution {
   triggered: boolean
@@ -22,9 +23,10 @@ export class LevelEvolution extends Evolution {
   }
 
   isSatisfied(): boolean {
+    const party = usePartyStore()
     return super.isSatisfied()
             // Check high enough level
-            && App.game.party.getPokemon(PokemonHelper.getPokemonByName(this.basePokemon).id).level >= this.level
+            && party.getPokemon(PokemonHelper.getPokemonByName(this.basePokemon).id).level >= this.level
   }
 
   evolve(): boolean {

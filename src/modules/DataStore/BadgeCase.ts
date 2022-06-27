@@ -16,7 +16,7 @@ export default class BadgeCase implements Feature {
 
   defaults: Record<string, any> = {}
 
-  badgeList: Array<Ref<boolean>> = emptyBadgeList.map(v => ref(v))
+  badgeList: Array<boolean> = emptyBadgeList.map(v => v)
 
   maxLevel: ComputedRef<number> = computed(() => Math.min(100, (this.badgeCount() + 2) * 10))
 
@@ -27,7 +27,7 @@ export default class BadgeCase implements Feature {
   })
 
   badgeCount(): number {
-    return this.badgeList.reduce((acc, b) => (acc + Number(b())), 0)
+    return this.badgeList.reduce((acc, b) => (acc + Number(b)), 0)
   }
 
   gainBadge(badge: BadgeEnums): void {

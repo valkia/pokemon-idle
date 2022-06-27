@@ -1,5 +1,12 @@
 import type { PokemonNameType } from '~/enums/PokemonNameType'
-
+import { PokemonHelper } from '~/scripts/pokemons/PokemonHelper'
+import App from '~/scripts/App'
+import NotificationConstants from '~/modules/notifications/NotificationConstants'
+import { PokemonFactory } from '~/scripts/pokemons/PokemonFactory'
+import Notifier from '~/modules/notifications/Notifier'
+import type { EvolutionType } from '~/enums/EvolutionType'
+import * as GameConstants from '~/enums/GameConstants'
+import { usePlayerStore } from '~/stores/player'
 export abstract class Evolution {
   type: EvolutionType[]
 
@@ -11,7 +18,8 @@ export abstract class Evolution {
 
   isSatisfied(): boolean {
     // Check that evolution is within reached regions
-    return PokemonHelper.calcNativeRegion(this.getEvolvedPokemon()) <= player.highestRegion()
+    const player = usePlayerStore()
+    return PokemonHelper.calcNativeRegion(this.getEvolvedPokemon()) <= player.highestRegion
   }
 
   abstract getEvolvedPokemon(): PokemonNameType
@@ -20,7 +28,8 @@ export abstract class Evolution {
     const evolvedPokemon = this.getEvolvedPokemon()
 
     // This Pokemon is from a region we haven't reached yet
-    if (PokemonHelper.calcNativeRegion(evolvedPokemon) > player.highestRegion())
+    const player = usePlayerStore()
+    if (PokemonHelper.calcNativeRegion(evolvedPokemon) > player.highestRegion)
       return false
 
     // Notify the player if they haven't already caught the evolution, or notifications are forced

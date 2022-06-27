@@ -29,6 +29,9 @@ export const usePlayerStore = defineStore({
     starter: (state): GameConstants.Starter | null => {
       return state._starter
     },
+    highestRegion: (state): GameConstants.Region => {
+      return state._highestRegion
+    },
   },
   actions: {
     setRoute(route: number) {

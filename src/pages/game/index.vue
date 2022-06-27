@@ -5,7 +5,7 @@
     <KantoSVG />
     <Notificaton />
     <pickStarterTutorialModal />
-    <starterCaught />
+    <!--    <starterCaught />-->
     <BattleList />
   </div>
 </template>

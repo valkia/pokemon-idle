@@ -13,6 +13,7 @@ import { LogBookTypes } from '~/modules/logbook/LogBookTypes'
 import OakItemType from '~/modules/enums/OakItemType'
 import { useBattleStore } from '~/stores/battle'
 import { usePartyStore } from '~/stores/party'
+import { useStatisticsStore } from '~/stores/statistics'
 /**
  * Handles all logic related to battling
  */
@@ -93,8 +94,8 @@ export class Battle {
     const enemyPokemon = battleStore.enemyPokemon
     Battle.route = player.route
     enemyPokemon?.defeat()
-
-    // GameHelper.incrementObservable(App.game.statistics.routeKills[player.region][Battle.route])
+    const statistics = useStatisticsStore()
+    statistics.setRouteKills(player.region, Battle.route)
 
     // App.game.breeding.progressEggsBattle(Battle.route, player.region)
     const isShiny: boolean = enemyPokemon.shiny

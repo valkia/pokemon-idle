@@ -20,7 +20,6 @@ export default class Settings {
   }
 
   static getSetting(name: string): Setting<any> {
-    console.log('this.list', this.list)
     return this.list.find(setting => setting.name === name) || null
   }
 

@@ -1,5 +1,6 @@
 // @ts-check
 import { acceptHMRUpdate, defineStore } from 'pinia'
+import type * as GameConstants from '~/enums/GameConstants'
 
 export const useStatisticsStore = defineStore({
   id: 'statistics',
@@ -32,7 +33,7 @@ export const useStatisticsStore = defineStore({
     capturedPokemonList: [], // 抓捕到的宝可梦列表
 
     // Battle
-    routeKills: {} as Record<string, Record<string, number>>,
+    _routeKills: {} as Record<string, Record<string, number>>,
     gymsDefeated: [0],
     dungeonsCleared: [0],
     temporaryBattleDefeated: [0],
@@ -41,10 +42,25 @@ export const useStatisticsStore = defineStore({
     totalMoney: (state): any => {
       return state._totalMoney
     },
+    routeKills: (state): any => {
+      return state._routeKills
+    },
   },
   actions: {
     setTotalMoney(number: number) {
       this._totalMoney = number
+    },
+    setRouteKills(region: GameConstants.Region, route: number) {
+      const value = this.getRouteKills(region, route)
+      const tmp = this._routeKills[region] || {}
+      console.log('setRouteKills', region, route, value)
+      tmp[route] = value + 1
+      this._routeKills[region] = tmp
+    },
+    getRouteKills(region: GameConstants.Region, route: number) {
+      const tmp = this._routeKills[region] || {}
+      const tmp2 = tmp[route] || 0
+      return tmp2
     },
   },
 })

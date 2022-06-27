@@ -161,6 +161,7 @@ export default class MapHelper {
   public static accessToTown(townName: string): boolean {
     const dataStore = useDataStore()
     const town = dataStore.TownList[townName]
+    console.log('town', town)
     if (!town)
       return false
 

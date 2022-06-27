@@ -16,7 +16,6 @@ export default class NotificationSetting {
       this.inGameNotification = new BooleanSetting(name, displayName, defaultValueInGame ?? false)
 
     this.desktopNotification = new BooleanSetting(`${name}.desktop`, displayName, false)
-    console.log('this.desktopNotification.observableValue', this.desktopNotification.observableValue)
     this.desktopNotification.observableValue && this.desktopNotification.observableValue.subscribe((changedTo) => {
       if (changedTo) {
         if (!('Notification' in window)) {
