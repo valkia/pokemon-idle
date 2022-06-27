@@ -20,7 +20,7 @@
           To help you on your journey, I will give you these <b>Key Items</b>!<br>
           You can view all your <b>Key Items</b> in the start menu.<br>
         </p>
-        <div class="row justify-content-center">
+        <div class="row justify-content-center" flex justify-around>
           <div class="col-sm-3">
             <img
               title="A television set that is tuned to a program with useful tips for novice TRAINERS."
