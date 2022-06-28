@@ -1,18 +1,40 @@
-/// <reference path="../declarations/DataStore/BadgeCase.d.ts" />
-/// <reference path="../declarations/GameHelper.d.ts" />
-/// <reference path="../declarations/party/Category.d.ts"/>
-
 /**
  * Main game class.
  */
-
 import * as GameConstants from '~/enums/GameConstants'
+import {AchievementHandler} from "~/scripts/achievements/AchievementHandler";
+import {usePlayerStore} from "~/stores/player";
+import {Battle} from "~/scripts/Battle";
+import App from "~/scripts/App";
+import BadgeCase from "~/modules/DataStore/BadgeCase";
+import KeyItemType from "~/modules/enums/KeyItemType";
+import {BattleFrontierRunner} from "~/scripts/battleFrontier/BattleFrontierRunner";
+import Settings from "~/modules/settings";
+import Notifier from "~/modules/notifications/Notifier";
+import LogBook from "~/modules/logbook/LogBook";
+import {PokemonFactory} from "~/scripts/pokemons/PokemonFactory";
+import {BattleFrontierBattle} from "~/scripts/battleFrontier/BattleFrontierBattle";
+import GameHelper from "~/enums/GameHelper";
+import KeyItems from "~/modules/keyItems/KeyItems";
+import MapHelper from "~/scripts/worldmap/MapHelper";
+import {StartSequenceRunner} from "~/scripts/StartSequenceRunner";
+import Multiplier from "~/modules/multiplier/Multiplier";
+import Amount from "~/modules/wallet/Amount";
+import {RouteHelper} from "~/scripts/wildBattle/RouteHelper";
+import Statistics from "~/modules/DataStore/StatisticStore";
+import {RoamingPokemonList} from "~/scripts/pokemons/RoamingPokemonList";
+import Weather from "~/enums/Weather";
+import NotificationConstants from "~/modules/notifications/NotificationConstants";
+import {BattlePokemon} from "~/scripts/pokemons/BattlePokemon";
+import PokemonType from "~/modules/enums/PokemonType";
+import {pokemonMap} from "~/data/PokemonList";
+import {Save} from "~/scripts/Save";
 export class Game {
   public static achievementCounter = 0
 
   // Features
 
-  private _gameState: KnockoutObservable<GameConstants.GameState>
+  private _gameState: GameConstants.GameState
   private worker: Worker
 
   /**
@@ -44,7 +66,7 @@ export class Game {
     public battleFrontier: BattleFrontier,
     public multiplier: Multiplier,
   ) {
-    this._gameState = ko.observable(GameConstants.GameState.paused)
+    this._gameState = GameConstants.GameState.paused
   }
 
   load() {
@@ -82,43 +104,44 @@ export class Game {
 
     // Update if the achievements are already completed
     AchievementHandler.preCheckAchievements()
-
+    const player = usePlayerStore()
     // TODO refactor to proper initialization methods
-    if (player.starter() != GameConstants.Starter.None) {
+    if (player.starter != GameConstants.Starter.None) {
       Battle.generateNewEnemy()
     }
     else {
       const battlePokemon = new BattlePokemon('MissingNo.', 0, PokemonType.None, PokemonType.None, 0, 0, 0, 0, new Amount(0, GameConstants.Currency.money), false)
-      Battle.enemyPokemon(battlePokemon)
+      Battle.enemyPokemon = (battlePokemon)
     }
     this.farming.resetAuras()
     // Safari.load();
-    Underground.energyTick(this.underground.getEnergyRegenTime())
+    //Underground.energyTick(this.underground.getEnergyRegenTime())
     AchievementHandler.calculateMaxBonus() // recalculate bonus based on active challenges
 
     const now = new Date()
-    SeededDateRand.seedWithDate(now)
-    DailyDeal.generateDeals(this.underground.getDailyDealsMax(), now)
-    BerryDeal.generateDeals(now)
+    //SeededDateRand.seedWithDate(now)
+    //DailyDeal.generateDeals(this.underground.getDailyDealsMax(), now)
+    //BerryDeal.generateDeals(now)
     Weather.generateWeather(now)
-    GemDeal.generateDeals()
+    //GemDeal.generateDeals()
     RoamingPokemonList.generateIncreasedChanceRoutes(now)
 
     this.computeOfflineEarnings()
     this.checkAndFix()
 
     // If the player isn't on a route, they're in a town/dungeon
-    this.gameState = player.route() ? GameConstants.GameState.fighting : GameConstants.GameState.town
+    this.gameState = player.route ? GameConstants.GameState.fighting : GameConstants.GameState.town
   }
 
   computeOfflineEarnings() {
     const now = Date.now()
+    const player = usePlayerStore()
     const timeDiffInSeconds = Math.floor((now - player._lastSeen) / 1000)
     if (timeDiffInSeconds > 1) {
       // Only allow up to 24 hours worth of bonuses
       const timeDiffOverride = Math.min(86400, timeDiffInSeconds)
       let region: GameConstants.Region = player.region
-      let route: number = player.route() || GameConstants.StartingRoutes[region]
+      let route: number = player.route || GameConstants.StartingRoutes[region]
       if (!MapHelper.validRoute(route, region)) {
         route = 1
         region = GameConstants.Region.kanto
@@ -138,7 +161,7 @@ export class Game {
       if (numberOfPokemonDefeated === 0)
         return
 
-      const routeMoney: number = PokemonFactory.routeMoney(player.route(), player.region, false)
+      const routeMoney: number = PokemonFactory.routeMoney(player.route, player.region, false)
       const baseMoneyToEarn = numberOfPokemonDefeated * routeMoney
       const moneyToEarn = Math.floor(baseMoneyToEarn * 0.5)// Debuff for offline money
       App.game.wallet.gainMoney(moneyToEarn, true)
@@ -155,13 +178,14 @@ export class Game {
   }
 
   checkAndFix() {
+    const player = usePlayerStore()
     // Quest box not showing (game thinking tutorial is not completed)
     if (App.game.quests.getQuestLine('Tutorial Quests').state() == QuestLineState.inactive) {
       if (App.game.statistics.gymsDefeated[GameConstants.getGymIndex('Pewter City')]() >= 1) {
         // Defeated Brock, Has completed the Tutorial
         App.game.quests.getQuestLine('Tutorial Quests').state(QuestLineState.ended)
       }
-      else if (player.starter() >= 0) {
+      else if (player.starter >= 0) {
         // Has chosen a starter, Tutorial is started
         App.game.quests.getQuestLine('Tutorial Quests').state(QuestLineState.started)
         App.game.quests.getQuestLine('Tutorial Quests').beginQuest(App.game.quests.getQuestLine('Tutorial Quests').curQuest())
@@ -208,8 +232,9 @@ export class Game {
   }
 
   start() {
+    const player = usePlayerStore()
     console.log(`[${GameConstants.formatDate(new Date())}] %cGame started`, 'color:#2ecc71;font-weight:900;')
-    if (player.starter() === GameConstants.Starter.None)
+    if (player.starter === GameConstants.Starter.None)
       StartSequenceRunner.start()
 
     let pageHidden = document.hidden
@@ -217,7 +242,7 @@ export class Game {
     // requestAnimationFrame (consistent if page visible)
     let lastFrameTime = 0
     let ticks = 0
-    const tick = (currentFrameTime) => {
+    const tick = (currentFrameTime:number) => {
       // Don't process while page hidden
       if (pageHidden) {
         this.frameRequest = requestAnimationFrame(tick)
@@ -295,6 +320,7 @@ export class Game {
 
   gameTick() {
     // Acheivements
+    const player = usePlayerStore()
     Game.achievementCounter += GameConstants.TICK_TIME
     if (Game.achievementCounter >= GameConstants.ACHIEVEMENT_TICK) {
       Game.achievementCounter = 0
@@ -320,27 +346,27 @@ export class Game {
         break
       }
       case GameConstants.GameState.dungeon: {
-        DungeonBattle.counter += GameConstants.TICK_TIME
+        /*DungeonBattle.counter += GameConstants.TICK_TIME
         if (DungeonBattle.counter >= GameConstants.BATTLE_TICK)
           DungeonBattle.tick()
 
-        DungeonRunner.tick()
+        DungeonRunner.tick()*/
         break
       }
       case GameConstants.GameState.battleFrontier: {
-        BattleFrontierBattle.counter += GameConstants.TICK_TIME
+        /*BattleFrontierBattle.counter += GameConstants.TICK_TIME
         if (BattleFrontierBattle.counter >= GameConstants.BATTLE_FRONTIER_TICK)
           BattleFrontierBattle.tick()
 
-        BattleFrontierRunner.tick()
+        BattleFrontierRunner.tick()*/
         break
       }
       case GameConstants.GameState.temporaryBattle: {
-        TemporaryBattleBattle.counter += GameConstants.TICK_TIME
+        /*TemporaryBattleBattle.counter += GameConstants.TICK_TIME
         if (TemporaryBattleBattle.counter >= GameConstants.BATTLE_TICK)
           TemporaryBattleBattle.tick()
 
-        TemporaryBattleRunner.tick()
+        TemporaryBattleRunner.tick()*/
         break
       }
     }
@@ -353,12 +379,12 @@ export class Game {
 
       // Check if it's a new day
       if (old.toLocaleDateString() !== now.toLocaleDateString()) {
-        SeededDateRand.seedWithDate(now)
+        //SeededDateRand.seedWithDate(now)
         // Give the player a free quest refresh
         this.quests.freeRefresh(true)
         // Refresh the Underground deals
-        DailyDeal.generateDeals(this.underground.getDailyDealsMax(), now)
-        BerryDeal.generateDeals(now)
+        //DailyDeal.generateDeals(this.underground.getDailyDealsMax(), now)
+        //BerryDeal.generateDeals(now)
         if (this.underground.canAccess() || App.game.quests.isDailyQuestsUnlocked()) {
           Notifier.notify({
             title: 'It\'s a new day!',
@@ -368,7 +394,7 @@ export class Game {
             timeout: 3e4,
           })
         }
-        DayOfWeekRequirement.date(now.getDay())
+        //DayOfWeekRequirement.date(now.getDay())
       }
 
       // Check if it's a new hour
@@ -381,7 +407,7 @@ export class Game {
     }
 
     // Underground
-    Underground.counter += GameConstants.TICK_TIME
+    /*Underground.counter += GameConstants.TICK_TIME
     if (Underground.counter >= GameConstants.UNDERGROUND_TICK) {
       Underground.energyTick(Math.max(0, Underground.energyTick() - 1))
       if (Underground.energyTick() == 0) {
@@ -403,7 +429,7 @@ export class Game {
 
     FluteEffectRunner.counter += GameConstants.TICK_TIME
     if (FluteEffectRunner.counter >= GameConstants.EFFECT_ENGINE_TICK)
-      FluteEffectRunner.tick()
+      FluteEffectRunner.tick()*/
 
     // Game timers
     GameHelper.counter += GameConstants.TICK_TIME
@@ -412,16 +438,17 @@ export class Game {
   }
 
   save() {
+    const player = usePlayerStore()
     player._lastSeen = Date.now()
     Save.store(player)
   }
 
   // Knockout getters/setters
   get gameState() {
-    return this._gameState()
+    return this._gameState
   }
 
   set gameState(value) {
-    this._gameState(value)
+    this._gameState = (value)
   }
 }

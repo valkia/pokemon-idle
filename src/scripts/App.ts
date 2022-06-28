@@ -1,10 +1,10 @@
-/// <reference path="../declarations/DataStore/BadgeCase.d.ts" />
 
 import { Game } from '~/scripts/Game'
 import Multiplier from '~/modules/multiplier/Multiplier'
 import * as GameConstants from '~/enums/GameConstants'
 import KeyItems from '~/modules/keyItems/KeyItems'
 import LogBook from '~/modules/logbook/LogBook'
+import {Preload} from "~/scripts/utilities/Preload";
 export default class App {
   static readonly debug = false
   static game: Game

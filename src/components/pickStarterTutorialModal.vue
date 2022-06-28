@@ -1,5 +1,5 @@
 <template>
-  <div v-if="show" id="popup-modal" tabindex="-1" class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 md:inset-0 h-modal md:h-full">
+  <div v-if="show" id="popup-modal" tabindex="-1" class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full justify-center items-center flex">
     <div class="relative p-4 w-full max-w-md h-full md:h-auto">
       <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
         <button
@@ -62,6 +62,7 @@
       </div>
     </div>
   </div>
+  <div v-if="show" modal-backdrop="" class="bg-gray-900 bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40"></div>
 </template>
 
 <script setup>
@@ -73,21 +74,21 @@ const toggleShow = useToggle(show)
 const bulbasaur = () => {
   StartSequenceRunner.pickStarter(GameConstants.Starter.Bulbasaur)
   const player = usePlayerStore()
-  // player.regionStarters[0](0)
+  player.setRegionStarters(0,0)
   toggleShow()
 }
 
 const charmander = () => {
   StartSequenceRunner.pickStarter(GameConstants.Starter.Charmander)
   const player = usePlayerStore()
-  // player.regionStarters[0](1)
+  player.setRegionStarters(0,1)
   toggleShow()
 }
 
 const squirtle = () => {
   StartSequenceRunner.pickStarter(GameConstants.Starter.Squirtle)
   const player = usePlayerStore()
-  // player.regionStarters[0](2)
+  player.setRegionStarters(0,2)
   toggleShow()
 }
 </script>
