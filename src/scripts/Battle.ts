@@ -99,22 +99,21 @@ export class Battle {
 
     // App.game.breeding.progressEggsBattle(Battle.route, player.region)
     const isShiny: boolean = enemyPokemon.shiny
-    /*    const pokeBall: GameConstants.Pokeball = App.game.pokeballs.calculatePokeballToUse(enemyPokemon.id, isShiny)
+        const pokeBall: GameConstants.Pokeball = App.game.pokeballs.calculatePokeballToUse(enemyPokemon.id, isShiny)
 
     if (pokeBall !== GameConstants.Pokeball.None) {
       this.prepareCatch(enemyPokemon, pokeBall)
       setTimeout(
-        () => {
-          this.attemptCatch(enemyPokemon)
-          if (Battle.route != 0)
-            this.generateNewEnemy()
-        },
-        App.game.pokeballs.calculateCatchTime(pokeBall),
+          () => {
+            this.attemptCatch(enemyPokemon)
+            if (Battle.route != 0)
+              this.generateNewEnemy()
+          },
+          App.game.pokeballs.calculateCatchTime(pokeBall),
       )
-    } */
-    // else {
-    this.generateNewEnemy()
-    // }
+    } else {
+      this.generateNewEnemy()
+    }
     this.gainItem()
     // player.lowerItemMultipliers(MultiplierDecreaser.Battle)
   }
@@ -181,9 +180,10 @@ export class Battle {
   public static catchPokemon(enemyPokemon: BattlePokemon) {
     const player = usePlayerStore()
     const catchRoute = Battle.route || player.town?.dungeon?.difficultyRoute || 1
-    App.game.wallet.gainDungeonTokens(PokemonFactory.routeDungeonTokens(catchRoute, player.region))
-    App.game.oakItems.use(OakItemType.Magic_Ball)
-    App.game.party.gainPokemonById(enemyPokemon.id, enemyPokemon.shiny)
+    //App.game.wallet.gainDungeonTokens(PokemonFactory.routeDungeonTokens(catchRoute, player.region))
+    //App.game.oakItems.use(OakItemType.Magic_Ball)
+    const party = usePartyStore()
+    party.gainPokemonById(enemyPokemon.id, enemyPokemon.shiny)
   }
 
   static gainItem() {
