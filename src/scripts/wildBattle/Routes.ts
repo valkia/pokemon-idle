@@ -11,7 +11,7 @@ import ClearDungeonRequirement from '~/scripts/achievements/ClearDungeonRequirem
 import ObtainedPokemonRequirement from '~/scripts/achievements/ObtainedPokemonRequirement'
 import MultiRequirement from '~/scripts/achievements/MultiRequirement'
 import WeatherRequirement from '~/scripts/achievements/WeatherRequirement'
-import { pokemonMap } from '~/data/PokemonList'
+import { pokemonMap } from '~/scripts/pokemons/PokemonList'
 import WeatherType from '~/enums/WeatherType'
 export default class Routes {
   public static regionRoutes: RegionRoute[] = []

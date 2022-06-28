@@ -1,5 +1,3 @@
-/// <reference path="Evolution.ts"/>
-/// <reference path="EvolutionType.ts"/>
 import type { PokemonNameType } from '~/enums/PokemonNameType'
 import { Evolution } from '~/enums/Evolution'
 import { EvolutionType } from '~/enums/EvolutionType'
@@ -34,9 +32,9 @@ export class LevelEvolution extends Evolution {
       return false
 
     this.triggered = true
-
+    const party = usePartyStore()
     // We have already obtained the evolution
-    if (App.game.party.alreadyCaughtPokemonByName(this.getEvolvedPokemon()))
+    if (party.alreadyCaughtPokemonByName(this.getEvolvedPokemon()))
       return false
 
     return super.evolve(true)

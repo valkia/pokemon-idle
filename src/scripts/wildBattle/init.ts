@@ -8,10 +8,10 @@ import ClearDungeonRequirement from '~/scripts/achievements/ClearDungeonRequirem
 import OneFromManyRequirement from '~/scripts/achievements/OneFromManyRequirement'
 import MultiRequirement from '~/scripts/achievements/MultiRequirement'
 import ObtainedPokemonRequirement from '~/scripts/achievements/ObtainedPokemonRequirement'
-import { pokemonMap } from '~/data/PokemonList'
 import WeatherRequirement from '~/scripts/achievements/WeatherRequirement'
 import WeatherType from '~/enums/WeatherType'
 import Routes from '~/scripts/wildBattle/Routes'
+import { pokemonMap } from '~/scripts/pokemons/PokemonList'
 
 export const init = () => {
   /*

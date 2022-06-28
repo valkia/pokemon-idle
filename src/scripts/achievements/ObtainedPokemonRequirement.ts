@@ -2,8 +2,8 @@
 
 import Requirement from '~/scripts/achievements/Requirement'
 import App from '~/scripts/App'
-import type { PokemonListData } from '~/data/PokemonList'
-import { pokemonMap } from '~/data/PokemonList'
+import type { PokemonListData } from '~/scripts/pokemons/PokemonList'
+import { pokemonMap } from '~/scripts/pokemons/PokemonList'
 import * as GameConstants from '~/enums/GameConstants'
 export default class ObtainedPokemonRequirement extends Requirement {
   public pokemonID: number

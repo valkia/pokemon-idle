@@ -14,6 +14,7 @@ import OakItemType from '~/modules/enums/OakItemType'
 import { useBattleStore } from '~/stores/battle'
 import { usePartyStore } from '~/stores/party'
 import { useStatisticsStore } from '~/stores/statistics'
+import { Pokeballs } from '~/scripts/pokeballs/Pokeballs'
 /**
  * Handles all logic related to battling
  */
@@ -99,19 +100,20 @@ export class Battle {
 
     // App.game.breeding.progressEggsBattle(Battle.route, player.region)
     const isShiny: boolean = enemyPokemon.shiny
-        const pokeBall: GameConstants.Pokeball = App.game.pokeballs.calculatePokeballToUse(enemyPokemon.id, isShiny)
-
+    const pokeBall: GameConstants.Pokeball = new Pokeballs().calculatePokeballToUse(enemyPokemon.id, isShiny)
+    console.log('pokeBall', pokeBall)
     if (pokeBall !== GameConstants.Pokeball.None) {
       this.prepareCatch(enemyPokemon, pokeBall)
       setTimeout(
-          () => {
-            this.attemptCatch(enemyPokemon)
-            if (Battle.route != 0)
-              this.generateNewEnemy()
-          },
-          App.game.pokeballs.calculateCatchTime(pokeBall),
+        () => {
+          this.attemptCatch(enemyPokemon)
+          if (Battle.route != 0)
+            this.generateNewEnemy()
+        },
+        new Pokeballs().calculateCatchTime(pokeBall),
       )
-    } else {
+    }
+    else {
       this.generateNewEnemy()
     }
     this.gainItem()
@@ -144,8 +146,9 @@ export class Battle {
   }
 
   protected static calculateActualCatchRate(enemyPokemon: BattlePokemon, pokeBall: GameConstants.Pokeball) {
-    const pokeballBonus = App.game.pokeballs.getCatchBonus(pokeBall)
-    const oakBonus = App.game.oakItems.calculateBonus(OakItemType.Magic_Ball)
+    const pokeballBonus = new Pokeballs().getCatchBonus(pokeBall)
+    // const oakBonus = App.game.oakItems.calculateBonus(OakItemType.Magic_Ball)
+    const oakBonus = 0
     const totalChance = GameConstants.clipNumber(enemyPokemon.catchRate + pokeballBonus + oakBonus, 0, 100)
     return totalChance
   }
@@ -154,34 +157,36 @@ export class Battle {
     this.pokeball.value = (pokeBall)
     this.catching.value = (true)
     this.catchRateActual.value = (this.calculateActualCatchRate(enemyPokemon, pokeBall))
-    App.game.pokeballs.usePokeball(pokeBall)
+    new Pokeballs().usePokeball(pokeBall)
   }
 
   protected static attemptCatch(enemyPokemon: BattlePokemon) {
     const partyStore = usePartyStore()
     const battleStore = useBattleStore()
     if (enemyPokemon == null) {
-      battleStore.setCatching(false)
+      this.catching.value = (false)
       return
     }
     if (Rand.chance(this.catchRateActual.value / 100)) { // Caught
       this.catchPokemon(enemyPokemon)
     }
     else if (enemyPokemon.shiny) { // Failed to catch, Shiny
-      App.game.logbook.newLog(LogBookTypes.ESCAPED, `The Shiny ${enemyPokemon.name} escaped!`)
+      // App.game.logbook.newLog(LogBookTypes.ESCAPED, `The Shiny ${enemyPokemon.name} escaped!`)
+      console.log(`The Shiny ${enemyPokemon.name} escaped!`)
     }
     else if (!partyStore.alreadyCaughtPokemon(enemyPokemon.id)) { // Failed to catch, Uncaught
-      App.game.logbook.newLog(LogBookTypes.ESCAPED, `The wild ${enemyPokemon.name} escaped!`)
+      // App.game.logbook.newLog(LogBookTypes.ESCAPED, `The wild ${enemyPokemon.name} escaped!`)
+      console.log(`The wild ${enemyPokemon.name} escaped!`)
     }
-    battleStore.setCatching(false)
+    this.catching.value = (false)
     battleStore.setCatchRateActual(0)
   }
 
   public static catchPokemon(enemyPokemon: BattlePokemon) {
     const player = usePlayerStore()
     const catchRoute = Battle.route || player.town?.dungeon?.difficultyRoute || 1
-    //App.game.wallet.gainDungeonTokens(PokemonFactory.routeDungeonTokens(catchRoute, player.region))
-    //App.game.oakItems.use(OakItemType.Magic_Ball)
+    // App.game.wallet.gainDungeonTokens(PokemonFactory.routeDungeonTokens(catchRoute, player.region))
+    // App.game.oakItems.use(OakItemType.Magic_Ball)
     const party = usePartyStore()
     party.gainPokemonById(enemyPokemon.id, enemyPokemon.shiny)
   }

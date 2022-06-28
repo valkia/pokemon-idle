@@ -2,33 +2,7 @@
  * Main game class.
  */
 import * as GameConstants from '~/enums/GameConstants'
-import {AchievementHandler} from "~/scripts/achievements/AchievementHandler";
-import {usePlayerStore} from "~/stores/player";
-import {Battle} from "~/scripts/Battle";
-import App from "~/scripts/App";
-import BadgeCase from "~/modules/DataStore/BadgeCase";
-import KeyItemType from "~/modules/enums/KeyItemType";
-import {BattleFrontierRunner} from "~/scripts/battleFrontier/BattleFrontierRunner";
-import Settings from "~/modules/settings";
-import Notifier from "~/modules/notifications/Notifier";
-import LogBook from "~/modules/logbook/LogBook";
-import {PokemonFactory} from "~/scripts/pokemons/PokemonFactory";
-import {BattleFrontierBattle} from "~/scripts/battleFrontier/BattleFrontierBattle";
-import GameHelper from "~/enums/GameHelper";
-import KeyItems from "~/modules/keyItems/KeyItems";
-import MapHelper from "~/scripts/worldmap/MapHelper";
-import {StartSequenceRunner} from "~/scripts/StartSequenceRunner";
-import Multiplier from "~/modules/multiplier/Multiplier";
-import Amount from "~/modules/wallet/Amount";
-import {RouteHelper} from "~/scripts/wildBattle/RouteHelper";
-import Statistics from "~/modules/DataStore/StatisticStore";
-import {RoamingPokemonList} from "~/scripts/pokemons/RoamingPokemonList";
-import Weather from "~/enums/Weather";
-import NotificationConstants from "~/modules/notifications/NotificationConstants";
-import {BattlePokemon} from "~/scripts/pokemons/BattlePokemon";
-import PokemonType from "~/modules/enums/PokemonType";
-import {pokemonMap} from "~/data/PokemonList";
-import {Save} from "~/scripts/Save";
+
 export class Game {
   public static achievementCounter = 0
 
@@ -115,15 +89,15 @@ export class Game {
     }
     this.farming.resetAuras()
     // Safari.load();
-    //Underground.energyTick(this.underground.getEnergyRegenTime())
+    // Underground.energyTick(this.underground.getEnergyRegenTime())
     AchievementHandler.calculateMaxBonus() // recalculate bonus based on active challenges
 
     const now = new Date()
-    //SeededDateRand.seedWithDate(now)
-    //DailyDeal.generateDeals(this.underground.getDailyDealsMax(), now)
-    //BerryDeal.generateDeals(now)
+    // SeededDateRand.seedWithDate(now)
+    // DailyDeal.generateDeals(this.underground.getDailyDealsMax(), now)
+    // BerryDeal.generateDeals(now)
     Weather.generateWeather(now)
-    //GemDeal.generateDeals()
+    // GemDeal.generateDeals()
     RoamingPokemonList.generateIncreasedChanceRoutes(now)
 
     this.computeOfflineEarnings()
@@ -242,7 +216,7 @@ export class Game {
     // requestAnimationFrame (consistent if page visible)
     let lastFrameTime = 0
     let ticks = 0
-    const tick = (currentFrameTime:number) => {
+    const tick = (currentFrameTime: number) => {
       // Don't process while page hidden
       if (pageHidden) {
         this.frameRequest = requestAnimationFrame(tick)
@@ -346,27 +320,27 @@ export class Game {
         break
       }
       case GameConstants.GameState.dungeon: {
-        /*DungeonBattle.counter += GameConstants.TICK_TIME
+        /* DungeonBattle.counter += GameConstants.TICK_TIME
         if (DungeonBattle.counter >= GameConstants.BATTLE_TICK)
           DungeonBattle.tick()
 
-        DungeonRunner.tick()*/
+        DungeonRunner.tick() */
         break
       }
       case GameConstants.GameState.battleFrontier: {
-        /*BattleFrontierBattle.counter += GameConstants.TICK_TIME
+        /* BattleFrontierBattle.counter += GameConstants.TICK_TIME
         if (BattleFrontierBattle.counter >= GameConstants.BATTLE_FRONTIER_TICK)
           BattleFrontierBattle.tick()
 
-        BattleFrontierRunner.tick()*/
+        BattleFrontierRunner.tick() */
         break
       }
       case GameConstants.GameState.temporaryBattle: {
-        /*TemporaryBattleBattle.counter += GameConstants.TICK_TIME
+        /* TemporaryBattleBattle.counter += GameConstants.TICK_TIME
         if (TemporaryBattleBattle.counter >= GameConstants.BATTLE_TICK)
           TemporaryBattleBattle.tick()
 
-        TemporaryBattleRunner.tick()*/
+        TemporaryBattleRunner.tick() */
         break
       }
     }
@@ -379,12 +353,12 @@ export class Game {
 
       // Check if it's a new day
       if (old.toLocaleDateString() !== now.toLocaleDateString()) {
-        //SeededDateRand.seedWithDate(now)
+        // SeededDateRand.seedWithDate(now)
         // Give the player a free quest refresh
         this.quests.freeRefresh(true)
         // Refresh the Underground deals
-        //DailyDeal.generateDeals(this.underground.getDailyDealsMax(), now)
-        //BerryDeal.generateDeals(now)
+        // DailyDeal.generateDeals(this.underground.getDailyDealsMax(), now)
+        // BerryDeal.generateDeals(now)
         if (this.underground.canAccess() || App.game.quests.isDailyQuestsUnlocked()) {
           Notifier.notify({
             title: 'It\'s a new day!',
@@ -394,7 +368,7 @@ export class Game {
             timeout: 3e4,
           })
         }
-        //DayOfWeekRequirement.date(now.getDay())
+        // DayOfWeekRequirement.date(now.getDay())
       }
 
       // Check if it's a new hour
@@ -407,7 +381,7 @@ export class Game {
     }
 
     // Underground
-    /*Underground.counter += GameConstants.TICK_TIME
+    /* Underground.counter += GameConstants.TICK_TIME
     if (Underground.counter >= GameConstants.UNDERGROUND_TICK) {
       Underground.energyTick(Math.max(0, Underground.energyTick() - 1))
       if (Underground.energyTick() == 0) {
@@ -429,7 +403,7 @@ export class Game {
 
     FluteEffectRunner.counter += GameConstants.TICK_TIME
     if (FluteEffectRunner.counter >= GameConstants.EFFECT_ENGINE_TICK)
-      FluteEffectRunner.tick()*/
+      FluteEffectRunner.tick() */
 
     // Game timers
     GameHelper.counter += GameConstants.TICK_TIME

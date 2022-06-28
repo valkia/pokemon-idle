@@ -7,6 +7,7 @@
     <pickStarterTutorialModal />
     <!--    <starterCaught />-->
     <BattleList />
+    <townView />
   </div>
 </template>
 
@@ -20,6 +21,7 @@ import { storeToRefs } from 'pinia'
 import { pokemonMap } from '~/scripts/pokemons/PokemonList'
 import { Battle } from '~/scripts/Battle'
 import KantoSVG from '~/components/map/Kanto/KantoSVG.vue'
+import townView from '~/components/map/townView.vue'
 import Enemy from '~/components/pokemon/Enemy.vue'
 import BattleList from '~/components/pokemon/BattleList.vue'
 import pickStarterTutorialModal from '~/components/pickStarterTutorialModal.vue'

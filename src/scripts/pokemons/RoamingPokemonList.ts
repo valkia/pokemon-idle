@@ -5,7 +5,7 @@ import GameHelper from '~/enums/GameHelper'
 import type { PokemonNameType } from '~/enums/PokemonNameType'
 import SeededRand from '~/utilities/SeededRand'
 import Routes from '~/scripts/wildBattle/Routes'
-import { RoamingPokemon } from '~/scripts/pokemons/RoamingPokemon'
+import type { RoamingPokemon } from '~/scripts/pokemons/RoamingPokemon'
 import ClearDungeonRequirement from '~/scripts/achievements/ClearDungeonRequirement'
 import GymBadgeRequirement from '~/scripts/achievements/GymBadgeRequirement'
 import BadgeEnums from '~/enums/Badges'
@@ -54,6 +54,7 @@ export class RoamingPokemonList {
     })
   }
 }
+/*
 
 // Kanto
 RoamingPokemonList.add(GameConstants.Region.kanto, new RoamingPokemon('Mew'))
@@ -123,3 +124,4 @@ RoamingPokemonList.add(GameConstants.Region.galar, new RoamingPokemon('Galarian 
   new ClearDungeonRequirement(1, GameConstants.getDungeonIndex('Dyna Tree Hill')),
   new SubregionRequirement(GameConstants.Region.galar, SubRegions.getSubRegion(GameConstants.Region.galar, 'Crown Tundra').id),
 ])))
+*/
