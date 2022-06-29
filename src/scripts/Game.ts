@@ -7,8 +7,8 @@ import type BadgeCase from '~/modules/DataStore/BadgeCase'
 import { StartSequenceRunner } from '~/scripts/StartSequenceRunner'
 import { usePlayerStore } from '~/stores/player'
 import { Battle } from '~/scripts/Battle'
-import GameHelper from "~/enums/GameHelper";
-import {Save} from "~/scripts/Save";
+import GameHelper from '~/enums/GameHelper'
+import { Save } from '~/scripts/Save'
 
 export class Game {
   public static achievementCounter = 0
