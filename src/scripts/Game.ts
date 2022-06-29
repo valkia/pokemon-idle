@@ -2,6 +2,31 @@
  * Main game class.
  */
 import * as GameConstants from '~/enums/GameConstants'
+import {Save} from "~/scripts/Save";
+import {AchievementHandler} from "~/scripts/achievements/AchievementHandler";
+import {usePlayerStore} from "~/stores/player";
+import App from "~/scripts/App";
+import GameHelper from "~/enums/GameHelper";
+import MapHelper from "~/scripts/worldmap/MapHelper";
+import BadgeCase from "~/modules/DataStore/BadgeCase";
+import {StartSequenceRunner} from "~/scripts/StartSequenceRunner";
+import KeyItemType from "~/modules/enums/KeyItemType";
+import {Pokeballs} from "~/scripts/pokeballs/Pokeballs";
+import Multiplier from "~/modules/multiplier/Multiplier";
+import {pokemonMap} from "~/scripts/pokemons/PokemonList";
+import Settings from "~/modules/settings";
+import Notifier from "~/modules/notifications/Notifier";
+import LogBook from "~/modules/logbook/LogBook";
+import Amount from "~/modules/wallet/Amount";
+import {RouteHelper} from "~/scripts/wildBattle/RouteHelper";
+import Statistics from "~/modules/DataStore/StatisticStore";
+import {RoamingPokemonList} from "~/scripts/pokemons/RoamingPokemonList";
+import Weather from "~/enums/Weather";
+import {Battle} from "~/scripts/Battle";
+import NotificationConstants from "~/modules/notifications/NotificationConstants";
+import {PokemonFactory} from "~/scripts/pokemons/PokemonFactory";
+import {BattlePokemon} from "~/scripts/pokemons/BattlePokemon";
+import PokemonType from "~/modules/enums/PokemonType";
 
 export class Game {
   public static achievementCounter = 0
@@ -15,29 +40,29 @@ export class Game {
      * TODO(@Isha) pass all features through the constructor
      */
   constructor(
-    public update: Update,
-    public profile: Profile,
-    public breeding: Breeding,
+    //public update: Update,
+    //public profile: Profile,
+    //public breeding: Breeding,
     public pokeballs: Pokeballs,
     public wallet: Wallet,
-    public keyItems: KeyItems,
+    //public keyItems: KeyItems,
     public badgeCase: BadgeCase,
-    public oakItems: OakItems,
-    public oakItemLoadouts: OakItemLoadouts,
+    //public oakItems: OakItems,
+    //public oakItemLoadouts: OakItemLoadouts,
     public categories: PokemonCategories,
     public party: Party,
-    public gems: Gems,
-    public underground: Underground,
-    public farming: Farming,
+    //public gems: Gems,
+    //public underground: Underground,
+    //public farming: Farming,
     public logbook: LogBook,
-    public redeemableCodes: RedeemableCodes,
+    //public redeemableCodes: RedeemableCodes,
     public statistics: Statistics,
-    public quests: Quests,
-    public specialEvents: SpecialEvents,
-    public discord: Discord,
-    public achievementTracker: AchievementTracker,
-    public challenges: Challenges,
-    public battleFrontier: BattleFrontier,
+    //public quests: Quests,
+    //public specialEvents: SpecialEvents,
+    //public discord: Discord,
+    //public achievementTracker: AchievementTracker,
+    //public challenges: Challenges,
+    //public battleFrontier: BattleFrontier,
     public multiplier: Multiplier,
   ) {
     this._gameState = GameConstants.GameState.paused
@@ -61,19 +86,19 @@ export class Game {
   }
 
   initialize() {
-    AchievementHandler.initialize(this.multiplier, this.challenges)
+/*    AchievementHandler.initialize(this.multiplier, this.challenges)
     FarmController.initialize()
     EffectEngineRunner.initialize(this.multiplier)
     FluteEffectRunner.initialize(this.multiplier)
     ItemHandler.initilizeEvoStones()
     this.profile.initialize()
-    this.breeding.initialize()
+    this.breeding.initialize()*/
     this.pokeballs.initialize()
-    this.keyItems.initialize()
+/*    this.keyItems.initialize()
     this.oakItems.initialize()
     this.underground.initialize()
     this.farming.initialize()
-    this.specialEvents.initialize()
+    this.specialEvents.initialize()*/
     this.load()
 
     // Update if the achievements are already completed

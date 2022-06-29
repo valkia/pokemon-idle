@@ -1,3 +1,17 @@
+<script setup lang="ts">
+import * as GameConstants from '~/enums/GameConstants'
+import { useGameStore } from '~/stores/game'
+import { usePlayerStore } from '~/stores/player'
+
+const gameState = computed(() => {
+  return useGameStore().gameState
+})
+const player = usePlayerStore()
+const backgroundImage = computed(() => {
+  return { backgroundImage: `url('/src/assets/images/towns/${player.town?.name.replace(/'/, '\\\'')}.png')` }
+})
+</script>
+
 <template>
   <div
     v-if=" gameState === GameConstants.GameState.town"
@@ -14,10 +28,10 @@
           ?
         </button>
         <h2 class="pageItemTitle">
-          <div data-bind="text: player.town().name">
-            Town Name
+          <div>
+            {{player.town?.name}}
           </div>
-          <div data-bind="if: player.town() instanceof DungeonTown && player.town().dungeon">
+          <div v-if="player.town instanceof DungeonTown && player.town?.dungeon">
             <!-- ko if: QuestLineHelper.isQuestLineCompleted('Tutorial Quests') -->
             <div
               class="right"
@@ -58,32 +72,38 @@
         <div class="list-group">
           <button
             class="btn btn-secondary p-0"
-            onclick="DungeonRunner.initializeDungeon(player.town().dungeon)"
-            data-bind="visible: player.town() instanceof DungeonTown, if: player.town().dungeon, attr: { class: player.town().dungeon && App.game.wallet.currencies[GameConstants.Currency.dungeonToken]() >= player.town().dungeon.tokenCost ? 'btn btn-success p-0' : 'btn btn-secondary p-0' }"
+            onclick="DungeonRunner.initializeDungeon(player.town.dungeon)"
+            v-if="player.town.dungeon && player.town instanceof DungeonTown"
+            :class="player.town.dungeon && App.game.wallet.currencies[GameConstants.Currency.dungeonToken]() >= player.town.dungeon.tokenCost ? 'btn btn-success p-0' : 'btn btn-secondary p-0'"
           >
             Start<br>
             <span
-              data-bind="template: { name: 'currencyTemplate', data: {'amount': player.town().dungeon.tokenCost, 'currency': GameConstants.Currency.dungeonToken}}"
+              data-bind="template: {
+              name: 'currencyTemplate',
+               data: {'amount': player.town().dungeon.tokenCost, 'currency': GameConstants.Currency.dungeonToken}
+               }"
             />
           </button>
 
           <!-- ko foreach: player.town().content -->
-          <div class="btn-group btn-block" style="margin-top: 0px;">
+          <div class="btn-group btn-block"
+               v-for="data in player.town.content"
+               :key="data.id"
+               style="margin-top: 0px;">
             <button
-              data-bind="
-                        class: $data.cssClass() + ($data.isUnlocked() ? '' : ' disabled'),
-                        text: $data.text(),
-                        visible: $data.isVisible(),
-                        click: $data.protectedOnclick,
-                        tooltip: ($data.tooltip || $data.clears() ? { title: $data.clears() != undefined ? `Total Clears: ${$data.clears()}` : $data.tooltip, trigger: 'hover', placement: 'left' } : undefined)
-                        "
+                :class="data.cssClass() + (data.isUnlocked() ? '' : ' disabled')"
+                :text="data.text()"
+                v-if="data.isVisible()"
+                @click=" data.protectedOnclick"
+                :tooltip=" (data.tooltip || data.clears() ? { title: data.clears() != undefined ? `Total Clears: ${data.clears()}` : data.tooltip, trigger: 'hover', placement: 'left' } : undefined)"
+
             />
             <!-- ko if: $data instanceof Gym -->
             <button
-              class="btn btn-info p-0 btn-gym-auto-restart" data-bind="
-                        tooltip: { html: true, title: `Auto restart Gym fight<br/>Cost: <img src='assets/images/currency/money.svg' height='18px'></button> ${($data.moneyReward * 2).toLocaleString('en-US')} per battle<br/><br/><i class='text-warning'>You will not receive Pokédollars for clearing the gym</i>`, trigger: 'hover', placement:'right' },
-                        click: () => GymRunner.startGym($data, true),
-                        visible: $data.isUnlocked() && App.game.statistics.gymsDefeated[GameConstants.getGymIndex($data.town)]() >= 100"
+                class="btn btn-info p-0 btn-gym-auto-restart"
+                tooltip=" { html: true, title: `Auto restart Gym fight<br/>Cost: <img src='assets/images/currency/money.svg' height='18px'></button> ${($data.moneyReward * 2).toLocaleString('en-US')} per battle<br/><br/><i class='text-warning'>You will not receive Pokédollars for clearing the gym</i>`, trigger: 'hover', placement:'right' }"
+                @click="GymRunner.startGym(data, true)"
+                v-if="data instanceof Gym && data.isUnlocked() && App.game.statistics.gymsDefeated[GameConstants.getGymIndex($data.town)]() >= 100"
             >
               ↻
             </button>
@@ -94,20 +114,20 @@
       </div>
       <div class="col-5" />
       <div class="col-3 no-gutters">
-        <div class="list-group" data-bind="foreach: player.town().npcs">
+        <div class="list-group" v-for="data in player.town.npcs">
           <!-- ko if: $data.isVisible() -->
           <button
             class="btn btn-info"
-            data-bind="text: $data.name, click: $data.openDialog"
+            @click="data.openDialog"
           >
-            NPC
+            {{ data.name }}
           </button>
           <!-- /ko -->
         </div>
       </div>
     </div>
     <div style="flex-grow: 1;" />
-    <div data-bind="if: (player.town().dungeon && player.town() instanceof DungeonTown)">
+    <div v-if="(player.town.dungeon && player.town instanceof DungeonTown)">
       <div id="dungeonPokemonList" class="card">
         <!--Display all available Pokémon in this dungeon-->
         <ul class="list-inline">
@@ -157,19 +177,7 @@
     </div>
   </div>
 </template>
-<script setup lang="ts">
-import * as GameConstants from '~/enums/GameConstants'
-import { useGameStore } from '~/stores/game'
-import { usePlayerStore } from '~/stores/player'
 
-const gameState = computed(() => {
-  return useGameStore().gameState
-})
-const player = usePlayerStore()
-const backgroundImage = computed(() => {
-  return { backgroundImage: `url('/src/assets/images/towns/${player.town?.name.replace(/'/, '\\\'')}.png')` }
-})
-</script>
 <style lang="scss">
 #townView {
   width: 50%;
