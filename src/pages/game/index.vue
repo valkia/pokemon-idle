@@ -8,6 +8,9 @@
     <!--    <starterCaught />-->
     <BattleList />
     <townView />
+    <button @click="start()">
+      ok
+    </button>
   </div>
 </template>
 
@@ -31,10 +34,12 @@ import { useDataStore } from '~/stores/data'
 import { init as townInit } from '~/scripts/towns/init'
 import { init as gymInit } from '~/scripts/gym/init'
 import { init as routeInit } from '~/scripts/wildBattle/init'
-import App from "~/scripts/App";
+import App from '~/scripts/App'
 const { t, locale } = useI18n()
 locale.value = 'zh-CN'
-App.start()
+const start = () => {
+  App.start()
+}
 // eslint-disable-next-line no-console
 console.log(t)
 useDataStore().setGymList(gymInit())
