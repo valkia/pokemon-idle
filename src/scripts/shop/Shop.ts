@@ -6,6 +6,7 @@ import type { Item } from '~/scripts/items/Item'
 import { ItemList } from '~/scripts/items/Item'
 import { PokeballItem } from '~/scripts/items/PokeballItem'
 import * as GameConstants from '~/enums/GameConstants'
+import { ShopHandler } from '~/scripts/shop/ShopHandler'
 
 export class Shop extends TownContent {
   public cssClass() {

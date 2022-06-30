@@ -14,6 +14,8 @@ import GameHelper from '~/enums/GameHelper'
 import { Gym } from '~/scripts/gym/Gym'
 import { DungeonTown } from '~/scripts/towns/Town'
 import { PokemonHelper } from '~/scripts/pokemons/PokemonHelper'
+import dataStore from '~/modules/DataStore'
+import { usePartyStore } from '~/stores/party'
 enum areaStatus {
   currentLocation,
   locked,
@@ -250,16 +252,19 @@ export default class MapHelper {
   }
 
   public static ableToTravel() {
+    const player = usePlayerStore()
     // If player already reached highest region, they can't move on
-    if (player.highestRegion() >= GameConstants.MAX_AVAILABLE_REGION)
+    if (player.highestRegion >= GameConstants.MAX_AVAILABLE_REGION)
       return false
-
+    const TownList = useDataStore().TownList
     // Check if player doesn't require complete dex to move on to the next region and has access to next regions starter town
-    if (!App.game.challenges.list.requireCompletePokedex.active())
-      return TownList[GameConstants.StartingTowns[player.highestRegion() + 1]]?.isUnlocked() ?? false
+    // !App.game.challenges.list.requireCompletePokedex.active()
+    if (false)
+      return TownList[GameConstants.StartingTowns[player.highestRegion + 1]]?.isUnlocked() ?? false
 
     // Check if all regional pokemon are obtained
-    return new Set(App.game.party.caughtPokemon.filter(p => p.id > 0 && PokemonHelper.calcNativeRegion(p.name) <= player.highestRegion()).map(p => Math.floor(p.id))).size >= GameConstants.TotalPokemonsPerRegion[player.highestRegion()]
+    const party = usePartyStore()
+    return new Set(party.caughtPokemon.filter(p => p.id > 0 && PokemonHelper.calcNativeRegion(p.name) <= player.highestRegion).map(p => Math.floor(p.id))).size >= GameConstants.TotalPokemonsPerRegion[player.highestRegion]
   }
 
   public static travelToNextRegion() {

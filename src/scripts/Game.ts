@@ -2,8 +2,6 @@
  * Main game class.
  */
 import * as GameConstants from '~/enums/GameConstants'
-import type { Pokeballs } from '~/scripts/pokeballs/Pokeballs'
-import type BadgeCase from '~/modules/DataStore/BadgeCase'
 import { StartSequenceRunner } from '~/scripts/StartSequenceRunner'
 import { usePlayerStore } from '~/stores/player'
 import { Battle } from '~/scripts/Battle'

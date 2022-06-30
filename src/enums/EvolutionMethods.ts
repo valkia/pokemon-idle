@@ -1,9 +1,3 @@
-/// <reference path="~/enums/StoneEvolution.ts" />
-/// <reference path="~/enums/LevelEvolution.ts" />
-/// <reference path="./DungeonRestriction.ts" />
-/// <reference path="./GymRestriction.ts" />
-/// <reference path="./TimedRestriction.ts" />
-/// <reference path="./EnvironmentRestriction.ts" />
 import { StoneEvolution } from './StoneEvolution'
 import { LevelEvolution } from '~/enums/LevelEvolution'
 import { DayTimeRestricted, NightTimeRestricted, TimeRestricted } from '~/enums/TimedRestriction'

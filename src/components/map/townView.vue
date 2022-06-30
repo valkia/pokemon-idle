@@ -2,7 +2,11 @@
 import * as GameConstants from '~/enums/GameConstants'
 import { useGameStore } from '~/stores/game'
 import { usePlayerStore } from '~/stores/player'
+import { DungeonTown } from '~/scripts/towns/Town'
+import { Gym } from '~/scripts/gym/Gym'
+import { useStatisticsStore } from '~/stores/statistics'
 
+const statistics = useStatisticsStore()
 const gameState = computed(() => {
   return useGameStore().gameState
 })
@@ -29,7 +33,7 @@ const backgroundImage = computed(() => {
         </button>
         <h2 class="pageItemTitle">
           <div>
-            {{player.town?.name}}
+            {{ player.town?.name }}
           </div>
           <div v-if="player.town instanceof DungeonTown && player.town?.dungeon">
             <!-- ko if: QuestLineHelper.isQuestLineCompleted('Tutorial Quests') -->
@@ -71,9 +75,9 @@ const backgroundImage = computed(() => {
       <div class="col-4 no-gutters">
         <div class="list-group">
           <button
+            v-if="player.town.dungeon && player.town instanceof DungeonTown"
             class="btn btn-secondary p-0"
             onclick="DungeonRunner.initializeDungeon(player.town.dungeon)"
-            v-if="player.town.dungeon && player.town instanceof DungeonTown"
             :class="player.town.dungeon && App.game.wallet.currencies[GameConstants.Currency.dungeonToken]() >= player.town.dungeon.tokenCost ? 'btn btn-success p-0' : 'btn btn-secondary p-0'"
           >
             Start<br>
@@ -86,24 +90,27 @@ const backgroundImage = computed(() => {
           </button>
 
           <!-- ko foreach: player.town().content -->
-          <div class="btn-group btn-block"
-               v-for="data in player.town.content"
-               :key="data.id"
-               style="margin-top: 0px;">
+          <div
+            v-for="data in player.town.content"
+            :key="data.id"
+            class="btn-group btn-block"
+            style="margin-top: 0px;"
+          >
             <button
-                :class="data.cssClass() + (data.isUnlocked() ? '' : ' disabled')"
-                :text="data.text()"
-                v-if="data.isVisible()"
-                @click=" data.protectedOnclick"
-                :tooltip=" (data.tooltip || data.clears() ? { title: data.clears() != undefined ? `Total Clears: ${data.clears()}` : data.tooltip, trigger: 'hover', placement: 'left' } : undefined)"
+              v-if="data.isVisible()"
+              :class="data.cssClass() + (data.isUnlocked() ? '' : ' disabled')"
 
-            />
+              tooltip=" (data.tooltip || data.clears() ? { title: data.clears() != undefined ? `Total Clears: ${data.clears()}` : data.tooltip, trigger: 'hover', placement: 'left' } : undefined)"
+              @click=" data.protectedOnclick()"
+            >
+              {{ data.text() }}
+            </button>
             <!-- ko if: $data instanceof Gym -->
             <button
-                class="btn btn-info p-0 btn-gym-auto-restart"
-                tooltip=" { html: true, title: `Auto restart Gym fight<br/>Cost: <img src='assets/images/currency/money.svg' height='18px'></button> ${($data.moneyReward * 2).toLocaleString('en-US')} per battle<br/><br/><i class='text-warning'>You will not receive Pokédollars for clearing the gym</i>`, trigger: 'hover', placement:'right' }"
-                @click="GymRunner.startGym(data, true)"
-                v-if="data instanceof Gym && data.isUnlocked() && App.game.statistics.gymsDefeated[GameConstants.getGymIndex($data.town)]() >= 100"
+              v-if="data instanceof Gym && data.isUnlocked() && statistics.gymsDefeated[GameConstants.getGymIndex(data.town)]() >= 100"
+              class="btn btn-info p-0 btn-gym-auto-restart"
+              tooltip=" { html: true, title: `Auto restart Gym fight<br/>Cost: <img src='assets/images/currency/money.svg' height='18px'></button> ${($data.moneyReward * 2).toLocaleString('en-US')} per battle<br/><br/><i class='text-warning'>You will not receive Pokédollars for clearing the gym</i>`, trigger: 'hover', placement:'right' }"
+              @click="GymRunner.startGym(data, true)"
             >
               ↻
             </button>
@@ -114,7 +121,7 @@ const backgroundImage = computed(() => {
       </div>
       <div class="col-5" />
       <div class="col-3 no-gutters">
-        <div class="list-group" v-for="data in player.town.npcs">
+        <div v-for="data in player.town.npcs" class="list-group">
           <!-- ko if: $data.isVisible() -->
           <button
             class="btn btn-info"

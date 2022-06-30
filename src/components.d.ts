@@ -17,6 +17,7 @@ declare module 'vue' {
     Notification: typeof import('./components/Notification.vue')['default']
     PickStarterTutorialModal: typeof import('./components/pickStarterTutorialModal.vue')['default']
     README: typeof import('./components/README.md')['default']
+    ShopModal: typeof import('./components/map/shopModal.vue')['default']
     StarterCaught: typeof import('./components/starterCaught.vue')['default']
     StartSequence: typeof import('./components/startSequence.vue')['default']
     TownView: typeof import('./components/map/townView.vue')['default']

@@ -1,15 +1,4 @@
 
-import type { Game } from '~/scripts/Game'
-import Multiplier from '~/modules/multiplier/Multiplier'
-import * as GameConstants from '~/enums/GameConstants'
-import LogBook from '~/modules/logbook/LogBook'
-import { Preload } from '~/scripts/utilities/Preload'
-
-import { Save } from '~/scripts/Save'
-import { Pokeballs } from '~/scripts/pokeballs/Pokeballs'
-import BadgeCase from '~/modules/DataStore/BadgeCase'
-import NotificationConstants from '~/modules/notifications/NotificationConstants'
-import Notifier from '~/modules/notifications/Notifier'
 export default class App {
   static readonly debug = true
   static game: Game

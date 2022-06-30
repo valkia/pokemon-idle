@@ -62,7 +62,7 @@
       </div>
     </div>
   </div>
-  <div v-if="show" modal-backdrop="" class="bg-gray-900 bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40"></div>
+  <div v-if="show" modal-backdrop="" class="bg-gray-900 bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40" />
 </template>
 
 <script setup>
@@ -74,21 +74,21 @@ const toggleShow = useToggle(show)
 const bulbasaur = () => {
   StartSequenceRunner.pickStarter(GameConstants.Starter.Bulbasaur)
   const player = usePlayerStore()
-  player.setRegionStarters(0,0)
+  player.setRegionStarters(0, 0)
   toggleShow()
 }
 
 const charmander = () => {
   StartSequenceRunner.pickStarter(GameConstants.Starter.Charmander)
   const player = usePlayerStore()
-  player.setRegionStarters(0,1)
+  player.setRegionStarters(0, 1)
   toggleShow()
 }
 
 const squirtle = () => {
   StartSequenceRunner.pickStarter(GameConstants.Starter.Squirtle)
   const player = usePlayerStore()
-  player.setRegionStarters(0,2)
+  player.setRegionStarters(0, 2)
   toggleShow()
 }
 </script>

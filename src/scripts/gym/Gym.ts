@@ -1,8 +1,3 @@
-/// <reference path="GymPokemon.ts"/>
-/// <reference path="../pokemons/PokemonFactory.ts"/>
-/// <reference path="../../declarations/requirements/OneFromManyRequirement.d.ts"/>
-/// <reference path="../../declarations/enums/Badges.d.ts"/>
-/// <reference path="../towns/TownContent.ts"/>
 
 import { TownContent } from '~/scripts/towns/TownContent'
 import App from '~/scripts/App'
@@ -12,6 +7,7 @@ import { GymList } from '~/scripts/gym/GymList'
 import ClearGymRequirement from '~/scripts/achievements/ClearGymRequirement'
 import BadgeEnums from '~/modules/enums/Badges'
 import * as GameConstants from '~/enums/GameConstants'
+import BadgeCase from '~/modules/DataStore/BadgeCase'
 /**
  * Data list that contains all gymLeaders, accessible by townName.
  */
@@ -37,7 +33,7 @@ export class Gym extends TownContent {
   buttonText: string
   public tooltip = 'Battle Gym Leaders to earn badges'
   public cssClass() {
-    if (App.game.badgeCase.hasBadge(this.badgeReward))
+    if (new BadgeCase().hasBadge(this.badgeReward))
       return 'btn btn-success'
 
     return 'btn btn-secondary'

@@ -1,5 +1,5 @@
 <template>
-  <div @click="enemyClick">
+  <div v-if=" gameState === GameState.fighting" @click="enemyClick">
     <img
       v-if="catching"
       class="pokeball-animated"
@@ -17,9 +17,13 @@ import { computed } from 'vue'
 import type { BattlePokemon } from '~/scripts/pokemons/BattlePokemon'
 import { Battle } from '~/scripts/Battle'
 import { useBattleStore } from '~/stores/battle'
-import { Pokeball } from '~/enums/GameConstants'
+import { GameState, Pokeball } from '~/enums/GameConstants'
+import { useGameStore } from '~/stores/game'
 const { t, locale } = useI18n()
 console.log('locale', locale.value)
+const gameState = computed(() => {
+  return useGameStore().gameState
+})
 const pokemon = computed(() => {
   return useBattleStore().enemyPokemon
 })
