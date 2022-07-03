@@ -7,6 +7,7 @@ import { ItemList } from '~/scripts/items/Item'
 import { PokeballItem } from '~/scripts/items/PokeballItem'
 import * as GameConstants from '~/enums/GameConstants'
 import { ShopHandler } from '~/scripts/shop/ShopHandler'
+import { useModalStore } from '~/stores/modal'
 
 export class Shop extends TownContent {
   public cssClass() {
@@ -23,7 +24,7 @@ export class Shop extends TownContent {
 
   public onclick(): void {
     ShopHandler.showShop(this)
-    $('#shopModal').modal('show')
+    useModalStore().setShopModalFlag(true)
   }
 
   public tooltip = 'Visit shops to buy items.'
@@ -45,7 +46,7 @@ export class Shop extends TownContent {
     return `Poké Mart ${this.parent.name}`
   }
 
-  public amountInput = () => $('#shopModal').find('input[name="amountOfItems"]')
+  public amountInput = () => null// $('#shopModal').find('input[name="amountOfItems"]')
 }
 
 export const pokeMartShop = new Shop([

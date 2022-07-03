@@ -5,6 +5,7 @@ import { usePlayerStore } from '~/stores/player'
 import { DungeonTown } from '~/scripts/towns/Town'
 import { Gym } from '~/scripts/gym/Gym'
 import { useStatisticsStore } from '~/stores/statistics'
+import { DungeonRunner } from '~/scripts/dungeons/DungeonRunner'
 
 const statistics = useStatisticsStore()
 const gameState = computed(() => {
@@ -74,11 +75,12 @@ const backgroundImage = computed(() => {
     <div class="row no-gutters">
       <div class="col-4 no-gutters">
         <div class="list-group">
+          {{ player.town.dungeon }}
           <button
-            v-if="player.town.dungeon && player.town instanceof DungeonTown"
+            v-if="player.town instanceof DungeonTown"
             class="btn btn-secondary p-0"
-            onclick="DungeonRunner.initializeDungeon(player.town.dungeon)"
             :class="player.town.dungeon && App.game.wallet.currencies[GameConstants.Currency.dungeonToken]() >= player.town.dungeon.tokenCost ? 'btn btn-success p-0' : 'btn btn-secondary p-0'"
+            @click="DungeonRunner.initializeDungeon(player.town.dungeon)"
           >
             Start<br>
             <span
@@ -187,7 +189,6 @@ const backgroundImage = computed(() => {
 
 <style lang="scss">
 #townView {
-  width: 50%;
   min-height: 263px;
   background-repeat: no-repeat;
   background-size: cover;

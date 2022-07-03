@@ -1,7 +1,12 @@
 <template>
   <div v-for="pokemon in pokemonList">
-    <img :src="pokemonImgUrl(pokemon)" class="avatar">
-    <div>{{ t(`pokemon.${pokemon.name}`) }}</div>
+    <div flex justify-center items-center>
+      <img :src="pokemonImgUrl(pokemon)" class="avatar">
+      <div>{{ t(`pokemon.${pokemon.name}`) }}</div>
+      <div ml="2">
+        等级{{ pokemon._level }}
+      </div>
+    </div>
   </div>
 </template>
 
@@ -24,6 +29,5 @@ const pokemonImgUrl = (pokemon: PartyPokemon) => {
 
 <style scoped>
 .avatar{
-  margin: 0 auto;
 }
 </style>

@@ -1,25 +1,72 @@
 <script setup lang="ts">
-const show = ref(true)
-const toggleShow = useToggle(show)
+import { ShopHandler } from '~/scripts/shop/ShopHandler'
+import { useModalStore } from '~/stores/modal'
+
+const show = computed(() => {
+  return useModalStore().shopModalFlag
+})
+const toggleShow = useModalStore().toggleShopModal
+
+const inputValue = ref(1)
 </script>
 <template>
   <div
-    id="shopModal" class="modal fade noselect" tabindex="-1" role="dialog"
-    aria-labelledby="shopModalLabel"
+    v-if="show" id="shopModal" class="modal fade noselect" tabindex="-1"
+    role="dialog" aria-labelledby="shopModalLabel"
   >
     <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header text-center">
-          <h4 data-bind="text: ShopHandler.shopObservable().displayName">
-            Shop
+          <h4 data-bind="text: ">
+            {{ ShopHandler.shopObservable?.displayName }}
           </h4>
-          <button type="button" class="btn btn-primary" data-dismiss="modal">
+          <button type="button" class="btn btn-primary" @click="toggleShow">
             &times;
           </button>
         </div>
         <div class="modal-body">
           <div>
-            <span data-bind="template: { name: 'shopBodyTemplate' }" />
+            <div id="shopBodyTemplate">
+              {{ ShopHandler.shopObservable }}
+              <div v-for=" item in [...new Set(ShopHandler.shopObservable?.items.map(i => i.currency))]" class="row justify-content-center">
+                <h4 class="col-6 col-sm-4 col-lg-2">
+                  金钱组件
+                </h4>
+              </div>
+              <div class="row justify-content-center" data-bind="foreach: ShopHandler.shopObservable().items">
+                <div class="col-6 col-sm-4 col-lg-3">
+                  <button
+                    class="shopItem clickable btn btn-block btn-secondary"
+                    data-bind="click: function() {ShopHandler.setSelected($index())},
+               css: { active: ShopHandler.selected() == $index() },
+               attr: { disabled: !$data.isAvailable() },
+               tooltip: {
+                  title: $data.description ? `<u>${$data.displayName}:</u><br/>${$data.description}` : '',
+                  trigger: 'hover',
+                  placement:'bottom',
+                  html: true
+                }"
+                  >
+                    <knockout data-bind="if: ($data instanceof CaughtIndicatingItem)">
+                      <span
+                        style="position: absolute; top: 15px; right: 20px;"
+                        data-bind="template: { name: 'caughtStatusTemplate', data: {'status': $data.getCaughtStatus()}}"
+                      />
+                    </knockout>
+                    <img src="" height="36px" data-bind="attr:{ src: $data.image }">
+                    <p data-bind="text: $data.displayName">
+                      Item Name
+                    </p>
+                    <div data-bind="if: $data.isAvailable()">
+                      <span data-bind="template: { name: 'currencyTemplate', data: {'amount': totalPrice(ShopHandler.amount()), 'currency': currency, 'reducedThreshold': 1e10}}" />
+                    </div>
+                    <div data-bind="ifnot: $data.isAvailable()">
+                      <span>Sold Out</span>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="modal-footer">
@@ -31,10 +78,11 @@ const toggleShow = useToggle(show)
                 </button>
               </div>
               <input
-                id="amountOfItems" type="number" class="outline-dark form-control form-control-number"
-                value="1" min="1" required name="amountOfItems"
-                oninput="ShopHandler.amount(parseInt($(this).val().toString(), 10) || 0);"
-                onchange="ShopHandler.amount(parseInt($(this).val().toString(), 10) || 0);" title=""
+                id="amountOfItems" v-model="inputValue" type="number"
+                class="outline-dark form-control form-control-number" min="1" required
+                name="amountOfItems"
+                title=""
+                @input="ShopHandler.amount(parseInt(inputValue, 10) || 0);" @change="ShopHandler.amount(parseInt(inputValue, 10) || 0);"
               >
               <div class="input-group-append">
                 <!-- ko if: Settings.getSetting('shopButtons').observableValue() == 'original' -->
@@ -71,47 +119,6 @@ const toggleShow = useToggle(show)
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <div id="shopBodyTemplate" type="text/html">
-    <div class="row justify-content-center" data-bind="foreach: [...new Set(ShopHandler.shopObservable().items.map(i => i.currency))]">
-      <h4 class="col-6 col-sm-4 col-lg-2">
-        <span data-bind="template: { name: 'currencyTemplate', data: { amount: App.game.wallet.currencies[$data](), currency: $data, reduced: true }}" />
-      </h4>
-    </div>
-    <div class="row justify-content-center" data-bind="foreach: ShopHandler.shopObservable().items">
-      <div class="col-6 col-sm-4 col-lg-3">
-        <button
-          class="shopItem clickable btn btn-block btn-secondary"
-          data-bind="click: function() {ShopHandler.setSelected($index())},
-               css: { active: ShopHandler.selected() == $index() },
-               attr: { disabled: !$data.isAvailable() },
-               tooltip: {
-                  title: $data.description ? `<u>${$data.displayName}:</u><br/>${$data.description}` : '',
-                  trigger: 'hover',
-                  placement:'bottom',
-                  html: true
-                }"
-        >
-          <knockout data-bind="if: ($data instanceof CaughtIndicatingItem)">
-            <span
-              style="position: absolute; top: 15px; right: 20px;"
-              data-bind="template: { name: 'caughtStatusTemplate', data: {'status': $data.getCaughtStatus()}}"
-            />
-          </knockout>
-          <img src="" height="36px" data-bind="attr:{ src: $data.image }">
-          <p data-bind="text: $data.displayName">
-            Item Name
-          </p>
-          <div data-bind="if: $data.isAvailable()">
-            <span data-bind="template: { name: 'currencyTemplate', data: {'amount': totalPrice(ShopHandler.amount()), 'currency': currency, 'reducedThreshold': 1e10}}" />
-          </div>
-          <div data-bind="ifnot: $data.isAvailable()">
-            <span>Sold Out</span>
-          </div>
-        </button>
       </div>
     </div>
   </div>

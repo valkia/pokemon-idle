@@ -11,12 +11,13 @@ export class ShopHandler {
   public static showShop(shop: Shop) {
     this.setSelected(0)
     this.shopObservable = new Shop([])
-    this.resetAmount()
+    // this.resetAmount()
     this.shopObservable = (shop)
     const player = usePlayerStore()
-    shop.items.forEach((item) => {
+    // 根据道具打折
+    /* shop.items.forEach((item) => {
       item.price(Math.round(item.basePrice * (player.itemMultipliers[item.saveName] || 1)))
-    })
+    }) */
   }
 
   // #region Controls

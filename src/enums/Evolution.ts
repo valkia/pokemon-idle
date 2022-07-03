@@ -7,6 +7,7 @@ import Notifier from '~/modules/notifications/Notifier'
 import type { EvolutionType } from '~/enums/EvolutionType'
 import * as GameConstants from '~/enums/GameConstants'
 import { usePlayerStore } from '~/stores/player'
+import { usePartyStore } from '~/stores/party'
 export abstract class Evolution {
   type: EvolutionType[]
 
@@ -33,7 +34,8 @@ export abstract class Evolution {
       return false
 
     // Notify the player if they haven't already caught the evolution, or notifications are forced
-    if (!App.game.party.alreadyCaughtPokemonByName(evolvedPokemon) || notification) {
+    const party = usePartyStore()
+    if (!party.alreadyCaughtPokemonByName(evolvedPokemon) || notification) {
       Notifier.notify({
         message: `Your ${this.basePokemon} evolved into a ${evolvedPokemon}`,
         type: NotificationConstants.NotificationOption.success,
@@ -41,7 +43,7 @@ export abstract class Evolution {
     }
 
     const shiny = PokemonFactory.generateShiny(GameConstants.SHINY_CHANCE_STONE)
-    App.game.party.gainPokemonById(PokemonHelper.getPokemonByName(evolvedPokemon).id, shiny, true)
+    party.gainPokemonById(PokemonHelper.getPokemonByName(evolvedPokemon).id, shiny, true)
     return shiny
   }
 }

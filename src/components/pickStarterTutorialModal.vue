@@ -66,11 +66,15 @@
 </template>
 
 <script setup>
+import { storeToRefs } from 'pinia'
 import { StartSequenceRunner } from '~/scripts/StartSequenceRunner'
 import { usePlayerStore } from '~/stores/player'
 import * as GameConstants from '~/enums/GameConstants'
-const show = ref(true)
-const toggleShow = useToggle(show)
+import { useModalStore } from '~/stores/modal'
+const show = computed(() => {
+  return useModalStore().pickStarterModalFlag
+})
+const toggleShow = useModalStore().togglePickStarterModal
 const bulbasaur = () => {
   StartSequenceRunner.pickStarter(GameConstants.Starter.Bulbasaur)
   const player = usePlayerStore()

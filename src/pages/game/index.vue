@@ -1,17 +1,22 @@
 
 <template>
-  <div>
-    <townView />
-    <Enemy />
-    <KantoSVG />
-    <Notificaton />
-    <pickStarterTutorialModal />
-    <!--    <starterCaught />-->
-    <BattleList />
-    <button @click="start()">
-      ok
-    </button>
+  <div container mx-auto flex>
+    <div w-xs>
+      <BattleList />
+    </div>
+    <div>
+      <townView />
+      <Enemy />
+      <KantoSVG />
+    </div>
   </div>
+  <Notificaton />
+  <pickStarterTutorialModal />
+  <!--    <starterCaught />-->
+  <ShopModal />
+  <button @click="start()">
+    ok
+  </button>
 </template>
 
 <route lang="yaml">
@@ -24,6 +29,7 @@ import { storeToRefs } from 'pinia'
 import { pokemonMap } from '~/scripts/pokemons/PokemonList'
 import { Battle } from '~/scripts/Battle'
 import KantoSVG from '~/components/map/Kanto/KantoSVG.vue'
+import ShopModal from '~/components/map/shopModal.vue'
 import townView from '~/components/map/townView.vue'
 import Enemy from '~/components/pokemon/Enemy.vue'
 import BattleList from '~/components/pokemon/BattleList.vue'
