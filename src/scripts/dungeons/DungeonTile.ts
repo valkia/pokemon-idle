@@ -1,64 +1,66 @@
-class DungeonTile {
-    _isVisible: boolean;
-    _isVisited: boolean;
-    _hasPlayer: boolean;
-    type: KnockoutObservable<GameConstants.DungeonTile>;
-    cssClass: KnockoutObservable<string>;
+import * as GameConstants from '~/enums/GameConstants'
 
-    constructor(type: GameConstants.DungeonTile) {
-        this._isVisible = false;
-        this._isVisited = false;
-        this._hasPlayer = false;
-        this.type = ko.observable(type);
-        this.cssClass = ko.observable('');
-        this.calculateCssClass();
-    }
+export class DungeonTile {
+  _isVisible: boolean
+  _isVisited: boolean
+  _hasPlayer: boolean
+  type: GameConstants.DungeonTile
+  cssClass: string
 
-    get isVisible() {
-        return this._isVisible;
-    }
+  constructor(type: GameConstants.DungeonTile) {
+    this._isVisible = false
+    this._isVisited = false
+    this._hasPlayer = false
+    this.type = type
+    this.cssClass = ''
+    this.calculateCssClass()
+  }
 
-    set isVisible(val) {
-        this._isVisible = val;
-        this.calculateCssClass();
-    }
+  get isVisible() {
+    return this._isVisible
+  }
 
-    get isVisited() {
-        return this._isVisited;
-    }
+  set isVisible(val) {
+    this._isVisible = val
+    this.calculateCssClass()
+  }
 
-    set isVisited(val) {
-        this._isVisited = val;
-        this.calculateCssClass();
-    }
+  get isVisited() {
+    return this._isVisited
+  }
 
-    get hasPlayer() {
-        return this._hasPlayer;
-    }
+  set isVisited(val) {
+    this._isVisited = val
+    this.calculateCssClass()
+  }
 
-    set hasPlayer(val) {
-        this._hasPlayer = val;
-        this.calculateCssClass();
-    }
+  get hasPlayer() {
+    return this._hasPlayer
+  }
 
-    public calculateCssClass() {
-        if (!this.isVisible) {
-            this.cssClass('tile tile-invisible');
-            return;
-        }
-        if (this.hasPlayer) {
-            this.cssClass('tile tile-player');
-            return;
-        }
-        // Base tile class
-        const css = ['tile'];
-        // If player visited tile add the class
-        if (this.isVisited) {
-            css.push('tile-visited');
-        }
-        // Add the tile type class
-        css .push(`tile-${GameConstants.DungeonTile[this.type()]}`);
-        // Join all the classes
-        this.cssClass(css.join(' '));
+  set hasPlayer(val) {
+    this._hasPlayer = val
+    this.calculateCssClass()
+  }
+
+  public calculateCssClass() {
+    if (!this.isVisible) {
+      this.cssClass = ('tile tile-invisible')
+      return
     }
+    if (this.hasPlayer) {
+      this.cssClass = ('tile tile-player')
+      return
+    }
+    // Base tile class
+    const css = ['tile']
+    // If player visited tile add the class
+    if (this.isVisited)
+      css.push('tile-visited')
+
+    // Add the tile type class
+    css.push(`tile-${GameConstants.DungeonTile[this.type]}`)
+    // Join all the classes
+    this.cssClass = (css.join(' '))
+  }
 }

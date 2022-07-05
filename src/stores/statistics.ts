@@ -1,6 +1,7 @@
 // @ts-check
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import type * as GameConstants from '~/enums/GameConstants'
+import { getDungeonIndex } from '~/enums/GameConstants'
 
 export const useStatisticsStore = defineStore({
   id: 'statistics',
@@ -35,7 +36,7 @@ export const useStatisticsStore = defineStore({
     // Battle
     _routeKills: {} as Record<string, Record<string, number>>,
     gymsDefeated: [0],
-    dungeonsCleared: [0],
+    _dungeonsCleared: {} as Record<string, number>,
     temporaryBattleDefeated: [0],
   }),
   getters: {
@@ -61,6 +62,9 @@ export const useStatisticsStore = defineStore({
       const tmp = this._routeKills[region] || {}
       const tmp2 = tmp[route] || 0
       return tmp2
+    },
+    getDungeonsCleared(dungeonName: string) {
+      return this._dungeonsCleared[getDungeonIndex(dungeonName)] || 0
     },
   },
 })

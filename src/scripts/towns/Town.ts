@@ -5,6 +5,8 @@ import type { TownContent } from '~/scripts/towns/TownContent'
 import { DockTownContent, NextRegionTownContent } from '~/scripts/towns/TownContent'
 import type { NPC } from '~/scripts/towns/NPC'
 import { useDataStore } from '~/stores/data'
+import type { Dungeon } from '~/scripts/dungeons/Dungeon'
+import { dungeonList } from '~/scripts/dungeons/Dungeon'
 
 interface TownOptionalArgument {
   requirements?: (Requirement | OneFromManyRequirement)[]
@@ -60,6 +62,6 @@ export class DungeonTown extends Town {
 
   constructor(name: string, region: GameConstants.Region, requirements: (Requirement | OneFromManyRequirement)[] = [], content: TownContent[] = []) {
     super(name, region, content, { requirements })
-    // this.dungeon = dungeonList[name]
+    this.dungeon = dungeonList[name]
   }
 }

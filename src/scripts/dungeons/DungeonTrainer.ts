@@ -1,14 +1,15 @@
-///<reference path="../trainers/Trainer.ts"/>
+/// <reference path="../trainers/Trainer.ts"/>
 
-class DungeonTrainer extends Trainer {
+import { Trainer } from '~/scripts/trainers/Trainer'
+import type { GymPokemon } from '~/scripts/gym/GymPokemon'
 
-    constructor(
-        trainerClass: string,
-        team: GymPokemon[],
-        public options?: EnemyOptions,
-        name?: string,
-        subTrainerClass?: string) {
-        super(trainerClass, team, name, subTrainerClass);
-    }
-
+export class DungeonTrainer extends Trainer {
+  constructor(
+    trainerClass: string,
+    team: GymPokemon[],
+    public options?: EnemyOptions,
+    name?: string,
+    subTrainerClass?: string) {
+    super(trainerClass, team, name, subTrainerClass)
+  }
 }

@@ -1,16 +1,26 @@
+import { DungeonMap } from '~/scripts/dungeons/DungeonMap'
+import Notifier from '~/modules/notifications/Notifier'
+import NotificationConstants from '~/modules/notifications/NotificationConstants'
+import { DungeonBattle } from '~/scripts/dungeons/DungeonBattle'
+import * as GameConstants from '~/enums/GameConstants'
+import { usePlayerStore } from '~/stores/player'
+import { useStatisticsStore } from '~/stores/statistics'
+import { useGameStore } from '~/stores/game'
+import Amount from '~/modules/wallet/Amount'
+import type { Dungeon } from '~/scripts/dungeons/Dungeon'
 
 export class DungeonRunner {
   public static dungeon: Dungeon
-  public static timeLeft: KnockoutObservable<number> = ko.observable(GameConstants.DUNGEON_TIME)
-  public static timeLeftPercentage: KnockoutObservable<number> = ko.observable(100)
+  public static timeLeft: GameConstants.DUNGEON_TIME
+  public static timeLeftPercentage: 100
 
-  public static fighting: KnockoutObservable<boolean> = ko.observable(false)
+  public static fighting: false
   public static map: DungeonMap
   public static chestsOpened: number
   public static currentTileType
-  public static fightingBoss: KnockoutObservable<boolean> = ko.observable(false)
-  public static defeatedBoss: KnockoutObservable<boolean> = ko.observable(false)
-  public static dungeonFinished: KnockoutObservable<boolean> = ko.observable(false)
+  public static fightingBoss: false
+  public static defeatedBoss: false
+  public static dungeonFinished: false
 
   public static initializeDungeon(dungeon) {
     if (!dungeon.isUnlocked())
@@ -25,30 +35,33 @@ export class DungeonRunner {
       })
       return false
     }
-    App.game.wallet.loseAmount(new Amount(DungeonRunner.dungeon.tokenCost, GameConstants.Currency.dungeonToken))
+    // App.game.wallet.loseAmount(new Amount(DungeonRunner.dungeon.tokenCost, GameConstants.Currency.dungeonToken))
     // Reset any trainers/pokemon if there was one previously
-    DungeonBattle.trainer(null)
-    DungeonBattle.trainerPokemonIndex(0)
-    DungeonBattle.enemyPokemon(null)
-
-    DungeonRunner.timeLeft(GameConstants.DUNGEON_TIME * FluteEffectRunner.getFluteMultiplier(GameConstants.FluteItemType.Time_Flute))
-    DungeonRunner.timeLeftPercentage(100)
+    DungeonBattle.trainer = (null)
+    DungeonBattle.trainerPokemonIndex = (0)
+    DungeonBattle.enemyPokemon = (null)
+    const player = usePlayerStore()
+    const statistics = useStatisticsStore()
+    // FluteEffectRunner.getFluteMultiplier(GameConstants.FluteItemType.Time_Flute)
+    DungeonRunner.timeLeft = (GameConstants.DUNGEON_TIME * 1.02)
+    DungeonRunner.timeLeftPercentage = (100)
     // Dungeon size increases with each region
     let dungeonSize = GameConstants.BASE_DUNGEON_SIZE + player.region
     // Decrease dungeon size by 1 for every 10, 100, 1000 etc completes
-    dungeonSize -= Math.max(0, App.game.statistics.dungeonsCleared[GameConstants.getDungeonIndex(DungeonRunner.dungeon.name)]().toString().length - 1)
-    const flash = App.game.statistics.dungeonsCleared[GameConstants.getDungeonIndex(DungeonRunner.dungeon.name)]() >= 200
+    dungeonSize -= Math.max(0, statistics.getDungeonsCleared(DungeonRunner.dungeon.name).toString().length - 1)
+    const flash = statistics.getDungeonsCleared(DungeonRunner.dungeon.name) >= 200
     // Dungeon size minimum of MIN_DUNGEON_SIZE
     DungeonRunner.map = new DungeonMap(Math.max(GameConstants.MIN_DUNGEON_SIZE, dungeonSize), flash)
 
     DungeonRunner.chestsOpened = 0
-    DungeonRunner.currentTileType = ko.pureComputed(() => {
+    DungeonRunner.currentTileType = computed(() => {
       return DungeonRunner.map.currentTile().type
     })
-    DungeonRunner.fightingBoss(false)
-    DungeonRunner.defeatedBoss(false)
-    DungeonRunner.dungeonFinished(false)
-    App.game.gameState = GameConstants.GameState.dungeon
+    DungeonRunner.fightingBoss = (false)
+    DungeonRunner.defeatedBoss = (false)
+    DungeonRunner.dungeonFinished = (false)
+    const gameStore = useGameStore()
+    gameStore.setGameState(GameConstants.GameState.dungeon)
   }
 
   public static tick() {
@@ -207,9 +220,9 @@ export class DungeonRunner {
     }
   }
 
-  public static timeLeftSeconds = ko.pureComputed(() => {
+  /*  public static timeLeftSeconds = ko.pureComputed(() => {
     return (Math.ceil(DungeonRunner.timeLeft() / 100) / 10).toFixed(1)
-  })
+  }) */
 
   public static dungeonCompleted(dungeon: Dungeon, includeShiny: boolean) {
     const possiblePokemon: PokemonNameType[] = dungeon.allAvailablePokemon()
@@ -230,7 +243,8 @@ export class DungeonRunner {
   }
 
   public static hasEnoughTokens() {
-    return App.game.wallet.hasAmount(new Amount(DungeonRunner.dungeon.tokenCost, GameConstants.Currency.dungeonToken))
+    // App.game.wallet.hasAmount(new Amount(DungeonRunner.dungeon.tokenCost, GameConstants.Currency.dungeonToken))
+    return true
   }
 
   public static dungeonLevel(): number {

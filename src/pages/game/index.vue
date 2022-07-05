@@ -14,6 +14,8 @@
   <pickStarterTutorialModal />
   <!--    <starterCaught />-->
   <ShopModal />
+  <DungeonView />
+  <DungeonMap />
   <button @click="start()">
     ok
   </button>
@@ -30,6 +32,8 @@ import { pokemonMap } from '~/scripts/pokemons/PokemonList'
 import { Battle } from '~/scripts/Battle'
 import KantoSVG from '~/components/map/Kanto/KantoSVG.vue'
 import ShopModal from '~/components/map/shopModal.vue'
+import DungeonMap from '~/components/DungeonMap.vue'
+import DungeonView from '~/components/DungeonView.vue'
 import townView from '~/components/map/townView.vue'
 import Enemy from '~/components/pokemon/Enemy.vue'
 import BattleList from '~/components/pokemon/BattleList.vue'

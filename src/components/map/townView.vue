@@ -75,11 +75,10 @@ const backgroundImage = computed(() => {
     <div class="row no-gutters">
       <div class="col-4 no-gutters">
         <div class="list-group">
-          {{ player.town.dungeon }}
+          <!--     :class="player.town.dungeon && App.game.wallet.currencies[GameConstants.Currency.dungeonToken]() >= player.town.dungeon.tokenCost ? 'btn btn-success p-0' : 'btn btn-secondary p-0'"     -->
           <button
             v-if="player.town instanceof DungeonTown"
             class="btn btn-secondary p-0"
-            :class="player.town.dungeon && App.game.wallet.currencies[GameConstants.Currency.dungeonToken]() >= player.town.dungeon.tokenCost ? 'btn btn-success p-0' : 'btn btn-secondary p-0'"
             @click="DungeonRunner.initializeDungeon(player.town.dungeon)"
           >
             Start<br>
@@ -143,9 +142,8 @@ const backgroundImage = computed(() => {
           <!-- ko foreach: player.town().dungeon.normalEncounterList -->
           <li class="list-inline-item">
             <img
-              class="dungeon-pokemon-preview" src="" data-bind="attr:{ src: $data.image },
+              class="dungeon-pokemon-preview" :src="$data.image" data-bind="attr:{ src: $data.image },
             css: { 'dungeon-pokemon-locked': $data.hidden }"
-              onerror="this.src='assets/images/trainers/Mysterious Trainer.png';"
             >
             <sup class="shiny" data-bind="visible: $data.shiny">✨</sup>
             <img
@@ -167,7 +165,6 @@ const backgroundImage = computed(() => {
             <img
               class="dungeon-pokemon-preview" src="" data-bind="attr:{ src: $data.image },
             css: { 'dungeon-pokemon-locked': $data.hidden }"
-              onerror="this.src='assets/images/trainers/Mysterious Trainer.png';"
             >
             <sup class="shiny" data-bind="visible: $data.shiny">✨</sup>
             <img
