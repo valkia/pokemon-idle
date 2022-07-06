@@ -8,19 +8,19 @@ import { useStatisticsStore } from '~/stores/statistics'
 import { useGameStore } from '~/stores/game'
 import Amount from '~/modules/wallet/Amount'
 import type { Dungeon } from '~/scripts/dungeons/Dungeon'
-import {useDungeonStore} from "~/stores/dungeon";
-import MapHelper from "~/scripts/worldmap/MapHelper";
-import {PokemonFactory} from "~/scripts/pokemons/PokemonFactory";
-import {AchievementHandler} from "~/scripts/achievements/AchievementHandler";
-import App from "~/scripts/App";
-import GameHelper from "~/enums/GameHelper";
-import {PokeballItem} from "~/scripts/items/PokeballItem";
-import {RouteHelper} from "~/scripts/wildBattle/RouteHelper";
-import ClearDungeonRequirement from "~/scripts/achievements/ClearDungeonRequirement";
-import {ItemList} from "~/scripts/items/Item";
-import {PokemonHelper} from "~/scripts/pokemons/PokemonHelper";
-import {PokemonNameType} from "~/enums/PokemonNameType";
-import Rand from "~/modules/utilities/Rand";
+import { useDungeonStore } from '~/stores/dungeon'
+import MapHelper from '~/scripts/worldmap/MapHelper'
+import { PokemonFactory } from '~/scripts/pokemons/PokemonFactory'
+import { AchievementHandler } from '~/scripts/achievements/AchievementHandler'
+import App from '~/scripts/App'
+import GameHelper from '~/enums/GameHelper'
+import { PokeballItem } from '~/scripts/items/PokeballItem'
+import { RouteHelper } from '~/scripts/wildBattle/RouteHelper'
+import ClearDungeonRequirement from '~/scripts/achievements/ClearDungeonRequirement'
+import { ItemList } from '~/scripts/items/Item'
+import { PokemonHelper } from '~/scripts/pokemons/PokemonHelper'
+import type { PokemonNameType } from '~/enums/PokemonNameType'
+import Rand from '~/modules/utilities/Rand'
 
 export class DungeonRunner {
   public static dungeon: Dungeon
@@ -97,13 +97,13 @@ export class DungeonRunner {
      * Handles the click event in the dungeon view
      */
   public static handleClick() {
-    if (DungeonRunner.fighting() && !DungeonBattle.catching())
+    if (DungeonRunner.fighting && !DungeonBattle.catching)
       DungeonBattle.clickAttack()
-    else if (DungeonRunner.map.currentTile().type() === GameConstants.DungeonTile.entrance)
+    else if (DungeonRunner.map.currentTile().type === GameConstants.DungeonTile.entrance)
       DungeonRunner.dungeonLeave()
-    else if (DungeonRunner.map.currentTile().type() === GameConstants.DungeonTile.chest)
+    else if (DungeonRunner.map.currentTile().type === GameConstants.DungeonTile.chest)
       DungeonRunner.openChest()
-    else if (DungeonRunner.map.currentTile().type() === GameConstants.DungeonTile.boss && !DungeonRunner.fightingBoss())
+    else if (DungeonRunner.map.currentTile().type === GameConstants.DungeonTile.boss && !DungeonRunner.fightingBoss)
       DungeonRunner.startBossFight()
   }
 
@@ -113,7 +113,7 @@ export class DungeonRunner {
   }
 
   public static openChest() {
-    if (DungeonRunner.map.currentTile().type() !== GameConstants.DungeonTile.chest)
+    if (DungeonRunner.map.currentTile.type !== GameConstants.DungeonTile.chest)
       return
 
     DungeonRunner.chestsOpened++
@@ -131,8 +131,8 @@ export class DungeonRunner {
 
     DungeonRunner.gainLoot(loot.loot, amount)
 
-    DungeonRunner.map.currentTile().type(GameConstants.DungeonTile.empty)
-    DungeonRunner.map.currentTile().calculateCssClass()
+    DungeonRunner.map.currentTile.type = (GameConstants.DungeonTile.empty)
+    DungeonRunner.map.currentTile.calculateCssClass()
     if (DungeonRunner.chestsOpened == Math.floor(DungeonRunner.map.size / 3))
       DungeonRunner.map.showChestTiles()
 
@@ -192,28 +192,28 @@ export class DungeonRunner {
   }
 
   public static startBossFight() {
-    if (DungeonRunner.map.currentTile().type() !== GameConstants.DungeonTile.boss || DungeonRunner.fightingBoss())
+    if (DungeonRunner.map.currentTile.type !== GameConstants.DungeonTile.boss || DungeonRunner.fightingBoss())
       return
 
-    DungeonRunner.fightingBoss(true)
+    DungeonRunner.fightingBoss = (true)
     DungeonBattle.generateNewBoss()
   }
 
   public static dungeonLeave() {
-    if (DungeonRunner.map.currentTile().type() !== GameConstants.DungeonTile.entrance || DungeonRunner.dungeonFinished() || !DungeonRunner.map.playerMoved())
+    if (DungeonRunner.map.currentTile.type !== GameConstants.DungeonTile.entrance || DungeonRunner.dungeonFinished || !DungeonRunner.map.playerMoved)
       return
 
-    DungeonRunner.dungeonFinished(true)
-    DungeonRunner.fighting(false)
-    DungeonRunner.fightingBoss(false)
+    DungeonRunner.dungeonFinished = (true)
+    DungeonRunner.fighting = (false)
+    DungeonRunner.fightingBoss = (false)
     MapHelper.moveToTown(DungeonRunner.dungeon.name)
   }
 
   private static dungeonLost() {
-    if (!DungeonRunner.dungeonFinished()) {
-      DungeonRunner.dungeonFinished(true)
-      DungeonRunner.fighting(false)
-      DungeonRunner.fightingBoss(false)
+    if (!DungeonRunner.dungeonFinished) {
+      DungeonRunner.dungeonFinished = (true)
+      DungeonRunner.fighting = (false)
+      DungeonRunner.fightingBoss = (false)
       MapHelper.moveToTown(DungeonRunner.dungeon.name)
       Notifier.notify({
         message: 'You could not complete the dungeon in time',
@@ -223,8 +223,8 @@ export class DungeonRunner {
   }
 
   public static dungeonWon() {
-    if (!DungeonRunner.dungeonFinished()) {
-      DungeonRunner.dungeonFinished(true)
+    if (!DungeonRunner.dungeonFinished) {
+      DungeonRunner.dungeonFinished = (true)
       GameHelper.incrementObservable(App.game.statistics.dungeonsCleared[GameConstants.getDungeonIndex(DungeonRunner.dungeon.name)])
       MapHelper.moveToTown(DungeonRunner.dungeon.name)
       DungeonRunner.dungeon.rewardFunction()
@@ -236,9 +236,9 @@ export class DungeonRunner {
     }
   }
 
-  /*  public static timeLeftSeconds = ko.pureComputed(() => {
-    return (Math.ceil(DungeonRunner.timeLeft() / 100) / 10).toFixed(1)
-  }) */
+  public static timeLeftSeconds = () => {
+    return (Math.ceil(DungeonRunner.timeLeft / 100) / 10).toFixed(1)
+  }
 
   public static dungeonCompleted(dungeon: Dungeon, includeShiny: boolean) {
     const possiblePokemon: PokemonNameType[] = dungeon.allAvailablePokemon()

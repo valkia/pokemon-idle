@@ -8,14 +8,16 @@
       <townView />
       <Enemy />
       <KantoSVG />
+
+      <DungeonView />
+      <DungeonMap />
     </div>
   </div>
   <Notificaton />
   <pickStarterTutorialModal />
   <!--    <starterCaught />-->
   <ShopModal />
-  <DungeonView />
-  <DungeonMap />
+
   <button @click="start()">
     ok
   </button>

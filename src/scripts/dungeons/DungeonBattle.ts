@@ -11,24 +11,26 @@ import { usePlayerStore } from '~/stores/player'
 import * as GameConstants from '~/enums/GameConstants'
 import { Pokeballs } from '~/scripts/pokeballs/Pokeballs'
 import Rand from '~/modules/utilities/Rand'
+import { DungeonBossPokemon } from '~/scripts/dungeons/DungeonBossPokemon'
+import { useDungeonStore } from '~/stores/dungeon'
 
 export class DungeonBattle extends Battle {
   static trainer: DungeonTrainer | null = null
   static trainerPokemonIndex: 0
 
-  /*  public static remainingTrainerPokemon: number = ko.pureComputed(() => {
+  public static remainingTrainerPokemon = () => {
     if (!DungeonBattle.trainer)
       return 0
 
     return DungeonBattle.trainer?.team.length - DungeonBattle.trainerPokemonIndex
-  })
+  }
 
-  public static defeatedTrainerPokemon: KnockoutComputed<number> = ko.pureComputed(() => {
+  public static defeatedTrainerPokemon = () => {
     if (!DungeonBattle.trainer)
       return 0
 
     return DungeonBattle.trainerPokemonIndex
-  }) */
+  }
 
   /**
      * Award the player with money and exp, and throw a Pokéball if applicable
@@ -105,6 +107,7 @@ export class DungeonBattle extends Battle {
 
       DungeonRunner.fighting = (false)
       this.trainer = (null)
+      useDungeonStore().setTrainer(null)
       this.trainerPokemonIndex = (0)
 
       // Clearing Dungeon tile
@@ -151,6 +154,7 @@ export class DungeonBattle extends Battle {
     else {
       const trainer = <DungeonTrainer>enemy
       this.trainer = (trainer)
+      useDungeonStore().setTrainer(trainer)
       this.trainerPokemonIndex = (0)
 
       this.generateTrainerPokemon()
@@ -218,6 +222,7 @@ export class DungeonBattle extends Battle {
     }
     else {
       this.trainer = (enemy)
+      useDungeonStore().setTrainer(enemy)
       this.trainerPokemonIndex = (0)
 
       this.generateTrainerPokemon()

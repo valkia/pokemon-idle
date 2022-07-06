@@ -2,12 +2,12 @@
 import { useGameStore } from '~/stores/game'
 import * as GameConstants from '~/enums/GameConstants'
 import { DungeonRunner } from '~/scripts/dungeons/DungeonRunner'
-import {useDungeonStore} from "~/stores/dungeon";
+import { useDungeonStore } from '~/stores/dungeon'
 const gameState = useGameStore()
-const dungeon = computed(()=>{
+const dungeon = computed(() => {
   return useDungeonStore().dungeon
 })
-const map = computed(()=>{
+const map = computed(() => {
   return useDungeonStore().map
 })
 </script>
@@ -23,10 +23,11 @@ const map = computed(()=>{
     </div>
     <div class="card-body p-0 text-center">
       <table class="dungeon-board">
-        <tbody v-for="(map,mapIndex) in map?.board()">
-          <tr v-for="(item,index) in map">
+        <tbody>
+          <tr v-for="(mapItem,mapIndex) in map?.board">
             <td
-              :class="item.cssClass()"
+              v-for="(item,index) in mapItem"
+              :class="item.cssClass"
               @click="map.moveToCoordinates(index, mapIndex)"
             />
           </tr>
@@ -35,3 +36,8 @@ const map = computed(()=>{
     </div>
   </div>
 </template>
+<style lang="scss">
+:root{
+  --trainer-image: url('/src/assets/images/profile/trainer-0.png');
+}
+</style>

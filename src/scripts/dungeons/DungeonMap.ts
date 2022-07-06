@@ -35,6 +35,7 @@ export class DungeonMap {
   }
 
   public moveToCoordinates(x: number, y: number) {
+    console.log('moveToCoordinates', x, y)
     if (this.moveToTile(new Point(x, y)))
       this.playerMoved = (true)
   }

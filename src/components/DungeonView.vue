@@ -1,13 +1,21 @@
 <script lang="ts" setup>
 import { useGameStore } from '~/stores/game'
 import * as GameConstants from '~/enums/GameConstants'
-import {PokemonHelper} from "~/scripts/pokemons/PokemonHelper";
-import {DungeonRunner} from "~/scripts/dungeons/DungeonRunner";
-import {useDungeonStore} from "~/stores/dungeon";
+import { PokemonHelper } from '~/scripts/pokemons/PokemonHelper'
+import { DungeonRunner } from '~/scripts/dungeons/DungeonRunner'
+import { DungeonBattle } from '~/scripts/dungeons/DungeonBattle'
+import { useDungeonStore } from '~/stores/dungeon'
 const gameState = useGameStore()
-const dungeon = computed(()=>{
+const dungeon = computed(() => {
   return useDungeonStore().dungeon
 })
+const enemyPokemon = computed(() => {
+  return useDungeonStore().enemyPokemon
+})
+const trainer = computed(() => {
+  return useDungeonStore().trainer
+})
+// eslint-disable-next-line no-unused-expressions
 </script>
 <template>
   <div v-if="gameState.gameState === GameConstants.GameState.dungeon" class="row justify-content-center no-gutters">
@@ -18,15 +26,15 @@ const dungeon = computed(()=>{
       @click="DungeonRunner.handleClick()"
     >
       <h2 class="pageItemTitle" style="display: block;">
-        <div v-if="DungeonBattle.enemyPokemon() && DungeonBattle.enemyPokemon().health()">
+        <div v-if="enemyPokemon?.health">
           <div data-bind="text: DungeonBattle.enemyPokemon().name">
-            {{ DungeonBattle.enemyPokemon().name }}
+            {{ enemyPokemon?.name }}
           </div>
           <!-- ko if: !DungeonBattle.trainer() -->
           <div data-bind="template: { name: 'caughtStatusTemplate', data: {'status': PartyController.getCaughtStatus(DungeonBattle.enemyPokemon().id)}}" />
         <!-- /ko -->
         </div>
-        <div v-if="!DungeonBattle.enemyPokemon() || !DungeonBattle.enemyPokemon().health()">
+        <div v-if="!enemyPokemon || !enemyPokemon?.health">
                 &nbsp;
         </div>
 
@@ -38,7 +46,7 @@ const dungeon = computed(()=>{
           <!-- /ko -->
           <!-- ko if: DungeonBattle.trainer() -->
           <div data-bind="text: DungeonBattle.trainer().name">
-            {{DungeonBattle.trainer().name}}
+            {{ trainer?.name }}
           </div>
           <!-- /ko -->
 
@@ -66,22 +74,23 @@ const dungeon = computed(()=>{
 
         <!-- ko ifnot: DungeonBattle.trainer() -->
         <div
-            class="right"
-            :class=" DungeonRunner.timeLeftSeconds() < 20?'text-danger':'text-primary'"
-            data-bind="css: { 'text-danger': DungeonRunner.timeLeftSeconds() < 20, 'text-primary': DungeonRunner.timeLeftSeconds() >= 20 }">
+          class="right"
+          :class=" DungeonRunner.timeLeftSeconds() < 20?'text-danger':'text-primary'"
+          data-bind="css: { 'text-danger': DungeonRunner.timeLeftSeconds() < 20, 'text-primary': DungeonRunner.timeLeftSeconds() >= 20 }"
+        >
           <h4>
-            <strong data-bind="text: DungeonRunner.timeLeftSeconds() + 's'" >
-            {{DungeonRunner.timeLeftSeconds() + 's'}}
-          </strong>
+            <strong data-bind="text: DungeonRunner.timeLeftSeconds() + 's'">
+              {{ DungeonRunner.timeLeftSeconds() + 's' }}
+            </strong>
           </h4>
         </div>
         <!-- /ko -->
         <!-- ko if: DungeonBattle.trainer() -->
         <div class="right">
-          <span v-for="item in  new Array(DungeonBattle.defeatedTrainerPokemon())">
+          <span v-for="item in new Array(DungeonBattle.defeatedTrainerPokemon())">
             <img src="/src/assets/images/pokeball/Pokeball.svg" class="pokeball-smallest pokeball-defeated">
           </span>
-          <span v-for="item in  new Array(DungeonBattle.remainingTrainerPokemon())">
+          <span v-for="item in new Array(DungeonBattle.remainingTrainerPokemon())">
             <img src="/src/assets/images/pokeball/Pokeball.svg" class="pokeball-smallest">
           </span>
         </div>
@@ -90,29 +99,31 @@ const dungeon = computed(()=>{
           <div
             class="progress-bar bg-danger" role="progressbar"
             :class="DungeonRunner.timeLeftSeconds() < 20?'bg-danger':'bg-primary'"
-            :style="'width:' + DungeonRunner.timeLeftPercentage() + '%'"
+            :style="'width:' + DungeonRunner.timeLeftPercentage + '%'"
             data-bind="attr:{ style: 'width:' + DungeonRunner.timeLeftPercentage() + '%' },
                      css: { 'bg-danger': DungeonRunner.timeLeftSeconds() < 20, 'bg-primary': DungeonRunner.timeLeftSeconds() >= 20 }"
             aria-valuemin="0" aria-valuemax="100"
           >
-            <span data-bind="text: DungeonRunner.timeLeftSeconds() + 's'" style="font-size: 12px;" >{{DungeonRunner.timeLeftSeconds() + 's'}}</span>
+            <span data-bind="text: DungeonRunner.timeLeftSeconds() + 's'" style="font-size: 12px;">{{ DungeonRunner.timeLeftSeconds() + 's' }}</span>
           </div>
         </div>
       </h2>
 
       <!-- ko if: (DungeonRunner.fighting() || DungeonBattle.catching)  -->
-      <div v-if="DungeonBattle.enemyPokemon">
-        <div style="position:absolute; left:65%;" v-if="DungeonBattle.trainer()">
-          <img data-bind="attr:{ src: DungeonBattle.trainer().image }"
-               :src="DungeonBattle.trainer().image"
-               onerror="this.src='assets/images/trainers/Mysterious Trainer.png';">
+      <div v-if="enemyPokemon">
+        <div v-if="trainer" style="position:absolute; left:65%;">
+          <img
+            data-bind="attr:{ src: DungeonBattle.trainer().image }"
+            :src="trainer.image"
+            onerror="this.src='assets/images/trainers/Mysterious Trainer.png';"
+          >
         </div>
         <div>
           <div v-if="!DungeonBattle.catching">
             <img
               class="enemy"
               data-bind="attr:{ src: PokemonHelper.getImage(DungeonBattle.enemyPokemon(), DungeonBattle.enemyPokemon().shiny) }"
-              :src="PokemonHelper.getImage(DungeonBattle.enemyPokemon(), DungeonBattle.enemyPokemon().shiny)"
+              :src="PokemonHelper.getImage(enemyPokemon, enemyPokemon.shiny)"
             >
           </div>
           <div v-if="DungeonBattle.catching" class="catchChance">
@@ -136,8 +147,8 @@ const dungeon = computed(()=>{
             data-bind="attr:{ style: 'width:' + DungeonBattle.enemyPokemon().healthPercentage() + '%'}, css: { 'healthbar-boss': DungeonRunner.fightingBoss(), 'bg-danger': !DungeonRunner.fightingBoss()}"
             aria-valuemin="0" aria-valuemax="100"
           >
-            <span data-bind="text: DungeonBattle.enemyPokemon().health() + ' / ' + DungeonBattle.enemyPokemon().maxHealth()" style="font-size: 12px;" >
-              {{DungeonBattle.enemyPokemon().health() + ' / ' + DungeonBattle.enemyPokemon().maxHealth()}}
+            <span data-bind="text: DungeonBattle.enemyPokemon().health() + ' / ' + DungeonBattle.enemyPokemon().maxHealth()" style="font-size: 12px;">
+              {{ DungeonBattle.enemyPokemon().health() + ' / ' + DungeonBattle.enemyPokemon().maxHealth() }}
             </span>
           </div>
         </div>
@@ -171,3 +182,141 @@ const dungeon = computed(()=>{
     </div>
   </div>
 </template>
+<style lang="scss">
+#dungeonPokemonList {
+  .boss {
+    position: absolute;
+    bottom: -10px;
+    left: -10px;
+    width: 35%;
+  }
+}
+.pokeball-small {
+  width: 32px;
+  height: 32px;
+  opacity: 0.2;
+}
+
+.pokeball-smallest {
+  width: 16px;
+  height: 16px;
+  margin-bottom: 3px;
+  margin-left: 3px;
+  box-sizing: content-box;
+}
+.tile {
+  position: relative;
+  height: 45px;
+  border: 1px solid black;
+  margin: 1px;
+  cursor: pointer;
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:not(.tile-visited, .tile-invisible, .tile-player) {
+    filter: brightness(50%);
+  }
+}
+
+.tile-invisible {
+  background-color: #333;
+}
+
+.tile-player {
+  background-color: #2ecc71;
+  position: relative;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-image: var(--trainer-image);
+  image-rendering: pixelated;
+}
+
+.tile-empty {
+  background-color: whitesmoke;
+}
+
+.tile-entrance {
+  background-color: #3498db;
+}
+
+.tile-enemy {
+  background-color: #e74c3c;
+}
+
+.tile-chest {
+  background-color: #f1c40f;
+  &::after {
+    position: absolute;
+    top: 15%;
+    left: 15%;
+    content: '';
+    display: block;
+    height: 70%;
+    width: 70%;
+    background: center / contain no-repeat url('../assets/images/dungeons/chest.png');
+  }
+}
+
+.tile-boss {
+  background-color: #9b59b6;
+  &::after {
+    position: absolute;
+    top: 15%;
+    left: 15%;
+    content: '';
+    display: block;
+    height: 70%;
+    width: 70%;
+    background: center / contain no-repeat url('../assets/images/dungeons/boss.svg');
+  }
+}
+
+.healthbar-boss {
+  background-color: #9b59b6;
+}
+
+.dungeon-board {
+  width: 100%;
+  padding: 20px;
+  margin: auto;
+}
+
+.dungeon-chest {
+  margin-top: 25px;
+}
+
+.chest-button {
+  p {
+    font-size: small;
+    margin-bottom: 0;
+  }
+}
+
+.dungeon-button {
+  margin-top: 50px;
+}
+
+.dungeon-pokemon-locked {
+  -webkit-filter: brightness(0%); /* Safari 6.0 - 9.0 */
+  filter: brightness(0%);
+  opacity: 0.2;
+}
+
+.dungeon-pokemon-preview {
+  max-height: 64px;
+  height: auto;
+  width: auto;
+  margin: -10px -10px -12px;
+}
+
+#dungeonPokemonList {
+  .boss {
+    position: absolute;
+    bottom: -10px;
+    left: -10px;
+    width: 35%;
+  }
+}
+
+</style>

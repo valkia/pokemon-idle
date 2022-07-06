@@ -56,7 +56,7 @@ const backgroundImage = computed(() => {
             >
               <img
                 title="You have captured all Pokémon in this dungeon!" class="pokeball-smallest"
-                src="assets/images/pokeball/Pokeball.svg"
+                src="/src/assets/images/pokeball/Pokeball.svg"
               >
             </div>
 
@@ -65,7 +65,7 @@ const backgroundImage = computed(() => {
               <img
                 title="You have captured all Pokémon shiny in this dungeon!"
                 class="pokeball-smallest"
-                src="assets/images/pokeball/Pokeball-shiny.svg"
+                src="/src/assets/images/pokeball/Pokeball-shiny.svg"
               >
             </div>
           </div>
@@ -147,7 +147,7 @@ const backgroundImage = computed(() => {
             >
             <sup class="shiny" data-bind="visible: $data.shiny">✨</sup>
             <img
-              class="lock" src="assets/images/breeding/lock.svg" data-bind="
+              class="lock" src="/src/assets/images/breeding/lock.svg" data-bind="
             hidden: !$data.lock,
             tooltip: {
                 title: 'Try talking to the locals. Sometimes they know more than you think.',
@@ -161,14 +161,14 @@ const backgroundImage = computed(() => {
           <!--Display all available bosses in this dungeon-->
           <!-- ko foreach: player.town().dungeon.bossEncounterList -->
           <li class="list-inline-item" data-bind="hidden: $data.hide">
-            <img class="boss" src="assets/images/dungeons/boss.svg">
+            <img class="boss" src="/src/assets/images/dungeons/boss.svg">
             <img
               class="dungeon-pokemon-preview" src="" data-bind="attr:{ src: $data.image },
             css: { 'dungeon-pokemon-locked': $data.hidden }"
             >
             <sup class="shiny" data-bind="visible: $data.shiny">✨</sup>
             <img
-              class="lock" src="assets/images/breeding/lock.svg" data-bind="hidden: !$data.lock,
+              class="lock" src="/src/assets/images/breeding/lock.svg" data-bind="hidden: !$data.lock,
             tooltip: {
                 title: 'Try talking to the locals. Sometimes they know more than you think.',
                 html: true,
@@ -185,6 +185,14 @@ const backgroundImage = computed(() => {
 </template>
 
 <style lang="scss">
+#dungeonPokemonList {
+  .boss {
+    position: absolute;
+    bottom: -10px;
+    left: -10px;
+    width: 35%;
+  }
+}
 #townView {
   min-height: 263px;
   background-repeat: no-repeat;
