@@ -8,6 +8,19 @@ import { useStatisticsStore } from '~/stores/statistics'
 import { useGameStore } from '~/stores/game'
 import Amount from '~/modules/wallet/Amount'
 import type { Dungeon } from '~/scripts/dungeons/Dungeon'
+import {useDungeonStore} from "~/stores/dungeon";
+import MapHelper from "~/scripts/worldmap/MapHelper";
+import {PokemonFactory} from "~/scripts/pokemons/PokemonFactory";
+import {AchievementHandler} from "~/scripts/achievements/AchievementHandler";
+import App from "~/scripts/App";
+import GameHelper from "~/enums/GameHelper";
+import {PokeballItem} from "~/scripts/items/PokeballItem";
+import {RouteHelper} from "~/scripts/wildBattle/RouteHelper";
+import ClearDungeonRequirement from "~/scripts/achievements/ClearDungeonRequirement";
+import {ItemList} from "~/scripts/items/Item";
+import {PokemonHelper} from "~/scripts/pokemons/PokemonHelper";
+import {PokemonNameType} from "~/enums/PokemonNameType";
+import Rand from "~/modules/utilities/Rand";
 
 export class DungeonRunner {
   public static dungeon: Dungeon
@@ -27,7 +40,8 @@ export class DungeonRunner {
       return false
 
     DungeonRunner.dungeon = dungeon
-
+    const dungeonStore = useDungeonStore()
+    dungeonStore.setDungeon(dungeon)
     if (!DungeonRunner.hasEnoughTokens()) {
       Notifier.notify({
         message: 'You don\'t have enough dungeon tokens',
@@ -52,6 +66,8 @@ export class DungeonRunner {
     const flash = statistics.getDungeonsCleared(DungeonRunner.dungeon.name) >= 200
     // Dungeon size minimum of MIN_DUNGEON_SIZE
     DungeonRunner.map = new DungeonMap(Math.max(GameConstants.MIN_DUNGEON_SIZE, dungeonSize), flash)
+
+    dungeonStore.setMap(DungeonRunner.map)
 
     DungeonRunner.chestsOpened = 0
     DungeonRunner.currentTileType = computed(() => {
@@ -248,6 +264,7 @@ export class DungeonRunner {
   }
 
   public static dungeonLevel(): number {
+    const player = usePlayerStore()
     return PokemonFactory.routeLevel(this.dungeon.difficultyRoute, player.region)
   }
 }

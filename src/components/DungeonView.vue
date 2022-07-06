@@ -1,56 +1,63 @@
 <script lang="ts" setup>
 import { useGameStore } from '~/stores/game'
 import * as GameConstants from '~/enums/GameConstants'
+import {PokemonHelper} from "~/scripts/pokemons/PokemonHelper";
+import {DungeonRunner} from "~/scripts/dungeons/DungeonRunner";
+import {useDungeonStore} from "~/stores/dungeon";
 const gameState = useGameStore()
-
+const dungeon = computed(()=>{
+  return useDungeonStore().dungeon
+})
 </script>
 <template>
   <div v-if="gameState.gameState === GameConstants.GameState.dungeon" class="row justify-content-center no-gutters">
     <div
-      class="col no-gutters clickable" style="height: 220px; display: block;"
+      class="col no-gutters clickable"
+      style="height: 220px; display: block;"
       data-bind="click: function() { DungeonRunner.handleClick() }"
+      @click="DungeonRunner.handleClick()"
     >
       <h2 class="pageItemTitle" style="display: block;">
-        <div data-bind="if: DungeonBattle.enemyPokemon() && DungeonBattle.enemyPokemon().health()">
+        <div v-if="DungeonBattle.enemyPokemon() && DungeonBattle.enemyPokemon().health()">
           <div data-bind="text: DungeonBattle.enemyPokemon().name">
-            Pokémon name
+            {{ DungeonBattle.enemyPokemon().name }}
           </div>
           <!-- ko if: !DungeonBattle.trainer() -->
           <div data-bind="template: { name: 'caughtStatusTemplate', data: {'status': PartyController.getCaughtStatus(DungeonBattle.enemyPokemon().id)}}" />
         <!-- /ko -->
         </div>
-        <div data-bind="if: !DungeonBattle.enemyPokemon() || !DungeonBattle.enemyPokemon().health()">
+        <div v-if="!DungeonBattle.enemyPokemon() || !DungeonBattle.enemyPokemon().health()">
                 &nbsp;
         </div>
 
         <div class="left">
           <!-- ko if: !DungeonBattle.trainer() -->
           <div data-bind="text: DungeonRunner.dungeon.name">
-            Dungeon name
+            {{ dungeon.name }}
           </div>
           <!-- /ko -->
           <!-- ko if: DungeonBattle.trainer() -->
           <div data-bind="text: DungeonBattle.trainer().name">
-            Trainer name
+            {{DungeonBattle.trainer().name}}
           </div>
           <!-- /ko -->
 
           <!-- ko if: !DungeonBattle.trainer() -->
 
           <!--If all Pokémon in the dungeon are caught-->
-          <div data-bind="if: (!DungeonRunner.dungeonCompleted(DungeonRunner.dungeon, true) && DungeonRunner.dungeonCompleted(DungeonRunner.dungeon, false))">
+          <div v-if="(!DungeonRunner.dungeonCompleted(DungeonRunner.dungeon, true) && DungeonRunner.dungeonCompleted(DungeonRunner.dungeon, false))">
             <img
               title="You have captured all Pokémon in this dungeon!" class="pokeball-smallest"
-              src="assets/images/pokeball/Pokeball.svg"
+              src="/src/assets/images/pokeball/Pokeball.svg"
             >
           </div>
 
           <!--If all Pokémon in the dungeon are caught shiny-->
-          <div data-bind="if: DungeonRunner.dungeonCompleted(DungeonRunner.dungeon, true)">
+          <div v-if="DungeonRunner.dungeonCompleted(dungeon, true)">
             <img
               title="You have captured all Pokémon shiny in this dungeon!"
               class="pokeball-smallest"
-              src="assets/images/pokeball/Pokeball-shiny.svg"
+              src="/src/assets/images/pokeball/Pokeball-shiny.svg"
             >
           </div>
 
@@ -58,65 +65,80 @@ const gameState = useGameStore()
         </div>
 
         <!-- ko ifnot: DungeonBattle.trainer() -->
-        <div class="right" data-bind="css: { 'text-danger': DungeonRunner.timeLeftSeconds() < 20, 'text-primary': DungeonRunner.timeLeftSeconds() >= 20 }">
-          <h4><strong data-bind="text: DungeonRunner.timeLeftSeconds() + 's'" /></h4>
+        <div
+            class="right"
+            :class=" DungeonRunner.timeLeftSeconds() < 20?'text-danger':'text-primary'"
+            data-bind="css: { 'text-danger': DungeonRunner.timeLeftSeconds() < 20, 'text-primary': DungeonRunner.timeLeftSeconds() >= 20 }">
+          <h4>
+            <strong data-bind="text: DungeonRunner.timeLeftSeconds() + 's'" >
+            {{DungeonRunner.timeLeftSeconds() + 's'}}
+          </strong>
+          </h4>
         </div>
         <!-- /ko -->
         <!-- ko if: DungeonBattle.trainer() -->
         <div class="right">
-          <span data-bind="foreach: new Array(DungeonBattle.defeatedTrainerPokemon())">
-            <img src="assets/images/pokeball/Pokeball.svg" class="pokeball-smallest pokeball-defeated">
+          <span v-for="item in  new Array(DungeonBattle.defeatedTrainerPokemon())">
+            <img src="/src/assets/images/pokeball/Pokeball.svg" class="pokeball-smallest pokeball-defeated">
           </span>
-          <span data-bind="foreach: new Array(DungeonBattle.remainingTrainerPokemon())">
-            <img src="assets/images/pokeball/Pokeball.svg" class="pokeball-smallest">
+          <span v-for="item in  new Array(DungeonBattle.remainingTrainerPokemon())">
+            <img src="/src/assets/images/pokeball/Pokeball.svg" class="pokeball-smallest">
           </span>
         </div>
         <!-- /ko -->
         <div class="progress timer">
           <div
             class="progress-bar bg-danger" role="progressbar"
+            :class="DungeonRunner.timeLeftSeconds() < 20?'bg-danger':'bg-primary'"
+            :style="'width:' + DungeonRunner.timeLeftPercentage() + '%'"
             data-bind="attr:{ style: 'width:' + DungeonRunner.timeLeftPercentage() + '%' },
                      css: { 'bg-danger': DungeonRunner.timeLeftSeconds() < 20, 'bg-primary': DungeonRunner.timeLeftSeconds() >= 20 }"
             aria-valuemin="0" aria-valuemax="100"
           >
-            <span data-bind="text: DungeonRunner.timeLeftSeconds() + 's'" style="font-size: 12px;" />
+            <span data-bind="text: DungeonRunner.timeLeftSeconds() + 's'" style="font-size: 12px;" >{{DungeonRunner.timeLeftSeconds() + 's'}}</span>
           </div>
         </div>
       </h2>
 
       <!-- ko if: (DungeonRunner.fighting() || DungeonBattle.catching)  -->
-      <div data-bind="if: DungeonBattle.enemyPokemon">
-        <div style="position:absolute; left:65%;" data-bind="if: DungeonBattle.trainer()">
-          <img data-bind="attr:{ src: DungeonBattle.trainer().image }" onerror="this.src='assets/images/trainers/Mysterious Trainer.png';">
+      <div v-if="DungeonBattle.enemyPokemon">
+        <div style="position:absolute; left:65%;" v-if="DungeonBattle.trainer()">
+          <img data-bind="attr:{ src: DungeonBattle.trainer().image }"
+               :src="DungeonBattle.trainer().image"
+               onerror="this.src='assets/images/trainers/Mysterious Trainer.png';">
         </div>
         <div>
-          <div data-bind="ifnot: DungeonBattle.catching">
+          <div v-if="!DungeonBattle.catching">
             <img
               class="enemy"
               data-bind="attr:{ src: PokemonHelper.getImage(DungeonBattle.enemyPokemon(), DungeonBattle.enemyPokemon().shiny) }"
-              src=""
+              :src="PokemonHelper.getImage(DungeonBattle.enemyPokemon(), DungeonBattle.enemyPokemon().shiny)"
             >
           </div>
-          <div data-bind="if: DungeonBattle.catching" class="catchChance">
+          <div v-if="DungeonBattle.catching" class="catchChance">
             <img
               class="pokeball-animated"
               data-bind="attr:{ src: 'assets/images/pokeball/' + GameConstants.Pokeball[DungeonBattle.pokeball()] + '.svg' }"
-              src=""
+              :src="'assets/images/pokeball/' + GameConstants.Pokeball[DungeonBattle.pokeball()] + '.svg'"
             >
             <br>
             Catch Chance:
             <div data-bind="text: Math.floor(DungeonBattle.catchRateActual()) + '%'">
-              Catch Rate
+              {{ Math.floor(DungeonBattle.catchRateActual()) + '%' }}
             </div>
           </div>
         </div>
         <div class="progress hitpoints" style="height: 20px;">
           <div
             class="progress-bar bg-danger" role="progressbar"
+            :style="'width:' + DungeonBattle.enemyPokemon().healthPercentage() + '%'"
+            :class="DungeonRunner.fightingBoss()?'healthbar-boss':'bg-danger'"
             data-bind="attr:{ style: 'width:' + DungeonBattle.enemyPokemon().healthPercentage() + '%'}, css: { 'healthbar-boss': DungeonRunner.fightingBoss(), 'bg-danger': !DungeonRunner.fightingBoss()}"
             aria-valuemin="0" aria-valuemax="100"
           >
-            <span data-bind="text: DungeonBattle.enemyPokemon().health() + ' / ' + DungeonBattle.enemyPokemon().maxHealth()" style="font-size: 12px;" />
+            <span data-bind="text: DungeonBattle.enemyPokemon().health() + ' / ' + DungeonBattle.enemyPokemon().maxHealth()" style="font-size: 12px;" >
+              {{DungeonBattle.enemyPokemon().health() + ' / ' + DungeonBattle.enemyPokemon().maxHealth()}}
+            </span>
           </div>
         </div>
       </div>
@@ -124,7 +146,7 @@ const gameState = useGameStore()
       <!-- ko if: DungeonRunner.map.currentTile().type() === GameConstants.DungeonTile.chest -->
       <div>
         <div class="dungeon-chest" style="height: 95px">
-          <img src="assets/images/dungeons/chest.png">
+          <img src="/src/assets/images/dungeons/chest.png">
         </div>
         <button class="btn btn-warning chest-button">
           <p>Open</p>
