@@ -4,11 +4,12 @@ import * as GameConstants from '~/enums/GameConstants'
 import { DungeonRunner } from '~/scripts/dungeons/DungeonRunner'
 import { useDungeonStore } from '~/stores/dungeon'
 const gameState = useGameStore()
+const dungeonStore = useDungeonStore()
 const dungeon = computed(() => {
-  return useDungeonStore().dungeon
+  return dungeonStore.dungeon
 })
 const map = computed(() => {
-  return useDungeonStore().map
+  return dungeonStore.map
 })
 </script>
 

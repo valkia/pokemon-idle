@@ -6,19 +6,26 @@ import { DungeonRunner } from '~/scripts/dungeons/DungeonRunner'
 import { DungeonBattle } from '~/scripts/dungeons/DungeonBattle'
 import { useDungeonStore } from '~/stores/dungeon'
 const gameState = useGameStore()
+const dungeonStore = useDungeonStore()
 const dungeon = computed(() => {
-  return useDungeonStore().dungeon
+  return dungeonStore.dungeon
+})
+const map = computed(() => {
+  return dungeonStore.map
 })
 const enemyPokemon = computed(() => {
-  return useDungeonStore().enemyPokemon
+  return dungeonStore.enemyPokemon
 })
 const trainer = computed(() => {
-  return useDungeonStore().trainer
+  return dungeonStore.trainer
 })
 // eslint-disable-next-line no-unused-expressions
 </script>
 <template>
-  <div v-if="gameState.gameState === GameConstants.GameState.dungeon" class="row justify-content-center no-gutters">
+  <div
+      v-if="gameState.gameState === GameConstants.GameState.dungeon"
+       class="row justify-content-center no-gutters"
+  >
     <div
       class="col no-gutters clickable"
       style="height: 220px; display: block;"
@@ -31,7 +38,9 @@ const trainer = computed(() => {
             {{ enemyPokemon?.name }}
           </div>
           <!-- ko if: !DungeonBattle.trainer() -->
-          <div data-bind="template: { name: 'caughtStatusTemplate', data: {'status': PartyController.getCaughtStatus(DungeonBattle.enemyPokemon().id)}}" />
+          <div
+              v-if="!trainer"
+              data-bind="template: { name: 'caughtStatusTemplate', data: {'status': PartyController.getCaughtStatus(DungeonBattle.enemyPokemon().id)}}" />
         <!-- /ko -->
         </div>
         <div v-if="!enemyPokemon || !enemyPokemon?.health">
@@ -53,7 +62,7 @@ const trainer = computed(() => {
           <!-- ko if: !DungeonBattle.trainer() -->
 
           <!--If all Pokémon in the dungeon are caught-->
-          <div v-if="(!DungeonRunner.dungeonCompleted(DungeonRunner.dungeon, true) && DungeonRunner.dungeonCompleted(DungeonRunner.dungeon, false))">
+          <div v-if="(!DungeonRunner.dungeonCompleted(dungeon, true) && DungeonRunner.dungeonCompleted(dungeon, false))">
             <img
               title="You have captured all Pokémon in this dungeon!" class="pokeball-smallest"
               src="/src/assets/images/pokeball/Pokeball.svg"
@@ -74,6 +83,7 @@ const trainer = computed(() => {
 
         <!-- ko ifnot: DungeonBattle.trainer() -->
         <div
+            v-if="!trainer"
           class="right"
           :class=" DungeonRunner.timeLeftSeconds() < 20?'text-danger':'text-primary'"
           data-bind="css: { 'text-danger': DungeonRunner.timeLeftSeconds() < 20, 'text-primary': DungeonRunner.timeLeftSeconds() >= 20 }"
@@ -119,43 +129,43 @@ const trainer = computed(() => {
           >
         </div>
         <div>
-          <div v-if="!DungeonBattle.catching">
+          <div v-if="!dungeonStore.catching">
             <img
               class="enemy"
               data-bind="attr:{ src: PokemonHelper.getImage(DungeonBattle.enemyPokemon(), DungeonBattle.enemyPokemon().shiny) }"
               :src="PokemonHelper.getImage(enemyPokemon, enemyPokemon.shiny)"
             >
           </div>
-          <div v-if="DungeonBattle.catching" class="catchChance">
+          <div v-if="dungeonStore.catching" class="catchChance">
             <img
               class="pokeball-animated"
               data-bind="attr:{ src: 'assets/images/pokeball/' + GameConstants.Pokeball[DungeonBattle.pokeball()] + '.svg' }"
-              :src="'assets/images/pokeball/' + GameConstants.Pokeball[DungeonBattle.pokeball()] + '.svg'"
+              :src="'/src/assets/images/pokeball/' + GameConstants.Pokeball[DungeonBattle.pokeball()] + '.svg'"
             >
             <br>
             Catch Chance:
             <div data-bind="text: Math.floor(DungeonBattle.catchRateActual()) + '%'">
-              {{ Math.floor(DungeonBattle.catchRateActual()) + '%' }}
+              {{ Math.floor(dungeonStore.catchRateActual) + '%' }}
             </div>
           </div>
         </div>
         <div class="progress hitpoints" style="height: 20px;">
           <div
             class="progress-bar bg-danger" role="progressbar"
-            :style="'width:' + DungeonBattle.enemyPokemon().healthPercentage() + '%'"
-            :class="DungeonRunner.fightingBoss()?'healthbar-boss':'bg-danger'"
+            :style="'width:' + dungeonStore.enemyPokemon.healthPercentage + '%'"
+            :class="dungeonStore.fightingBoss?'healthbar-boss':'bg-danger'"
             data-bind="attr:{ style: 'width:' + DungeonBattle.enemyPokemon().healthPercentage() + '%'}, css: { 'healthbar-boss': DungeonRunner.fightingBoss(), 'bg-danger': !DungeonRunner.fightingBoss()}"
             aria-valuemin="0" aria-valuemax="100"
           >
             <span data-bind="text: DungeonBattle.enemyPokemon().health() + ' / ' + DungeonBattle.enemyPokemon().maxHealth()" style="font-size: 12px;">
-              {{ DungeonBattle.enemyPokemon().health() + ' / ' + DungeonBattle.enemyPokemon().maxHealth() }}
+              {{ dungeonStore.enemyPokemon.health + ' / ' + dungeonStore.enemyPokemon.maxHealth }}
             </span>
           </div>
         </div>
       </div>
       <!-- /ko -->
       <!-- ko if: DungeonRunner.map.currentTile().type() === GameConstants.DungeonTile.chest -->
-      <div>
+      <div v-if="map.currentTile.type === GameConstants.DungeonTile.chest">
         <div class="dungeon-chest" style="height: 95px">
           <img src="/src/assets/images/dungeons/chest.png">
         </div>
@@ -166,14 +176,14 @@ const trainer = computed(() => {
       </div>
       <!-- /ko -->
       <!-- ko if: (DungeonRunner.map.currentTile().type() === GameConstants.DungeonTile.boss && !DungeonRunner.fightingBoss()) -->
-      <div>
+      <div v-if="(map.currentTile.type === GameConstants.DungeonTile.boss && !DungeonRunner.fightingBoss())">
         <button class="btn btn-danger dungeon-button">
           Start Bossfight
         </button>
       </div>
       <!-- /ko -->
       <!-- ko if: DungeonRunner.map.currentTile().type() === GameConstants.DungeonTile.entrance && DungeonRunner.map.playerMoved() -->
-      <div>
+      <div v-if="map.currentTile.type === GameConstants.DungeonTile.entrance && map.playerMoved">
         <button class="btn btn-warning dungeon-button">
           Leave Dungeon
         </button>

@@ -13,6 +13,7 @@ import { BerryType } from '~/enums/BerryType'
 import type BagItem from '~/interfaces/BagItem'
 import GenericProxy from '~/utilities/GenericProxy'
 import Rand from '~/utilities/Rand'
+import {MaxIDPerRegion} from "~/enums/GameConstants";
 
 const pokemonBabyPrevolutionMap: Record<string, PokemonNameType> = {}
 
@@ -21349,7 +21350,7 @@ pokemonList.forEach((p) => {
       poke.eggCycles = Math.min(maxEggCycles, Math.round(p.eggCycles * 1.5))
     })
   }
-  (p as PokemonListData).nativeRegion = (p as PokemonListData).nativeRegion || GameConstants.TotalPokemonsPerRegion.findIndex(maxRegionID => maxRegionID >= Math.floor(p.id))
+  (p as PokemonListData).nativeRegion = (p as PokemonListData).nativeRegion || GameConstants.MaxIDPerRegion.findIndex(maxRegionID => maxRegionID >= Math.floor(p.id))
   pokemonNameIndex[p.name.toLowerCase()] = p
 })
 

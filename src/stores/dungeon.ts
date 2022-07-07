@@ -11,6 +11,9 @@ export const useDungeonStore = defineStore('dungeon', {
     _map: null as DungeonMap | null,
     _enemyPokemon: null as BattlePokemon | null,
     _trainer: null as DungeonTrainer | null,
+    _catching: false,
+    _catchRateActual: 0,
+    _fightingBoss: false,
   }),
   getters: {
     dungeon: (state): Dungeon | null => {
@@ -25,7 +28,15 @@ export const useDungeonStore = defineStore('dungeon', {
     trainer: (state): DungeonTrainer | null => {
       return state._trainer
     },
-
+    catching: (state): any => {
+      return state._catching
+    },
+    catchRateActual: (state): any => {
+      return state._catchRateActual
+    },
+    fightingBoss: (state): any => {
+      return state._fightingBoss
+    }
   },
   actions: {
     setDungeon(value: Dungeon | null) {
@@ -40,6 +51,15 @@ export const useDungeonStore = defineStore('dungeon', {
     setTrainer(value: DungeonTrainer | null) {
       this._trainer = value
     },
+    setCatching(value: boolean) {
+      this._catching = value
+    },
+    setCatchRateActual(value: number) {
+      this._catchRateActual = value
+    },
+    setFightingBoss(value: boolean) {
+      this._fightingBoss = value
+    }
   },
 })
 

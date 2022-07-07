@@ -1,4 +1,5 @@
 import * as GameConstants from '~/enums/GameConstants'
+import {useDataStore} from "~/stores/data";
 export class Preload {
     static itemsToLoad = [];
     static itemsLoaded = [];
@@ -51,7 +52,7 @@ export class Preload {
                 Preload.loadTowns();
                 Preload.loadUndergroundItems();
                 // Preload.loadMap();
-                // Preload.loadPokemon(),
+                Preload.loadPokemon(),
                 Preload.hideSplashScreen(true);
             });
         } else {
@@ -66,7 +67,7 @@ export class Preload {
                     Preload.loadTowns(),
                     Preload.loadUndergroundItems(),
                     // Preload.loadMap(),
-                    // Preload.loadPokemon(),
+                    Preload.loadPokemon(),
                     Preload.minimumTime(),
                 ]).then(() => {
                     clearTimeout(forceLoad);
@@ -86,6 +87,7 @@ export class Preload {
 
     private static loadTowns() {
         const p = Array<Promise<void>>();
+        const TownList = useDataStore().TownList
         for (const name in TownList) {
             // Skip unreleased towns unless a feature flag has enabled them
             if (
@@ -109,7 +111,7 @@ export class Preload {
                     console.warn('Failed to load town image:', name);
                     resolve();
                 };
-                img.src = `assets/images/towns/${name}.png`;
+                img.src = `/src/assets/images/towns/${name}.png`;
             }));
 
         }
@@ -131,7 +133,7 @@ export class Preload {
                     console.warn('Failed to load image for pokemon:', i);
                     resolve();
                 };
-                img.src = `assets/images/pokemon/${i}.png`;
+                img.src = `/src/assets/images/pokemon/${i}.png`;
             }));
 
         }

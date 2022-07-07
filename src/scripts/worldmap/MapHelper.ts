@@ -16,6 +16,7 @@ import { DungeonTown } from '~/scripts/towns/Town'
 import { PokemonHelper } from '~/scripts/pokemons/PokemonHelper'
 import dataStore from '~/modules/DataStore'
 import { usePartyStore } from '~/stores/party'
+import {MaxIDPerRegion} from "~/enums/GameConstants";
 enum areaStatus {
   currentLocation,
   locked,
@@ -264,7 +265,7 @@ export default class MapHelper {
 
     // Check if all regional pokemon are obtained
     const party = usePartyStore()
-    return new Set(party.caughtPokemon.filter(p => p.id > 0 && PokemonHelper.calcNativeRegion(p.name) <= player.highestRegion).map(p => Math.floor(p.id))).size >= GameConstants.TotalPokemonsPerRegion[player.highestRegion]
+    return new Set(party.caughtPokemon.filter(p => p.id > 0 && PokemonHelper.calcNativeRegion(p.name) <= player.highestRegion).map(p => Math.floor(p.id))).size >= GameConstants.MaxIDPerRegion[player.highestRegion]
   }
 
   public static travelToNextRegion() {

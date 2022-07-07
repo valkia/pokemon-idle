@@ -1,3 +1,4 @@
+import {Preload} from "~/scripts/utilities/Preload";
 
 export default class App {
   static readonly debug = true
