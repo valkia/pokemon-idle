@@ -87,7 +87,7 @@ export class DungeonRunner {
       else
         this.dungeonLost()
     }
-    if (this.map.playerMoved()) {
+    if (this.map.playerMoved) {
       this.timeLeft(this.timeLeft() - GameConstants.DUNGEON_TICK)
       this.timeLeftPercentage(Math.floor(this.timeLeft() / GameConstants.DUNGEON_TIME * 100))
     }
@@ -97,13 +97,14 @@ export class DungeonRunner {
      * Handles the click event in the dungeon view
      */
   public static handleClick() {
-    if (DungeonRunner.fighting && !DungeonBattle.catching)
+    const dungeon = useDungeonStore()
+    if (dungeon.fighting && !dungeon.catching)
       DungeonBattle.clickAttack()
-    else if (DungeonRunner.map.currentTile().type === GameConstants.DungeonTile.entrance)
+    else if (dungeon.map.currentTile().type === GameConstants.DungeonTile.entrance)
       DungeonRunner.dungeonLeave()
-    else if (DungeonRunner.map.currentTile().type === GameConstants.DungeonTile.chest)
+    else if (dungeon.map.currentTile().type === GameConstants.DungeonTile.chest)
       DungeonRunner.openChest()
-    else if (DungeonRunner.map.currentTile().type === GameConstants.DungeonTile.boss && !DungeonRunner.fightingBoss)
+    else if (dungeon.map.currentTile().type === GameConstants.DungeonTile.boss && !DungeonRunner.fightingBoss)
       DungeonRunner.startBossFight()
   }
 

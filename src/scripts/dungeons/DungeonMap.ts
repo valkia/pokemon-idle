@@ -4,6 +4,7 @@ import { Point } from '~/scripts/dungeons/Point'
 import * as GameConstants from '~/enums/GameConstants'
 import { DungeonRunner } from '~/scripts/dungeons/DungeonRunner'
 import { DungeonBattle } from '~/scripts/dungeons/DungeonBattle'
+import { useDungeonStore } from '~/stores/dungeon'
 export class DungeonMap {
   board: DungeonTile[][]
   playerPosition: Point
@@ -69,6 +70,9 @@ export class DungeonMap {
       if (this.currentTile().type == GameConstants.DungeonTile.enemy)
         DungeonBattle.generateNewEnemy()
 
+      const dungeonStore = useDungeonStore()
+      console.log('this', this)
+      dungeonStore.setMap(this)
       return true
     }
     return false
@@ -105,7 +109,8 @@ export class DungeonMap {
 
   public hasAccesToTile(point: Point): boolean {
     // If player fighting/catching they cannot move right now
-    if (DungeonRunner.fighting || DungeonBattle.catching)
+    const dungeon = useDungeonStore()
+    if (dungeon.fighting || dungeon.catching)
       return false
 
     // If tile out of bounds, it's invalid

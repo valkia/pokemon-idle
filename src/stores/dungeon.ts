@@ -14,6 +14,9 @@ export const useDungeonStore = defineStore('dungeon', {
     _catching: false,
     _catchRateActual: 0,
     _fightingBoss: false,
+    _fighting: false,
+    _counter: 0,
+    _defeatedBoss: false,
   }),
   getters: {
     dungeon: (state): Dungeon | null => {
@@ -34,9 +37,18 @@ export const useDungeonStore = defineStore('dungeon', {
     catchRateActual: (state): any => {
       return state._catchRateActual
     },
-    fightingBoss: (state): any => {
+    fightingBoss: (state): boolean => {
       return state._fightingBoss
-    }
+    },
+    fighting: (state): boolean => {
+      return state._fighting
+    },
+    counter: (state): number => {
+      return state._counter
+    },
+    defeatedBoss: (state): boolean => {
+      return state._defeatedBoss
+    },
   },
   actions: {
     setDungeon(value: Dungeon | null) {
@@ -59,7 +71,16 @@ export const useDungeonStore = defineStore('dungeon', {
     },
     setFightingBoss(value: boolean) {
       this._fightingBoss = value
-    }
+    },
+    setFighting(value: boolean) {
+      this._fighting = value
+    },
+    setCounter(value: number) {
+      this._counter = value
+    },
+    setDefeatedBoss(value: boolean) {
+      this._defeatedBoss = value
+    },
   },
 })
 

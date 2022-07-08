@@ -23,8 +23,8 @@ const trainer = computed(() => {
 </script>
 <template>
   <div
-      v-if="gameState.gameState === GameConstants.GameState.dungeon"
-       class="row justify-content-center no-gutters"
+    v-if="gameState.gameState === GameConstants.GameState.dungeon"
+    class="row justify-content-center no-gutters"
   >
     <div
       class="col no-gutters clickable"
@@ -39,8 +39,9 @@ const trainer = computed(() => {
           </div>
           <!-- ko if: !DungeonBattle.trainer() -->
           <div
-              v-if="!trainer"
-              data-bind="template: { name: 'caughtStatusTemplate', data: {'status': PartyController.getCaughtStatus(DungeonBattle.enemyPokemon().id)}}" />
+            v-if="!trainer"
+            data-bind="template: { name: 'caughtStatusTemplate', data: {'status': PartyController.getCaughtStatus(DungeonBattle.enemyPokemon().id)}}"
+          />
         <!-- /ko -->
         </div>
         <div v-if="!enemyPokemon || !enemyPokemon?.health">
@@ -83,7 +84,7 @@ const trainer = computed(() => {
 
         <!-- ko ifnot: DungeonBattle.trainer() -->
         <div
-            v-if="!trainer"
+          v-if="!trainer"
           class="right"
           :class=" DungeonRunner.timeLeftSeconds() < 20?'text-danger':'text-primary'"
           data-bind="css: { 'text-danger': DungeonRunner.timeLeftSeconds() < 20, 'text-primary': DungeonRunner.timeLeftSeconds() >= 20 }"
@@ -125,8 +126,8 @@ const trainer = computed(() => {
           <img
             data-bind="attr:{ src: DungeonBattle.trainer().image }"
             :src="trainer.image"
-            onerror="this.src='assets/images/trainers/Mysterious Trainer.png';"
           >
+          <!--    onerror="this.src='assets/images/trainers/Mysterious Trainer.png';"      -->
         </div>
         <div>
           <div v-if="!dungeonStore.catching">

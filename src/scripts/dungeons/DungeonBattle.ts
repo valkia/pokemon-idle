@@ -13,6 +13,7 @@ import { Pokeballs } from '~/scripts/pokeballs/Pokeballs'
 import Rand from '~/modules/utilities/Rand'
 import { DungeonBossPokemon } from '~/scripts/dungeons/DungeonBossPokemon'
 import { useDungeonStore } from '~/stores/dungeon'
+import { usePartyStore } from '~/stores/party'
 
 export class DungeonBattle extends Battle {
   static trainer: DungeonTrainer | null = null
@@ -36,18 +37,19 @@ export class DungeonBattle extends Battle {
      * Award the player with money and exp, and throw a Pokéball if applicable
      */
   public static defeatPokemon() {
-    const enemyPokemon: BattlePokemon | null = this.enemyPokemon
+    const dungeon = useDungeonStore()
+    const enemyPokemon: BattlePokemon | null = dungeon.enemyPokemon
 
     // Handle Trainer Pokemon defeat
-    if (this.trainer) {
+    if (dungeon.trainer) {
       this.defeatTrainerPokemon()
       return
     }
 
-    DungeonRunner.fighting = false
-    if (DungeonRunner.fightingBoss) {
-      DungeonRunner.fightingBoss = false
-      DungeonRunner.defeatedBoss = true
+    dungeon.setFighting(false)
+    if (dungeon.fightingBoss) {
+      dungeon.setFightingBoss(false)
+      dungeon.setDefeatedBoss(true)
     }
     enemyPokemon?.defeat()
     const player = usePlayerStore()
@@ -55,9 +57,9 @@ export class DungeonBattle extends Battle {
     // player.lowerItemMultipliers(MultiplierDecreaser.Battle)
 
     // Clearing Dungeon tile
-    DungeonRunner.map.currentTile().type(GameConstants.DungeonTile.empty)
+    DungeonRunner.map.currentTile().type = (GameConstants.DungeonTile.empty)
     DungeonRunner.map.currentTile().calculateCssClass()
-
+    dungeon.setMap(DungeonRunner.map)
     // Attempting to catch Pokemon
     const isShiny: boolean = enemyPokemon?.shiny
     const pokeBall: GameConstants.Pokeball = new Pokeballs().calculatePokeballToUse(enemyPokemon?.id, isShiny)
@@ -69,7 +71,7 @@ export class DungeonBattle extends Battle {
           if (DungeonRunner.defeatedBoss)
             DungeonRunner.dungeonWon()
         },
-        App.game.pokeballs.calculateCatchTime(pokeBall),
+        500 || new Pokeballs().calculateCatchTime(pokeBall),
       )
     }
     else if (DungeonRunner.defeatedBoss) {
@@ -111,9 +113,10 @@ export class DungeonBattle extends Battle {
       this.trainerPokemonIndex = (0)
 
       // Clearing Dungeon tile
-      DungeonRunner.map.currentTile().type(GameConstants.DungeonTile.empty)
+      DungeonRunner.map.currentTile().type = (GameConstants.DungeonTile.empty)
       DungeonRunner.map.currentTile().calculateCssClass()
-
+      const dungeonStore = useDungeonStore()
+      dungeonStore.setMap(DungeonRunner.map)
       // Update boss
       if (DungeonRunner.fightingBoss) {
         DungeonRunner.fightingBoss = (false)
@@ -128,39 +131,41 @@ export class DungeonBattle extends Battle {
   }
 
   public static generateNewEnemy() {
-    this.catching = (false)
-    this.counter = 0
+    const dungeon = useDungeonStore()
+    dungeon.setCatching(false)
+    dungeon.setCounter(0)
     const player = usePlayerStore()
+    const party = usePartyStore()
     // Finding enemy from enemyList
     const enemy = Rand.fromWeightedArray(DungeonRunner.dungeon.availableMinions(), DungeonRunner.dungeon.weightList)
     // Pokemon
     if (typeof enemy === 'string' || enemy.hasOwnProperty('pokemon')) {
       const pokemon = (typeof enemy === 'string') ? enemy : (<DetailedPokemon>enemy).pokemon
       const enemyPokemon = PokemonFactory.generateDungeonPokemon(pokemon, DungeonRunner.chestsOpened, DungeonRunner.dungeon.baseHealth, DungeonRunner.dungeonLevel())
-      this.enemyPokemon(enemyPokemon)
+      dungeon.setEnemyPokemon(enemyPokemon)
 
-      GameHelper.incrementObservable(App.game.statistics.pokemonEncountered[enemyPokemon.id])
-      GameHelper.incrementObservable(App.game.statistics.totalPokemonEncountered)
+      // GameHelper.incrementObservable(App.game.statistics.pokemonEncountered[enemyPokemon.id])
+      // GameHelper.incrementObservable(App.game.statistics.totalPokemonEncountered)
       if (enemyPokemon.shiny) {
-        GameHelper.incrementObservable(App.game.statistics.shinyPokemonEncountered[enemyPokemon.id])
-        GameHelper.incrementObservable(App.game.statistics.totalShinyPokemonEncountered)
-        App.game.logbook.newLog(LogBookTypes.SHINY, `[${player.town.dungeon.name}] You encountered a Shiny ${this.enemyPokemon.name}.`)
+        // GameHelper.incrementObservable(App.game.statistics.shinyPokemonEncountered[enemyPokemon.id])
+        // GameHelper.incrementObservable(App.game.statistics.totalShinyPokemonEncountered)
+        // App.game.logbook.newLog(LogBookTypes.SHINY, `[${player.town.dungeon.name}] You encountered a Shiny ${this.enemyPokemon.name}.`)
       }
-      else if (!App.game.party.alreadyCaughtPokemon(this.enemyPokemon.id)) {
-        App.game.logbook.newLog(LogBookTypes.NEW, `[${player.town.dungeon.name}] You encountered a wild ${this.enemyPokemon.name}.`)
+      else if (!party.alreadyCaughtPokemon(enemyPokemon.id)) {
+        // App.game.logbook.newLog(LogBookTypes.NEW, `[${player.town.dungeon.name}] You encountered a wild ${this.enemyPokemon.name}.`)
       }
       // Trainer
     }
     else {
       const trainer = <DungeonTrainer>enemy
       this.trainer = (trainer)
-      useDungeonStore().setTrainer(trainer)
+      dungeon.setTrainer(trainer)
       this.trainerPokemonIndex = (0)
 
       this.generateTrainerPokemon()
     }
 
-    DungeonRunner.fighting = (true)
+    dungeon.setFighting(true)
   }
 
   public static generateNewLootEnemy(pokemon: PokemonNameType) {

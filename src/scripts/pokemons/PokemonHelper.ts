@@ -76,7 +76,7 @@ export class PokemonHelper {
   }
 
   public static getImage(pokemon: PokemonInterface, shiny: boolean): string {
-    let src = 'assets/images/'
+    let src = '/src/assets/images/'
     if (shiny)
       src += 'shiny'
 

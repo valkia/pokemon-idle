@@ -1,5 +1,5 @@
-import {Preload} from "~/scripts/utilities/Preload";
-
+import { Preload } from '~/scripts/utilities/Preload'
+import * as GameConstants from '~/enums/GameConstants'
 export default class App {
   static readonly debug = true
   static game: Game
@@ -14,10 +14,10 @@ export default class App {
       console.log(`[${GameConstants.formatDate(new Date())}] %cLoading Game Data..`, 'color:#8e44ad;font-weight:900;')
       // Needs to be loaded first so save data can be updated (specifically "player" data)
       // const update = new Update()
-      const multiplier = new Multiplier()
+      // const multiplier = new Multiplier()
 
       // player = Save.load()
-      const player = new Pokeballs()
+      // const player = new Pokeballs()
       /* App.game = new Game(
         // update,
         // new Profile(),
