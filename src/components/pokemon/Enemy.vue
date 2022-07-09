@@ -28,7 +28,7 @@ const pokemon = computed(() => {
   return useBattleStore().enemyPokemon
 })
 const catching = computed(() => {
-  return Battle.catching.value
+  return useBattleStore().catching
 })
 const pokeballImgUrl = computed(() => {
   return `/src/assets/images/pokeball/${Pokeball[Battle.pokeball.value]}.svg`

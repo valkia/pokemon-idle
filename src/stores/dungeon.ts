@@ -17,6 +17,7 @@ export const useDungeonStore = defineStore('dungeon', {
     _fighting: false,
     _counter: 0,
     _defeatedBoss: false,
+    _trainerPokemonIndex: 0,
   }),
   getters: {
     dungeon: (state): Dungeon | null => {
@@ -49,6 +50,9 @@ export const useDungeonStore = defineStore('dungeon', {
     defeatedBoss: (state): boolean => {
       return state._defeatedBoss
     },
+    trainerPokemonIndex: (state): number => {
+      return state._trainerPokemonIndex
+    },
   },
   actions: {
     setDungeon(value: Dungeon | null) {
@@ -80,6 +84,9 @@ export const useDungeonStore = defineStore('dungeon', {
     },
     setDefeatedBoss(value: boolean) {
       this._defeatedBoss = value
+    },
+    setTrainerPokemonIndex(value: number) {
+      this._trainerPokemonIndex = value
     },
   },
 })

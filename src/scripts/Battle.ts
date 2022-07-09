@@ -15,6 +15,7 @@ import { useBattleStore } from '~/stores/battle'
 import { usePartyStore } from '~/stores/party'
 import { useStatisticsStore } from '~/stores/statistics'
 import { Pokeballs } from '~/scripts/pokeballs/Pokeballs'
+import { useDungeonStore } from '~/stores/dungeon'
 /**
  * Handles all logic related to battling
  */
@@ -61,7 +62,7 @@ export class Battle {
   /**
      * Attacks with clicks and checks if the enemy is defeated.
      */
-  public static clickAttack() {
+  public static clickAttack(battleStore = useBattleStore()) {
     const player = usePlayerStore()
     // click attacks disabled and we already beat the starter
     /* if (App.game.challenges.list.disableClickAttack.active() && player.starter() != GameConstants.Starter.None)
@@ -74,7 +75,7 @@ export class Battle {
       return
 
     this.lastClickAttack = now
-    const battleStore = useBattleStore()
+    console.log('clickAttack', battleStore)
     const enemyPokemon = battleStore.enemyPokemon
     if (!enemyPokemon?.isAlive())
       return
@@ -153,16 +154,16 @@ export class Battle {
     return totalChance
   }
 
-  protected static prepareCatch(enemyPokemon: BattlePokemon, pokeBall: GameConstants.Pokeball) {
+  protected static prepareCatch(enemyPokemon: BattlePokemon, pokeBall: GameConstants.Pokeball, battleStore: any = useBattleStore()) {
     this.pokeball.value = (pokeBall)
-    this.catching.value = (true)
-    this.catchRateActual.value = (this.calculateActualCatchRate(enemyPokemon, pokeBall))
+    battleStore.setCatching(true)
+    battleStore.setCatchRateActual(this.calculateActualCatchRate(enemyPokemon, pokeBall))
     new Pokeballs().usePokeball(pokeBall)
   }
 
-  protected static attemptCatch(enemyPokemon: BattlePokemon) {
+  protected static attemptCatch(enemyPokemon: BattlePokemon, battleStore: any = useBattleStore()) {
+    console.log('attemptCatch', battleStore)
     const partyStore = usePartyStore()
-    const battleStore = useBattleStore()
     if (enemyPokemon == null) {
       this.catching.value = (false)
       return
@@ -178,7 +179,7 @@ export class Battle {
       // App.game.logbook.newLog(LogBookTypes.ESCAPED, `The wild ${enemyPokemon.name} escaped!`)
       console.log(`The wild ${enemyPokemon.name} escaped!`)
     }
-    this.catching.value = (false)
+    battleStore.setCatching(false)
     battleStore.setCatchRateActual(0)
   }
 

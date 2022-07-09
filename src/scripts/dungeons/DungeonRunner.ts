@@ -54,6 +54,9 @@ export class DungeonRunner {
     DungeonBattle.trainer = (null)
     DungeonBattle.trainerPokemonIndex = (0)
     DungeonBattle.enemyPokemon = (null)
+    dungeonStore.setTrainer(null)
+    dungeonStore.setTrainerPokemonIndex(0)
+    dungeonStore.setEnemyPokemon(null)
     const player = usePlayerStore()
     const statistics = useStatisticsStore()
     // FluteEffectRunner.getFluteMultiplier(GameConstants.FluteItemType.Time_Flute)
@@ -97,14 +100,15 @@ export class DungeonRunner {
      * Handles the click event in the dungeon view
      */
   public static handleClick() {
+    console.log('handleClick')
     const dungeon = useDungeonStore()
     if (dungeon.fighting && !dungeon.catching)
-      DungeonBattle.clickAttack()
+      DungeonBattle.clickAttack(dungeon)
     else if (dungeon.map.currentTile().type === GameConstants.DungeonTile.entrance)
       DungeonRunner.dungeonLeave()
     else if (dungeon.map.currentTile().type === GameConstants.DungeonTile.chest)
       DungeonRunner.openChest()
-    else if (dungeon.map.currentTile().type === GameConstants.DungeonTile.boss && !DungeonRunner.fightingBoss)
+    else if (dungeon.map.currentTile().type === GameConstants.DungeonTile.boss && !dungeon.fightingBoss)
       DungeonRunner.startBossFight()
   }
 
@@ -114,7 +118,8 @@ export class DungeonRunner {
   }
 
   public static openChest() {
-    if (DungeonRunner.map.currentTile.type !== GameConstants.DungeonTile.chest)
+    const dungeon = useDungeonStore()
+    if (dungeon.map.currentTile().type !== GameConstants.DungeonTile.chest)
       return
 
     DungeonRunner.chestsOpened++
@@ -193,10 +198,11 @@ export class DungeonRunner {
   }
 
   public static startBossFight() {
-    if (DungeonRunner.map.currentTile.type !== GameConstants.DungeonTile.boss || DungeonRunner.fightingBoss())
+    const dungeon = useDungeonStore()
+    if (dungeon.map.currentTile().type !== GameConstants.DungeonTile.boss || dungeon.fightingBoss)
       return
 
-    DungeonRunner.fightingBoss = (true)
+    dungeon.setFightingBoss(true)
     DungeonBattle.generateNewBoss()
   }
 

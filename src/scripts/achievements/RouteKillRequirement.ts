@@ -9,7 +9,7 @@ export default class RouteKillRequirement extends AchievementRequirement {
     public route: number,
     option: GameConstants.AchievementOption = GameConstants.AchievementOption.more,
   ) {
-    super(value, option, GameConstants.AchievementType['Route Kill'])
+    super(GameConstants.debug ? 1 : value, option, GameConstants.AchievementType['Route Kill'])
   }
 
   public getProgress() {

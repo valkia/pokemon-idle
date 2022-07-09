@@ -129,45 +129,45 @@ const trainer = computed(() => {
           >
           <!--    onerror="this.src='assets/images/trainers/Mysterious Trainer.png';"      -->
         </div>
-        <div>
-          <div v-if="!dungeonStore.catching">
+        <div flex justify-center items-center>
+          <div v-if="!dungeon.catching">
             <img
               class="enemy"
               data-bind="attr:{ src: PokemonHelper.getImage(DungeonBattle.enemyPokemon(), DungeonBattle.enemyPokemon().shiny) }"
               :src="PokemonHelper.getImage(enemyPokemon, enemyPokemon.shiny)"
             >
           </div>
-          <div v-if="dungeonStore.catching" class="catchChance">
+          <div v-if="dungeon.catching" class="catchChance">
             <img
               class="pokeball-animated"
               data-bind="attr:{ src: 'assets/images/pokeball/' + GameConstants.Pokeball[DungeonBattle.pokeball()] + '.svg' }"
-              :src="'/src/assets/images/pokeball/' + GameConstants.Pokeball[DungeonBattle.pokeball()] + '.svg'"
+              :src="'/src/assets/images/pokeball/' + GameConstants.Pokeball[DungeonBattle.pokeball.value] + '.svg'"
             >
             <br>
             Catch Chance:
             <div data-bind="text: Math.floor(DungeonBattle.catchRateActual()) + '%'">
-              {{ Math.floor(dungeonStore.catchRateActual) + '%' }}
+              {{ Math.floor(dungeon.catchRateActual) + '%' }}
             </div>
           </div>
         </div>
-        <div class="progress hitpoints" style="height: 20px;">
+        <div class="progress hitpoints" style="height: 20px;" flex justify-center items-center>
           <div
             class="progress-bar bg-danger" role="progressbar"
-            :style="'width:' + dungeonStore.enemyPokemon.healthPercentage + '%'"
-            :class="dungeonStore.fightingBoss?'healthbar-boss':'bg-danger'"
+            :style="'width:' + enemyPokemon.healthPercentage + '%'"
+            :class="dungeon.fightingBoss?'healthbar-boss':'bg-danger'"
             data-bind="attr:{ style: 'width:' + DungeonBattle.enemyPokemon().healthPercentage() + '%'}, css: { 'healthbar-boss': DungeonRunner.fightingBoss(), 'bg-danger': !DungeonRunner.fightingBoss()}"
             aria-valuemin="0" aria-valuemax="100"
           >
             <span data-bind="text: DungeonBattle.enemyPokemon().health() + ' / ' + DungeonBattle.enemyPokemon().maxHealth()" style="font-size: 12px;">
-              {{ dungeonStore.enemyPokemon.health + ' / ' + dungeonStore.enemyPokemon.maxHealth }}
+              {{ enemyPokemon.health + ' / ' + enemyPokemon.maxHealth?enemyPokemon.maxHealth:0 }}
             </span>
           </div>
         </div>
       </div>
       <!-- /ko -->
       <!-- ko if: DungeonRunner.map.currentTile().type() === GameConstants.DungeonTile.chest -->
-      <div v-if="map.currentTile.type === GameConstants.DungeonTile.chest">
-        <div class="dungeon-chest" style="height: 95px">
+      <div v-if="map.currentTile().type === GameConstants.DungeonTile.chest">
+        <div class="dungeon-chest" style="height: 95px" flex justify-center items-center>
           <img src="/src/assets/images/dungeons/chest.png">
         </div>
         <button class="btn btn-warning chest-button">
@@ -177,14 +177,14 @@ const trainer = computed(() => {
       </div>
       <!-- /ko -->
       <!-- ko if: (DungeonRunner.map.currentTile().type() === GameConstants.DungeonTile.boss && !DungeonRunner.fightingBoss()) -->
-      <div v-if="(map.currentTile.type === GameConstants.DungeonTile.boss && !DungeonRunner.fightingBoss())">
+      <div v-if="(map.currentTile().type === GameConstants.DungeonTile.boss && !dungeon.fightingBoss)" flex justify-center items-center>
         <button class="btn btn-danger dungeon-button">
           Start Bossfight
         </button>
       </div>
       <!-- /ko -->
       <!-- ko if: DungeonRunner.map.currentTile().type() === GameConstants.DungeonTile.entrance && DungeonRunner.map.playerMoved() -->
-      <div v-if="map.currentTile.type === GameConstants.DungeonTile.entrance && map.playerMoved">
+      <div v-if="map.currentTile().type === GameConstants.DungeonTile.entrance && map.playerMoved" flex justify-center items-center>
         <button class="btn btn-warning dungeon-button">
           Leave Dungeon
         </button>

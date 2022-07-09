@@ -1,14 +1,13 @@
 import { Preload } from '~/scripts/utilities/Preload'
 import * as GameConstants from '~/enums/GameConstants'
 export default class App {
-  static readonly debug = true
   static game: Game
 
   static start() {
-    if (!App.debug)
+    if (!GameConstants.debug)
       Object.freeze(GameConstants)
 
-    Preload.load(App.debug).then(() => {
+    Preload.load(GameConstants.debug).then(() => {
       // ko.options.deferUpdates = true
 
       console.log(`[${GameConstants.formatDate(new Date())}] %cLoading Game Data..`, 'color:#8e44ad;font-weight:900;')

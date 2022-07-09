@@ -19,9 +19,9 @@ const map = computed(() => {
     id="dungeonMap"
     class="card sortable-disabled border-secondary mb-3 dungeon no-select"
   >
-    <div class="card-header p-0">
+    <!--    <div class="card-header p-0">
       <span>{{ dungeon.name }}</span>
-    </div>
+    </div>-->
     <div class="card-body p-0 text-center">
       <table class="dungeon-board">
         <tbody>
