@@ -108,7 +108,7 @@ const backgroundImage = computed(() => {
             </button>
             <!-- ko if: $data instanceof Gym -->
             <button
-              v-if="data instanceof Gym && data.isUnlocked() && statistics.gymsDefeated[GameConstants.getGymIndex(data.town)]() >= 100"
+              v-if="data instanceof Gym && data.isUnlocked() && statistics.getGymsDefeated(GameConstants.getGymIndex(data.town)) >= 100"
               class="btn btn-info p-0 btn-gym-auto-restart"
               tooltip=" { html: true, title: `Auto restart Gym fight<br/>Cost: <img src='assets/images/currency/money.svg' height='18px'></button> ${($data.moneyReward * 2).toLocaleString('en-US')} per battle<br/><br/><i class='text-warning'>You will not receive Pokédollars for clearing the gym</i>`, trigger: 'hover', placement:'right' }"
               @click="GymRunner.startGym(data, true)"
@@ -140,14 +140,18 @@ const backgroundImage = computed(() => {
         <!--Display all available Pokémon in this dungeon-->
         <ul class="list-inline">
           <!-- ko foreach: player.town().dungeon.normalEncounterList -->
-          <li class="list-inline-item">
+          <li v-for="$data in player.town.dungeon.normalEncounterList" class="list-inline-item">
             <img
-              class="dungeon-pokemon-preview" :src="$data.image" data-bind="attr:{ src: $data.image },
+              class="dungeon-pokemon-preview"
+              :class="$data.hidden?'dungeon-pokemon-locked':''"
+              :src="$data.image" data-bind="attr:{ src: $data.image },
             css: { 'dungeon-pokemon-locked': $data.hidden }"
             >
-            <sup class="shiny" data-bind="visible: $data.shiny">✨</sup>
+            <sup v-if="$data.shiny" class="shiny" data-bind="visible: $data.shiny">✨</sup>
             <img
-              class="lock" src="/src/assets/images/breeding/lock.svg" data-bind="
+              v-if="$data.lock" class="lock"
+              src="/src/assets/images/breeding/lock.svg"
+              data-bind="
             hidden: !$data.lock,
             tooltip: {
                 title: 'Try talking to the locals. Sometimes they know more than you think.',
@@ -160,15 +164,26 @@ const backgroundImage = computed(() => {
           <!-- /ko -->
           <!--Display all available bosses in this dungeon-->
           <!-- ko foreach: player.town().dungeon.bossEncounterList -->
-          <li class="list-inline-item" data-bind="hidden: $data.hide">
+          <li
+            v-for="$data in player.town.dungeon.bossEncounterList" class="list-inline-item"
+            data-bind="hidden: $data.hide"
+          >
             <img class="boss" src="/src/assets/images/dungeons/boss.svg">
             <img
-              class="dungeon-pokemon-preview" src="" data-bind="attr:{ src: $data.image },
+              class="dungeon-pokemon-preview"
+              :class="$data.hidden?'dungeon-pokemon-locked':''"
+              :src="$data.image" data-bind="attr:{ src: $data.image },
             css: { 'dungeon-pokemon-locked': $data.hidden }"
             >
-            <sup class="shiny" data-bind="visible: $data.shiny">✨</sup>
+            <sup
+              v-if="$data.shiny"
+              class="shiny"
+              data-bind="visible: $data.shiny"
+            >✨</sup>
             <img
-              class="lock" src="/src/assets/images/breeding/lock.svg" data-bind="hidden: !$data.lock,
+              v-if="$data.lock" class="lock"
+              src="/src/assets/images/breeding/lock.svg"
+              data-bind="hidden: !$data.lock,
             tooltip: {
                 title: 'Try talking to the locals. Sometimes they know more than you think.',
                 html: true,
@@ -193,6 +208,7 @@ const backgroundImage = computed(() => {
     width: 35%;
   }
 }
+
 #townView {
   min-height: 263px;
   background-repeat: no-repeat;
@@ -214,19 +230,30 @@ const backgroundImage = computed(() => {
   #dungeonPokemonList {
     width: 100%;
 
-    .list-inline-item {
-      position: relative;
+    .list-inline {
+      display: flex;
 
-      .lock {
-        position: absolute;
-        width: 100%;
-        left: 0px;
-      }
+      .list-inline-item {
+        position: relative;
 
-      .shiny {
-        position: absolute;
-        top: 10px;
-        right: -5px;
+        .boss {
+          position: absolute;
+          bottom: -10px;
+          left: -10px;
+          width: 35%;
+        }
+
+        .lock {
+          position: absolute;
+          width: 100%;
+          left: 0px;
+        }
+
+        .shiny {
+          position: absolute;
+          top: 10px;
+          right: -5px;
+        }
       }
     }
   }

@@ -26,13 +26,14 @@ const trainer = computed(() => {
     v-if="gameState.gameState === GameConstants.GameState.dungeon"
     class="row justify-content-center no-gutters"
   >
+    <!--    -->
     <div
       class="col no-gutters clickable"
       style="height: 220px; display: block;"
       data-bind="click: function() { DungeonRunner.handleClick() }"
       @click="DungeonRunner.handleClick()"
     >
-      <h2 class="pageItemTitle" style="display: block;">
+      <h2 class="pageItemTitle" flex style="display: block;">
         <div v-if="enemyPokemon?.health">
           <div data-bind="text: DungeonBattle.enemyPokemon().name">
             {{ enemyPokemon?.name }}
@@ -97,7 +98,7 @@ const trainer = computed(() => {
         </div>
         <!-- /ko -->
         <!-- ko if: DungeonBattle.trainer() -->
-        <div class="right">
+        <div v-if="trainer" class="right">
           <span v-for="item in new Array(DungeonBattle.defeatedTrainerPokemon())">
             <img src="/src/assets/images/pokeball/Pokeball.svg" class="pokeball-smallest pokeball-defeated">
           </span>
@@ -121,7 +122,7 @@ const trainer = computed(() => {
       </h2>
 
       <!-- ko if: (DungeonRunner.fighting() || DungeonBattle.catching)  -->
-      <div v-if="enemyPokemon">
+      <div v-if="dungeonStore.fighting || dungeonStore.catching">
         <div v-if="trainer" style="position:absolute; left:65%;">
           <img
             data-bind="attr:{ src: DungeonBattle.trainer().image }"
@@ -130,14 +131,14 @@ const trainer = computed(() => {
           <!--    onerror="this.src='assets/images/trainers/Mysterious Trainer.png';"      -->
         </div>
         <div flex justify-center items-center>
-          <div v-if="!dungeon.catching">
+          <div v-if="!dungeonStore.catching">
             <img
               class="enemy"
               data-bind="attr:{ src: PokemonHelper.getImage(DungeonBattle.enemyPokemon(), DungeonBattle.enemyPokemon().shiny) }"
-              :src="PokemonHelper.getImage(enemyPokemon, enemyPokemon.shiny)"
+              :src="PokemonHelper.getImage(enemyPokemon, enemyPokemon?.shiny)"
             >
           </div>
-          <div v-if="dungeon.catching" class="catchChance">
+          <div v-if="dungeonStore.catching" class="catchChance">
             <img
               class="pokeball-animated"
               data-bind="attr:{ src: 'assets/images/pokeball/' + GameConstants.Pokeball[DungeonBattle.pokeball()] + '.svg' }"
@@ -146,7 +147,7 @@ const trainer = computed(() => {
             <br>
             Catch Chance:
             <div data-bind="text: Math.floor(DungeonBattle.catchRateActual()) + '%'">
-              {{ Math.floor(dungeon.catchRateActual) + '%' }}
+              {{ Math.floor(dungeonStore.catchRateActual) + '%' }}
             </div>
           </div>
         </div>
@@ -154,12 +155,12 @@ const trainer = computed(() => {
           <div
             class="progress-bar bg-danger" role="progressbar"
             :style="'width:' + enemyPokemon.healthPercentage + '%'"
-            :class="dungeon.fightingBoss?'healthbar-boss':'bg-danger'"
+            :class="dungeonStore.fightingBoss?'healthbar-boss':'bg-danger'"
             data-bind="attr:{ style: 'width:' + DungeonBattle.enemyPokemon().healthPercentage() + '%'}, css: { 'healthbar-boss': DungeonRunner.fightingBoss(), 'bg-danger': !DungeonRunner.fightingBoss()}"
             aria-valuemin="0" aria-valuemax="100"
           >
             <span data-bind="text: DungeonBattle.enemyPokemon().health() + ' / ' + DungeonBattle.enemyPokemon().maxHealth()" style="font-size: 12px;">
-              {{ enemyPokemon.health + ' / ' + enemyPokemon.maxHealth?enemyPokemon.maxHealth:0 }}
+              {{ enemyPokemon.health }} / {{ enemyPokemon.maxHealth?enemyPokemon.maxHealth:0 }}
             </span>
           </div>
         </div>
@@ -177,7 +178,7 @@ const trainer = computed(() => {
       </div>
       <!-- /ko -->
       <!-- ko if: (DungeonRunner.map.currentTile().type() === GameConstants.DungeonTile.boss && !DungeonRunner.fightingBoss()) -->
-      <div v-if="(map.currentTile().type === GameConstants.DungeonTile.boss && !dungeon.fightingBoss)" flex justify-center items-center>
+      <div v-if="(map.currentTile().type === GameConstants.DungeonTile.boss && !dungeonStore.fightingBoss)" flex justify-center items-center>
         <button class="btn btn-danger dungeon-button">
           Start Bossfight
         </button>
@@ -322,6 +323,10 @@ const trainer = computed(() => {
 }
 
 #dungeonPokemonList {
+  background: #fff;
+  .list-inline-item{
+    width: 60px;
+  }
   .boss {
     position: absolute;
     bottom: -10px;
@@ -330,4 +335,160 @@ const trainer = computed(() => {
   }
 }
 
+.battle-view {
+  min-height: 220px !important;
+
+  background-image: url(../assets/images/battleBackground/default.png);
+  background-size: cover;
+  background-position: bottom;
+
+  &.forest {
+    background-image: url(../assets/images/battleBackground/forest.png);
+    background-position: top;
+  }
+
+  &.water {
+    background-image: url(../assets/images/battleBackground/water.png);
+    background-position: top;
+  }
+
+  &.ice {
+    background-image: url(../assets/images/battleBackground/ice.png);
+    background-position: top;
+  }
+
+  &.cave {
+    background-image: url(../assets/images/battleBackground/cave.png);
+    background-position: top;
+  }
+
+  &.gem, &.cave-gem {
+    background-image: url(../assets/images/battleBackground/cave-gem.png);
+    background-position: center;
+  }
+
+  &.power-plant {
+    background-image: url(../assets/images/battleBackground/power-plant.png);
+    background-position: center;
+  }
+
+  &.mansion {
+    background-image: url(../assets/images/battleBackground/mansion.png);
+    background-position: center;
+  }
+
+  &.graveyard {
+    background-image: url(../assets/images/battleBackground/graveyard.png);
+    background-position: center;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  span {
+    line-height: 1.5;
+  }
+
+  .timer {
+    position: absolute;
+    width: 100%;
+    height: 20px;
+    top: 36px;
+  }
+
+  .pokeball-animated {
+    margin-top: 25px;
+  }
+
+  .catchChance {
+    color: black;
+  }
+
+  .hitpoints {
+    height: 20px;
+    position: absolute;
+    bottom: 20px;
+    width: 90%;
+    left: 5%;
+  }
+}
+
+.pageItemTitle {
+  width: 100%;
+  color: whitesmoke;
+  background-color: rgba(0,0,0,0.7);
+  margin: 0px;
+
+  .right {
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    font-size: 16px;
+  }
+
+  .left {
+    position: absolute;
+    left: 4px;
+    top: 4px;
+    font-size: 16px;
+  }
+}
+
+.pageItemFooter {
+  width: 100%;
+  color: whitesmoke;
+  background-color: rgba(0,0,0,0.7);
+  margin: 0px;
+  position: absolute;
+  bottom: 0px;
+
+  .right {
+    position: absolute;
+    right: 4px;
+    bottom: 4px;
+    font-size: 16px;
+  }
+
+  .left {
+    position: absolute;
+    left: 4px;
+    bottom: 4px;
+    font-size: 16px;
+  }
+}
+
+.pokeball-animated {
+  margin: auto;
+  height: 96px;
+  width: 96px;
+  padding: 10px;
+  -webkit-animation:spin 1s linear infinite;
+  -moz-animation:spin 1s linear infinite;
+  animation:spin 1s linear infinite;
+}
+
+@-moz-keyframes spin { 100% { -moz-transform: rotate(20deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(20deg); } }
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  15% {
+    transform: rotate(10deg);
+  }
+  30% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  65% {
+    transform: rotate(-10deg);
+  }
+  80% {
+    transform: rotate(0deg);
+  }
+}
 </style>

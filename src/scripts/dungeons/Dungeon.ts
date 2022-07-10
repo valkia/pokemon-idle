@@ -23,6 +23,7 @@ import type BadgeEnums from '~/modules/enums/Badges'
 import SeededDateRequirement from '~/scripts/achievements/SeededDateRequirement'
 import DayOfWeekRequirement from '~/scripts/achievements/DayOfWeekRequirement'
 import SeededDateRand from '~/utilities/SeededDateRand'
+import { usePartyStore } from '~/stores/party'
 export interface EnemyOptions {
   weight?: number
   requirement?: MultiRequirement | OneFromManyRequirement | Requirement
@@ -106,8 +107,8 @@ export class Dungeon {
     // TODO: HLXII - We need this check as this method is called somewhere during initialization when App isn't initialized yet
     // the requirement.isCompleted call can sometimes use the App object, which will cause this to crash
     // Once App is moved to modules, this check might be able to be removed.
-    if (!App.game)
-      return []
+    /* if (!App.game)
+      return [] */
 
     if (includeTrainers) {
       return this.bossList.filter((boss) => {
@@ -278,10 +279,11 @@ export class Dungeon {
         else
           pokemonName = <PokemonNameType>enemy
 
+        const party = usePartyStore()
         const encounter = {
-          image: `assets/images/${(App.game.party.alreadyCaughtPokemonByName(pokemonName, true) ? 'shiny' : '')}pokemon/${pokemonMap[pokemonName].id}.png`,
-          shiny: App.game.party.alreadyCaughtPokemonByName(pokemonName, true),
-          hidden: !App.game.party.alreadyCaughtPokemonByName(pokemonName),
+          image: `/src/assets/images/${(party.alreadyCaughtPokemonByName(pokemonName, true) ? 'shiny' : '')}pokemon/${pokemonMap[pokemonName].id}.png`,
+          shiny: party.alreadyCaughtPokemonByName(pokemonName, true),
+          hidden: !party.alreadyCaughtPokemonByName(pokemonName),
           lock: false,
           lockMessage: '',
         }
@@ -300,17 +302,17 @@ export class Dungeon {
      */
   get bossEncounterList(): EncounterInfo[] {
     const encounterInfo = []
-
+    const party = usePartyStore()
     // Handling Bosses
     this.bossList.forEach((boss) => {
       // Handling Pokemon
       if (boss instanceof DungeonBossPokemon) {
         const pokemonName = boss.name
         const encounter = {
-          image: `assets/images/${(App.game.party.alreadyCaughtPokemonByName(pokemonName, true) ? 'shiny' : '')}pokemon/${pokemonMap[pokemonName].id}.png`,
-          shiny: App.game.party.alreadyCaughtPokemonByName(pokemonName, true),
+          image: `/src/assets/images/${(party.alreadyCaughtPokemonByName(pokemonName, true) ? 'shiny' : '')}pokemon/${pokemonMap[pokemonName].id}.png`,
+          shiny: party.alreadyCaughtPokemonByName(pokemonName, true),
           hide: boss.options?.hide ? (boss.options?.requirement ? !boss.options?.requirement.isCompleted() : boss.options?.hide) : false,
-          hidden: !App.game.party.alreadyCaughtPokemonByName(pokemonName),
+          hidden: !party.alreadyCaughtPokemonByName(pokemonName),
           lock: boss.options?.requirement ? !boss.options?.requirement.isCompleted() : false,
           lockMessage: boss.options?.requirement ? boss.options?.requirement.hint() : '',
         }

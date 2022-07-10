@@ -21,6 +21,7 @@ import { ItemList } from '~/scripts/items/Item'
 import { PokemonHelper } from '~/scripts/pokemons/PokemonHelper'
 import type { PokemonNameType } from '~/enums/PokemonNameType'
 import Rand from '~/modules/utilities/Rand'
+import { getDungeonIndex } from '~/enums/GameConstants'
 
 export class DungeonRunner {
   public static dungeon: Dungeon
@@ -65,8 +66,8 @@ export class DungeonRunner {
     // Dungeon size increases with each region
     let dungeonSize = GameConstants.BASE_DUNGEON_SIZE + player.region
     // Decrease dungeon size by 1 for every 10, 100, 1000 etc completes
-    dungeonSize -= Math.max(0, statistics.getDungeonsCleared(DungeonRunner.dungeon.name).toString().length - 1)
-    const flash = statistics.getDungeonsCleared(DungeonRunner.dungeon.name) >= 200
+    dungeonSize -= Math.max(0, statistics.getDungeonsCleared(getDungeonIndex(dungeonStore.dungeon.name)).toString().length - 1)
+    const flash = statistics.getDungeonsCleared(getDungeonIndex(dungeonStore.dungeon.name)) >= 200
     // Dungeon size minimum of MIN_DUNGEON_SIZE
     DungeonRunner.map = new DungeonMap(Math.max(GameConstants.MIN_DUNGEON_SIZE, dungeonSize), flash)
 
@@ -79,6 +80,9 @@ export class DungeonRunner {
     DungeonRunner.fightingBoss = (false)
     DungeonRunner.defeatedBoss = (false)
     DungeonRunner.dungeonFinished = (false)
+    dungeonStore.setFighting(false)
+    dungeonStore.setDefeatedBoss(false)
+    dungeonStore.setDungeonFinished(false)
     const gameStore = useGameStore()
     gameStore.setGameState(GameConstants.GameState.dungeon)
   }
@@ -198,6 +202,7 @@ export class DungeonRunner {
   }
 
   public static startBossFight() {
+    console.log('startBossFight')
     const dungeon = useDungeonStore()
     if (dungeon.map.currentTile().type !== GameConstants.DungeonTile.boss || dungeon.fightingBoss)
       return
@@ -230,11 +235,15 @@ export class DungeonRunner {
   }
 
   public static dungeonWon() {
-    if (!DungeonRunner.dungeonFinished) {
-      DungeonRunner.dungeonFinished = (true)
-      GameHelper.incrementObservable(App.game.statistics.dungeonsCleared[GameConstants.getDungeonIndex(DungeonRunner.dungeon.name)])
-      MapHelper.moveToTown(DungeonRunner.dungeon.name)
-      DungeonRunner.dungeon.rewardFunction()
+    console.log('dungeonWon')
+    const dungeon = useDungeonStore()
+    if (!dungeon.dungeonFinished) {
+      dungeon.setDungeonFinished(true)
+      // GameHelper.incrementObservable(App.game.statistics.dungeonsCleared[GameConstants.getDungeonIndex(DungeonRunner.dungeon.name)])
+      const statistics = useStatisticsStore()
+      statistics.addDungeonsCleared(getDungeonIndex(dungeon.dungeon.name))
+      MapHelper.moveToTown(dungeon.dungeon.name)
+      dungeon.dungeon.rewardFunction()
       // TODO award loot with a special screen
       Notifier.notify({
         message: 'You have successfully completed the dungeon',

@@ -35,8 +35,8 @@ export const useStatisticsStore = defineStore({
 
     // Battle
     _routeKills: {} as Record<string, Record<string, number>>,
-    gymsDefeated: [0],
-    _dungeonsCleared: {} as Record<string, number>,
+    _gymsDefeated: {} as Record<number, number>,
+    _dungeonsCleared: {} as Record<number, number>,
     temporaryBattleDefeated: [0],
   }),
   getters: {
@@ -63,8 +63,17 @@ export const useStatisticsStore = defineStore({
       const tmp2 = tmp[route] || 0
       return tmp2
     },
-    getDungeonsCleared(dungeonName: string) {
-      return this._dungeonsCleared[getDungeonIndex(dungeonName)] || 0
+    getDungeonsCleared(dungeonIndex: number): number {
+      return this._dungeonsCleared[dungeonIndex] || 0
+    },
+    addDungeonsCleared(dungeonIndex: number) {
+      this._dungeonsCleared[dungeonIndex] = (this._dungeonsCleared[dungeonIndex] || 0) + 1
+    },
+    getGymsDefeated(gymIndex: number): number {
+      return this._gymsDefeated[gymIndex] || 0
+    },
+    addGymsDefeated(gymIndex: number) {
+      this._gymsDefeated[gymIndex] = (this._gymsDefeated[gymIndex] || 0) + 1
     },
   },
 })

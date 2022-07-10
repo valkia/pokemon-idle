@@ -21,6 +21,7 @@ import Amount from '~/modules/wallet/Amount'
 import Notifier from '~/modules/notifications/Notifier'
 import NotificationConstants from '~/modules/notifications/NotificationConstants'
 import { PartyPokemon } from '~/scripts/party/PartyPokemon'
+import type { DungeonBossPokemon } from '~/scripts/dungeons/DungeonBossPokemon'
 export class PokemonFactory {
   /**
      * Generate a wild pokemon based on route, region and the dataList.
@@ -171,7 +172,7 @@ export class PokemonFactory {
     return new BattlePokemon(name, basePokemon.id, basePokemon.type1, basePokemon.type2, maxHealth, level, 0, exp, new Amount(money, GameConstants.Currency.money), shiny, GameConstants.DUNGEON_GEMS)
   }
 
-  public static generateDungeonBoss(bossPokemon: DungeonBossPokemon, chestsOpened: number): BattlePokemon {
+  public static generateDungeonBoss(bossPokemon: DungeonBossPokemon, chestsOpened = 0): BattlePokemon {
     const name: PokemonNameType = bossPokemon.name
     const basePokemon = PokemonHelper.getPokemonByName(name)
     const id = basePokemon.id

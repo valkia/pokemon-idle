@@ -8,6 +8,9 @@ import ClearGymRequirement from '~/scripts/achievements/ClearGymRequirement'
 import BadgeEnums from '~/modules/enums/Badges'
 import * as GameConstants from '~/enums/GameConstants'
 import BadgeCase from '~/modules/DataStore/BadgeCase'
+import type { GymPokemon } from '~/scripts/gym/GymPokemon'
+import { AchievementHandler } from '~/scripts/achievements/AchievementHandler'
+import { GymRunner } from '~/scripts/gym/GymRunner'
 /**
  * Data list that contains all gymLeaders, accessible by townName.
  */
@@ -48,6 +51,7 @@ export class Gym extends TownContent {
   }
 
   public onclick(): void {
+    console.log('onclick')
     GymRunner.startGym(this)
   }
 
@@ -58,7 +62,7 @@ export class Gym extends TownContent {
 
   public areaStatus(): areaStatus {
     if (this.isUnlocked()) {
-      if (!App.game.badgeCase.hasBadge(this.badgeReward))
+      if (!new BadgeCase().hasBadge(this.badgeReward))
         return areaStatus.unlockedUnfinished
       else if (this.isThereQuestAtLocation())
         return areaStatus.questAtLocation
@@ -130,6 +134,6 @@ export class Gym extends TownContent {
   }
 
   get imagePath(): string {
-    return `assets/images/gymLeaders/${GymBattle.gym.leaderName}.png`
+    return `/src/assets/images/gymLeaders/${GymBattle.gym.leaderName}.png`
   }
 }

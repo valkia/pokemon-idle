@@ -14,8 +14,8 @@ export default class ClearDungeonRequirement extends AchievementRequirement {
 
   public getProgress() {
     const statistics = useStatisticsStore()
-    // return Math.min(statistics.dungeonsCleared[this.dungeonIndex], this.requiredValue)
-    return Math.min(0, this.requiredValue)
+
+    return Math.min(statistics.getDungeonsCleared(this.dungeonIndex), this.requiredValue)
   }
 
   public hint(): string {

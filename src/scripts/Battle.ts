@@ -111,7 +111,7 @@ export class Battle {
           if (Battle.route != 0)
             this.generateNewEnemy()
         },
-        500 || new Pokeballs().calculateCatchTime(pokeBall),
+        GameConstants.debug ? 50 : new Pokeballs().calculateCatchTime(pokeBall),
       )
     }
     else {
@@ -165,10 +165,10 @@ export class Battle {
     console.log('attemptCatch', battleStore)
     const partyStore = usePartyStore()
     if (enemyPokemon == null) {
-      this.catching.value = (false)
+      battleStore.setCatching(false)
       return
     }
-    if (Rand.chance(this.catchRateActual.value / 100)) { // Caught
+    if (Rand.chance(battleStore.catchRateActual / 100)) { // Caught
       this.catchPokemon(enemyPokemon)
     }
     else if (enemyPokemon.shiny) { // Failed to catch, Shiny
