@@ -10,6 +10,7 @@ declare module 'vue' {
     DungeonView: typeof import('./components/DungeonView.vue')['default']
     Enemy: typeof import('./components/pokemon/Enemy.vue')['default']
     Footer: typeof import('./components/Footer.vue')['default']
+    GymView: typeof import('./components/GymView.vue')['default']
     KantoSVG: typeof import('./components/map/Kanto/KantoSVG.vue')['default']
     MapDungeon: typeof import('./components/map/Kanto/mapDungeon.vue')['default']
     MapOverlay: typeof import('./components/map/Kanto/mapOverlay.vue')['default']

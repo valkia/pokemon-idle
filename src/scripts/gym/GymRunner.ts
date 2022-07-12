@@ -9,45 +9,46 @@ import NotificationConstants from '~/modules/notifications/NotificationConstants
 import { Champion } from '~/scripts/gym/Champion'
 import Settings from '~/modules/settings'
 import Notifier from '~/modules/notifications/Notifier'
+import { useGymStore } from '~/stores/gym'
+import { useGameStore } from '~/stores/game'
+import { Currency, GYM_COUNTDOWN, GYM_TICK, GYM_TIME, GameState, getGymIndex } from '~/enums/GameConstants'
+import { GymBattle } from '~/scripts/gym/GymBattle'
+import BadgeCase from '~/modules/DataStore/BadgeCase'
+import { useStatisticsStore } from '~/stores/statistics'
+import { usePlayerStore } from '~/stores/player'
+import BadgeEnums from '~/modules/enums/Badges'
 
 export class GymRunner {
-  public static timeLeft: KnockoutObservable<number> = ko.observable(GameConstants.GYM_TIME)
-  public static timeLeftPercentage: KnockoutObservable<number> = ko.observable(100)
-
-  public static gymObservable: KnockoutObservable<Gym> = ko.observable(GymList['Pewter City'])
-  public static running: KnockoutObservable<boolean> = ko.observable(false)
-  public static autoRestart: KnockoutObservable<boolean> = ko.observable(false)
-  public static initialRun = true
-
   public static startGym(
     gym: Gym,
     autoRestart = false,
     initialRun = true,
   ) {
-    this.initialRun = initialRun
-    this.autoRestart(autoRestart)
-    this.running(false)
-    this.gymObservable(gym)
+    const gymStore = useGymStore()
+    gymStore.setInitialRun(initialRun)
+    gymStore.setAutoRestart(autoRestart)
+    gymStore.setRunning(false)
+    gymStore.setGym(gym)
     /* todo 冠军gym
     if (gym instanceof Champion)
       gym.setPokemon(player.regionStarters[player.region]())
 */
+    const gameStore = useGameStore()
+    gameStore.setGameState(GameState.idle)
 
-    App.game.gameState = GameConstants.GameState.idle
-    GymRunner.timeLeft(GameConstants.GYM_TIME)
-    GymRunner.timeLeftPercentage(100)
+    gymStore.setTimeLeft(GYM_TIME)
+    gymStore.setTimeLeftPercentage(100)
 
-    GymBattle.gym = gym
-    GymBattle.totalPokemons(gym.pokemons.length)
-    GymBattle.index(0)
+    gymStore.setTotalPokemons(gym.pokemons.length)
+    gymStore.setIndex(0)
     GymBattle.generateNewEnemy()
-    App.game.gameState = GameConstants.GameState.gym
-    this.running(true)
+    gameStore.setGameState(GameState.gym)
+    gymStore.setRunning(true)
     this.resetGif()
 
     setTimeout(() => {
       this.hideGif()
-    }, GameConstants.GYM_COUNTDOWN)
+    }, GYM_COUNTDOWN)
   }
 
   private static hideGif() {
@@ -59,7 +60,8 @@ export class GymRunner {
     if (!Settings.getSetting('showGymGoAnimation').value)
       return
 
-    if (!this.autoRestart() || this.initialRun) {
+    const gymStore = useGymStore()
+    if (!gymStore.autoRestart || gymStore.initialRun) {
       $('#gymGoContainer').show()
       setTimeout(() => {
         $('#gymGo').attr('src', 'assets/gifs/go.gif')
@@ -68,62 +70,71 @@ export class GymRunner {
   }
 
   public static tick() {
-    if (!this.running())
+    const gymStore = useGymStore()
+    if (!gymStore.running)
       return
 
-    if (this.timeLeft() < 0)
+    if (gymStore.timeLeft < 0)
       GymRunner.gymLost()
 
-    this.timeLeft(this.timeLeft() - GameConstants.GYM_TICK)
-    this.timeLeftPercentage(Math.floor(this.timeLeft() / GameConstants.GYM_TIME * 100))
+    gymStore.setTimeLeft(gymStore.timeLeft - GYM_TICK)
+    gymStore.setTimeLeftPercentage(Math.floor(gymStore.timeLeft / GYM_TIME * 100))
   }
 
   public static gymLost() {
-    if (this.running()) {
-      this.running(false)
+    const gymStore = useGymStore()
+    if (gymStore.running) {
+      gymStore.setRunning(false)
       Notifier.notify({
         message: `It appears you are not strong enough to defeat ${GymBattle.gym.leaderName}`,
         type: NotificationConstants.NotificationOption.danger,
       })
-      App.game.gameState = GameConstants.GameState.town
+      const gameStore = useGameStore()
+      gameStore.setGameState(GameState.town)
     }
   }
 
   public static gymWon(gym: Gym) {
-    if (this.running()) {
-      this.running(false)
+    const gymStore = useGymStore()
+    if (gymStore.running) {
+      gymStore.setRunning(false)
       Notifier.notify({
         message: `Congratulations, you defeated ${GymBattle.gym.leaderName}!`,
         type: NotificationConstants.NotificationOption.success,
         setting: NotificationConstants.NotificationSetting.General.gym_won,
       })
       // If this is the first time defeating this gym
-      if (!App.game.badgeCase.hasBadge(gym.badgeReward))
+      if (!new BadgeCase().hasBadge(gym.badgeReward))
         gym.firstWinReward()
 
-      GameHelper.incrementObservable(App.game.statistics.gymsDefeated[GameConstants.getGymIndex(gym.town)])
+      const statistics = useStatisticsStore()
+      statistics.addGymsDefeated[getGymIndex(gym.town)]
 
       // Auto restart gym battle
-      if (this.autoRestart()) {
-        const cost = (this.gymObservable().moneyReward || 10) * 2
-        const amt = new Amount(cost, GameConstants.Currency.money)
+      if (gymStore.autoRestart) {
+        const cost = (gymStore.gym.moneyReward || 10) * 2
+        const amt = new Amount(cost, Currency.money)
         // If the player can afford it, restart the gym
-        if (App.game.wallet.loseAmount(amt)) {
-          this.startGym(this.gymObservable(), this.autoRestart(), false)
-          return
-        }
+        // if (App.game.wallet.loseAmount(amt)) {
+        this.startGym(gymStore.gym, gymStore.autoRestart, false)
+        return
+        // }
       }
 
       // Award money for defeating gym
-      App.game.wallet.gainMoney(gym.moneyReward)
+      // App.game.wallet.gainMoney(gym.moneyReward)
+      const player = usePlayerStore()
       // Send the player back to the town they were in
-      player.town(gym.parent)
-      App.game.gameState = GameConstants.GameState.town
+      player.setTown(gym.parent)
+      const gameStore = useGameStore()
+      gameStore.setGameState(GameState.town)
+      // App.game.gameState = GameConstants.GameState.town
     }
   }
 
-  public static timeLeftSeconds = ko.pureComputed(() => {
-    return (Math.ceil(GymRunner.timeLeft() / 100) / 10).toFixed(1)
+  public static timeLeftSeconds = computed(() => {
+    const gymStore = useGymStore()
+    return (Math.ceil(gymStore.timeLeft / 100) / 10).toFixed(1)
   })
 }
 
