@@ -11,6 +11,8 @@ import BadgeCase from '~/modules/DataStore/BadgeCase'
 import type { GymPokemon } from '~/scripts/gym/GymPokemon'
 import { AchievementHandler } from '~/scripts/achievements/AchievementHandler'
 import { GymRunner } from '~/scripts/gym/GymRunner'
+import { GymBattle } from '~/scripts/gym/GymBattle'
+import { useGymStore } from '~/stores/gym'
 /**
  * Data list that contains all gymLeaders, accessible by townName.
  */
@@ -126,7 +128,7 @@ export class Gym extends TownContent {
 
   public firstWinReward() {
     // Give the player this gyms badge
-    App.game.badgeCase.gainBadge(this.badgeReward)
+    new BadgeCase().gainBadge(this.badgeReward)
     // Show the badge modal
     $('#receiveBadgeModal').modal('show')
     // Run the first time reward function
@@ -134,6 +136,7 @@ export class Gym extends TownContent {
   }
 
   get imagePath(): string {
-    return `/src/assets/images/gymLeaders/${GymBattle.gym.leaderName}.png`
+    const gymStore = useGymStore()
+    return `/src/assets/images/gymLeaders/${gymStore.gym.leaderName}.png`
   }
 }

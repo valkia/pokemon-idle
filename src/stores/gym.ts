@@ -1,6 +1,7 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { GYM_TIME } from '~/enums/GameConstants'
 import type { Gym } from '~/scripts/gym/Gym'
+import {BattlePokemon} from "~/scripts/pokemons/BattlePokemon";
 export const useGymStore = defineStore('gym', {
 
   state: () => ({
@@ -12,6 +13,7 @@ export const useGymStore = defineStore('gym', {
     _initialRun: true,
     _index: 0,
     _totalPokemons: 0,
+    _enemyPokemon: null as BattlePokemon | null,
   }),
   getters: {
     timeLeft: (state): number => {
@@ -38,6 +40,9 @@ export const useGymStore = defineStore('gym', {
     initialRun: (state): boolean => {
       return state._initialRun
     },
+    enemyPokemon: (state): any => {
+      return state._enemyPokemon
+    },
   },
   actions: {
     setTimeLeft(value: number) {
@@ -63,6 +68,9 @@ export const useGymStore = defineStore('gym', {
     },
     setInitialRun(value: boolean) {
       this._initialRun = value
+    },
+    setEnemyPokemon(value: BattlePokemon | null) {
+      this._enemyPokemon = value
     },
   },
 })

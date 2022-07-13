@@ -1,4 +1,5 @@
 import * as GameConstants from '~/enums/GameConstants'
+import { debug } from '~/enums/GameConstants'
 export default abstract class Requirement {
   public requiredValue: number
   public option: GameConstants.AchievementOption
@@ -18,11 +19,11 @@ export default abstract class Requirement {
   public isCompleted() {
     switch (this.option) {
       case GameConstants.AchievementOption.less:
-        return this.getProgress() < this.requiredValue
+        return debug ? true : this.getProgress() < this.requiredValue
       case GameConstants.AchievementOption.equal:
-        return this.getProgress() == this.requiredValue
+        return debug ? true : this.getProgress() == this.requiredValue
       case GameConstants.AchievementOption.more:
-        return this.getProgress() >= this.requiredValue
+        return debug ? true : this.getProgress() >= this.requiredValue
     }
   }
 }

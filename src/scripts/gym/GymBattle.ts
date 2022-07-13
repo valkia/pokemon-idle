@@ -1,7 +1,6 @@
 /// <reference path="../Battle.ts"/>
 import { Battle } from '~/scripts/Battle'
 import { GymRunner } from '~/scripts/gym/GymRunner'
-import { Region } from '~/enums/GameConstants'
 import { useGymStore } from '~/stores/gym'
 import { PokemonFactory } from '~/scripts/pokemons/PokemonFactory'
 
@@ -15,19 +14,21 @@ export class GymBattle extends Battle {
   public static clickAttack() {
     const gymStore = useGymStore()
     if (gymStore.running)
-      super.clickAttack()
+      super.clickAttack(gymStore)
   }
 
   /**
      * Award the player with exp, and go to the next pokemon
      */
   public static defeatPokemon() {
-    this.enemyPokemon.defeat(true)
     const gymStore = useGymStore()
+    gymStore.enemyPokemon.defeat(true)
+
     // Make gym "route" regionless
     // App.game.breeding.progressEggsBattle(this.gym.badgeReward * 3 + 1, Region.none)
     gymStore.setIndex(gymStore.index + 1)
-
+    console.log('gymStore.index', gymStore.index)
+    console.log('gymStore.gym.pokemons.length', gymStore.gym.pokemons.length)
     if (gymStore.index >= gymStore.gym.pokemons.length)
       GymRunner.gymWon(gymStore.gym)
     else
@@ -42,7 +43,7 @@ export class GymBattle extends Battle {
   public static generateNewEnemy() {
     const gymStore = useGymStore()
     this.counter = 0
-    this.enemyPokemon = (PokemonFactory.generateGymPokemon(gymStore.gym, gymStore.index))
+    gymStore.setEnemyPokemon(PokemonFactory.generateGymPokemon(gymStore.gym, gymStore.index))
   }
 
   public static pokemonsDefeatedComputable = computed(() => {

@@ -20,7 +20,6 @@ import { useDungeonStore } from '~/stores/dungeon'
  * Handles all logic related to battling
  */
 export class Battle {
-  static enemyPokemon: BattlePokemon | null
 
   static counter = 0
   static catching = ref(false)
@@ -133,7 +132,6 @@ export class Battle {
     console.log('enemyPokemon', enemyPokemon)
     const battleStore = useBattleStore()
     battleStore.setEnemyPokemon(enemyPokemon)
-    return enemyPokemon
     /* GameHelper.incrementObservable(App.game.statistics.pokemonEncountered[enemyPokemon.id])
     GameHelper.incrementObservable(App.game.statistics.totalPokemonEncountered)
     if (enemyPokemon.shiny) {

@@ -1,12 +1,8 @@
 import type { Gym } from '~/scripts/gym/Gym'
-import App from '~/scripts/App'
-import GameHelper from '~/enums/GameHelper'
-import { GymList } from '~/scripts/gym/GymList'
 import Amount from '~/modules/wallet/Amount'
 import KeyItemController from '~/modules/keyItems/KeyItemController'
 import KeyItemType from '~/modules/enums/KeyItemType'
 import NotificationConstants from '~/modules/notifications/NotificationConstants'
-import { Champion } from '~/scripts/gym/Champion'
 import Settings from '~/modules/settings'
 import Notifier from '~/modules/notifications/Notifier'
 import { useGymStore } from '~/stores/gym'
@@ -44,11 +40,12 @@ export class GymRunner {
     GymBattle.generateNewEnemy()
     gameStore.setGameState(GameState.gym)
     gymStore.setRunning(true)
-    this.resetGif()
+    // todo
+    // this.resetGif()
 
-    setTimeout(() => {
+    /* setTimeout(() => {
       this.hideGif()
-    }, GYM_COUNTDOWN)
+    }, GYM_COUNTDOWN) */
   }
 
   private static hideGif() {
@@ -95,11 +92,12 @@ export class GymRunner {
   }
 
   public static gymWon(gym: Gym) {
+    console.log('gymWon')
     const gymStore = useGymStore()
     if (gymStore.running) {
       gymStore.setRunning(false)
       Notifier.notify({
-        message: `Congratulations, you defeated ${GymBattle.gym.leaderName}!`,
+        message: `Congratulations, you defeated ${gymStore.gym.leaderName}!`,
         type: NotificationConstants.NotificationOption.success,
         setting: NotificationConstants.NotificationSetting.General.gym_won,
       })
@@ -135,6 +133,11 @@ export class GymRunner {
   public static timeLeftSeconds = computed(() => {
     const gymStore = useGymStore()
     return (Math.ceil(gymStore.timeLeft / 100) / 10).toFixed(1)
+  })
+
+  public static timeLeftPercentage = computed(() => {
+    const gymStore = useGymStore()
+    return Math.floor(gymStore.timeLeft / GYM_TIME * 100)
   })
 }
 

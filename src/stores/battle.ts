@@ -21,7 +21,6 @@ export const useBattleStore = defineStore('battle', {
   actions: {
     setEnemyPokemon(value: BattlePokemon | null) {
       this._enemyPokemon = value
-      console.log('enemyPokemon', this._enemyPokemon)
     },
     setCatching(value: boolean) {
       this._catching = value

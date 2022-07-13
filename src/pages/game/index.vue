@@ -5,6 +5,7 @@
       <BattleList />
     </div>
     <div>
+      <GymView />
       <townView />
       <Enemy />
       <KantoSVG />
@@ -42,6 +43,7 @@ import BattleList from '~/components/pokemon/BattleList.vue'
 import pickStarterTutorialModal from '~/components/pickStarterTutorialModal.vue'
 import starterCaught from '~/components/starterCaught.vue'
 import Notificaton from '~/components/Notification.vue'
+import GymView from '~/components/GymView.vue'
 import { useDataStore } from '~/stores/data'
 import { init as townInit } from '~/scripts/towns/init'
 import { init as gymInit } from '~/scripts/gym/init'
