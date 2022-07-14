@@ -18,6 +18,7 @@
   <pickStarterTutorialModal />
   <!--    <starterCaught />-->
   <ShopModal />
+  <ReceiveGymBadge />
 
   <button @click="start()">
     ok
@@ -43,6 +44,7 @@ import BattleList from '~/components/pokemon/BattleList.vue'
 import pickStarterTutorialModal from '~/components/pickStarterTutorialModal.vue'
 import starterCaught from '~/components/starterCaught.vue'
 import Notificaton from '~/components/Notification.vue'
+import ReceiveGymBadge from '~/components/ReceiveGymBadge.vue'
 import GymView from '~/components/GymView.vue'
 import { useDataStore } from '~/stores/data'
 import { init as townInit } from '~/scripts/towns/init'

@@ -78,7 +78,7 @@ const autoRestart = computed(() => {
         <!-- TODO: Add after all Gym Leader images are formatted correctly (same sizes, style etc)
             <img style="position:absolute; left:65%; top: 64px; height: 64px" data-bind="attr:{ src: GymBattle.gym.imagePath }" onerror="this.src = '/src/assets/images/transparent.png'"/>
             -->
-        <img class="enemy" :src="PokemonHelper.getImage(enemyPokemon, enemyPokemon.shiny)">
+        <img mx-auto class="enemy" :src="PokemonHelper.getImage(enemyPokemon, enemyPokemon.shiny)">
       </div>
 
       <div class="progress hitpoints" style="height: 20px;">

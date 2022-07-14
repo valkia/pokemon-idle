@@ -1,12 +1,11 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
-import type { Town } from '~/scripts/towns/Town'
-import type { Gym } from '~/scripts/gym/Gym'
 
 export const useModalStore = defineStore('modal', {
 
   state: () => ({
     _shopModalFlag: false,
     _pickStarterModalFlag: true,
+    _receiveBadgeModal: false,
   }),
   getters: {
     shopModalFlag: (state): any => {

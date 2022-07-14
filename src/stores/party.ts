@@ -119,9 +119,9 @@ export const usePartyStore = defineStore('party', {
       const trainerBonus = trainer ? 1.5 : 1
       const expTotal = Math.floor(exp * level * trainerBonus * multBonus / 9)
 
-      const maxLevel = new BadgeCase().maxLevel
+      const maxLevel = BadgeCase.maxLevel()
       for (const pokemon of this.caughtPokemon) {
-        if (pokemon.level < maxLevel.value)
+        if (pokemon.level < maxLevel)
           pokemon.gainExp(expTotal)
       }
     },

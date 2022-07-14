@@ -419,7 +419,7 @@ const trainer = computed(() => {
   color: whitesmoke;
   background-color: rgba(0,0,0,0.7);
   margin: 0px;
-
+  position: relative;
   .right {
     position: absolute;
     right: 4px;

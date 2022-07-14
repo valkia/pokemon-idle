@@ -505,7 +505,7 @@
 
       <!--Pokémon Tower-->
       <map-dungeon
-        :locals="{name: 'Pokemon Tower'
+        :locals="{name: 'Pokémon Tower'
                   , x: 89, y: 16
                   , width: 4, height: 8
         }"

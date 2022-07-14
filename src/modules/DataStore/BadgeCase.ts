@@ -6,6 +6,7 @@ import GameHelper from '~/enums/GameHelper'
 import { camelCaseToString } from '~/enums/GameConstants'
 import App from '~/scripts/App'
 import WeatherType from '~/enums/WeatherType'
+import { useBadgeStore } from '~/stores/badge'
 
 const emptyBadgeList = new Array(GameHelper.enumLength(BadgeEnums)).fill(false)
 
@@ -16,10 +17,6 @@ export default class BadgeCase implements Feature {
 
   defaults: Record<string, any> = {}
 
-  badgeList: Array<boolean> = emptyBadgeList.map(v => v)
-
-  maxLevel: ComputedRef<number> = computed(() => Math.min(100, (this.badgeCount() + 2) * 10))
-
   badgeCaseTooltip: ComputedRef<string> = computed(() => {
     const maxLevel = this.maxLevel.value
 
@@ -27,20 +24,19 @@ export default class BadgeCase implements Feature {
   })
 
   badgeCount(): number {
-    return this.badgeList.reduce((acc, b) => (acc + Number(b)), 0)
+    return useBadgeStore().badgeCount
   }
 
-  gainBadge(badge: BadgeEnums): void {
-    this.badgeList[badge].value = (true)
+  static gainBadge(badge: BadgeEnums): void {
+    useBadgeStore().gainBadge(badge)
+  }
 
-    // Track when users gains a badge and their total attack
-    LogEvent('gained badge', 'badges', `gained badge (${camelCaseToString(BadgeEnums[badge])})`,
-      App.game.party.calculatePokemonAttack(undefined, undefined, true, undefined, true, false, WeatherType.Clear))
+  static maxLevel(): number {
+    return useBadgeStore().maxLevel
   }
 
   hasBadge(badge: BadgeEnums): boolean {
-    if (badge === null || badge === BadgeEnums.None) return true
-    return !!this.badgeList[badge].value
+    return useBadgeStore().hasBadge(badge)
   }
 
   // This method intentionally left blank

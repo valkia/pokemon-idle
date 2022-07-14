@@ -13,6 +13,7 @@ import { AchievementHandler } from '~/scripts/achievements/AchievementHandler'
 import { GymRunner } from '~/scripts/gym/GymRunner'
 import { GymBattle } from '~/scripts/gym/GymBattle'
 import { useGymStore } from '~/stores/gym'
+import { useModalStore } from '~/stores/modal'
 /**
  * Data list that contains all gymLeaders, accessible by townName.
  */
@@ -128,9 +129,9 @@ export class Gym extends TownContent {
 
   public firstWinReward() {
     // Give the player this gyms badge
-    new BadgeCase().gainBadge(this.badgeReward)
+    BadgeCase.gainBadge(this.badgeReward)
     // Show the badge modal
-    $('#receiveBadgeModal').modal('show')
+    useModalStore()._receiveBadgeModal = true
     // Run the first time reward function
     this.rewardFunction()
   }
