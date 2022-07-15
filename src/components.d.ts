@@ -19,13 +19,13 @@ declare module 'vue' {
     MapRoute: typeof import('./components/map/Kanto/mapRoute.vue')['default']
     MapTown: typeof import('./components/map/Kanto/mapTown.vue')['default']
     Notification: typeof import('./components/Notification.vue')['default']
-    PickStarterTutorialModal: typeof import('./components/pickStarterTutorialModal.vue')['default']
+    PickStarterTutorialModal: typeof import('./components/PickStarterTutorialModal.vue')['default']
     README: typeof import('./components/README.md')['default']
     ReceiveGymBadge: typeof import('./components/ReceiveGymBadge.vue')['default']
-    ShopModal: typeof import('./components/map/shopModal.vue')['default']
-    StarterCaught: typeof import('./components/starterCaught.vue')['default']
-    StartSequence: typeof import('./components/startSequence.vue')['default']
-    TownView: typeof import('./components/map/townView.vue')['default']
+    ShopModal: typeof import('./components/map/ShopModal.vue')['default']
+    StarterCaught: typeof import('./components/StarterCaught.vue')['default']
+    StartSequence: typeof import('./components/StartSequence.vue')['default']
+    TownView: typeof import('./components/map/TownView.vue')['default']
   }
 }
 

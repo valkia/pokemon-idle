@@ -6,7 +6,7 @@
     </div>
     <div>
       <GymView />
-      <townView />
+      <TownView />
       <Enemy />
       <KantoSVG />
 
@@ -15,7 +15,7 @@
     </div>
   </div>
   <Notificaton />
-  <pickStarterTutorialModal />
+  <PickStarterTutorialModal />
   <!--    <starterCaught />-->
   <ShopModal />
   <ReceiveGymBadge />
@@ -35,14 +35,14 @@ import { storeToRefs } from 'pinia'
 import { pokemonMap } from '~/scripts/pokemons/PokemonList'
 import { Battle } from '~/scripts/Battle'
 import KantoSVG from '~/components/map/Kanto/KantoSVG.vue'
-import ShopModal from '~/components/map/shopModal.vue'
+import ShopModal from '~/components/map/ShopModal.vue'
 import DungeonMap from '~/components/DungeonMap.vue'
 import DungeonView from '~/components/DungeonView.vue'
-import townView from '~/components/map/townView.vue'
+import TownView from '~/components/map/TownView.vue'
 import Enemy from '~/components/pokemon/Enemy.vue'
 import BattleList from '~/components/pokemon/BattleList.vue'
-import pickStarterTutorialModal from '~/components/pickStarterTutorialModal.vue'
-import starterCaught from '~/components/starterCaught.vue'
+import PickStarterTutorialModal from '~/components/PickStarterTutorialModal.vue'
+import StarterCaught from '~/components/StarterCaught.vue'
 import Notificaton from '~/components/Notification.vue'
 import ReceiveGymBadge from '~/components/ReceiveGymBadge.vue'
 import GymView from '~/components/GymView.vue'
