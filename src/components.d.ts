@@ -22,6 +22,7 @@ declare module 'vue' {
     PickStarterTutorialModal: typeof import('./components/PickStarterTutorialModal.vue')['default']
     README: typeof import('./components/README.md')['default']
     ReceiveGymBadge: typeof import('./components/ReceiveGymBadge.vue')['default']
+    RouteBattles: typeof import('./components/RouteBattles.vue')['default']
     ShopModal: typeof import('./components/map/ShopModal.vue')['default']
     StarterCaught: typeof import('./components/StarterCaught.vue')['default']
     StartSequence: typeof import('./components/StartSequence.vue')['default']

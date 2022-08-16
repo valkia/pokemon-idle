@@ -7,10 +7,13 @@
     <div>
       <GymView />
       <TownView />
-      <Enemy />
+      <!--      <Enemy />-->
+      <div class="battle-view card-body p-0 justify-content-center no-gutters no-select">
+        <RouteBattles />
+        <DungeonView />
+      </div>
       <KantoSVG />
 
-      <DungeonView />
       <DungeonMap />
     </div>
   </div>
@@ -38,6 +41,7 @@ import KantoSVG from '~/components/map/Kanto/KantoSVG.vue'
 import ShopModal from '~/components/map/ShopModal.vue'
 import DungeonMap from '~/components/DungeonMap.vue'
 import DungeonView from '~/components/DungeonView.vue'
+import RouteBattles from '~/components/RouteBattles.vue'
 import TownView from '~/components/map/TownView.vue'
 import Enemy from '~/components/pokemon/Enemy.vue'
 import BattleList from '~/components/pokemon/BattleList.vue'

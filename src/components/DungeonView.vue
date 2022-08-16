@@ -266,7 +266,7 @@ const trainer = computed(() => {
     display: block;
     height: 70%;
     width: 70%;
-    background: center / contain no-repeat url('../assets/images/dungeons/chest.png');
+    background: center / contain no-repeat url('/src/assets/images/dungeons/chest.png');
   }
 }
 
@@ -280,7 +280,7 @@ const trainer = computed(() => {
     display: block;
     height: 70%;
     width: 70%;
-    background: center / contain no-repeat url('../assets/images/dungeons/boss.svg');
+    background: center / contain no-repeat url('/src/assets/images/dungeons/boss.svg');
   }
 }
 
@@ -338,47 +338,47 @@ const trainer = computed(() => {
 .battle-view {
   min-height: 220px !important;
 
-  background-image: url(../assets/images/battleBackground/default.png);
+  background-image: url(/src/assets/images/battleBackground/default.png);
   background-size: cover;
   background-position: bottom;
-
+  position: relative;
   &.forest {
-    background-image: url(../assets/images/battleBackground/forest.png);
+    background-image: url(/src/assets/images/battleBackground/forest.png);
     background-position: top;
   }
 
   &.water {
-    background-image: url(../assets/images/battleBackground/water.png);
+    background-image: url(/src/assets/images/battleBackground/water.png);
     background-position: top;
   }
 
   &.ice {
-    background-image: url(../assets/images/battleBackground/ice.png);
+    background-image: url(/src/assets/images/battleBackground/ice.png);
     background-position: top;
   }
 
   &.cave {
-    background-image: url(../assets/images/battleBackground/cave.png);
+    background-image: url(/src/assets/images/battleBackground/cave.png);
     background-position: top;
   }
 
   &.gem, &.cave-gem {
-    background-image: url(../assets/images/battleBackground/cave-gem.png);
+    background-image: url(/src/assets/images/battleBackground/cave-gem.png);
     background-position: center;
   }
 
   &.power-plant {
-    background-image: url(../assets/images/battleBackground/power-plant.png);
+    background-image: url(/src/assets/images/battleBackground/power-plant.png);
     background-position: center;
   }
 
   &.mansion {
-    background-image: url(../assets/images/battleBackground/mansion.png);
+    background-image: url(/src/assets/images/battleBackground/mansion.png);
     background-position: center;
   }
 
   &.graveyard {
-    background-image: url(../assets/images/battleBackground/graveyard.png);
+    background-image: url(/src/assets/images/battleBackground/graveyard.png);
     background-position: center;
   }
 

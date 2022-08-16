@@ -20,7 +20,6 @@ import { useDungeonStore } from '~/stores/dungeon'
  * Handles all logic related to battling
  */
 export class Battle {
-
   static counter = 0
   static catching = ref(false)
   static catchRateActual = ref(0)
