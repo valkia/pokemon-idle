@@ -12,6 +12,9 @@ intro:
   aka: 也叫
   whats-your-name: 输入你的名字
 not-found: 未找到页面
+ui:
+  'defeated': '击败'
+  'Catch Chance': '捕获概率'
 map:
   'Kanto': '关东地区'
   'Johto': '城都地区'

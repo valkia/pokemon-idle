@@ -1,16 +1,24 @@
-
 <template>
   <div container mx-auto flex>
     <div w-xs>
       <BattleList />
     </div>
     <div>
-      <GymView />
       <TownView />
       <!--      <Enemy />-->
-      <div class="battle-view card-body p-0 justify-content-center no-gutters no-select">
+      <div
+        v-show="(gameState === GameConstants.GameState.fighting
+          || gameState === GameConstants.GameState.dungeon
+          || gameState === GameConstants.GameState.paused
+          || gameState === GameConstants.GameState.gym
+          || gameState == GameConstants.GameState.battleFrontier)
+          || gameState == GameConstants.GameState.temporaryBattle"
+        class="battle-view card-body p-0 justify-content-center no-gutters no-select"
+        :class="MapHelper.calculateBattleCssClass()"
+      >
         <RouteBattles />
         <DungeonView />
+        <GymView />
       </div>
       <KantoSVG />
 
@@ -30,7 +38,7 @@
 
 <route lang="yaml">
 meta:
-  layout: game
+layout: game
 </route>
 
 <script setup lang="ts">
@@ -55,6 +63,10 @@ import { init as townInit } from '~/scripts/towns/init'
 import { init as gymInit } from '~/scripts/gym/init'
 import { init as routeInit } from '~/scripts/wildBattle/init'
 import App from '~/scripts/App'
+import MapHelper from '~/scripts/worldmap/MapHelper'
+import * as GameConstants from '~/enums/GameConstants'
+import { useGameStore } from '~/stores/game'
+
 const { t, locale } = useI18n()
 locale.value = 'zh-CN'
 const start = () => {
@@ -66,4 +78,9 @@ useDataStore().setGymList(gymInit())
 useDataStore().setTownList(townInit())
 routeInit()
 console.log(Battle.generateNewEnemy())
+
+const gameState = computed(() => {
+  return useGameStore().gameState
+})
+
 </script>

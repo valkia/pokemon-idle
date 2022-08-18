@@ -51,23 +51,19 @@ const backgroundImage = computed(() => {
             </div>
             <!-- /ko -->
             <!--If all Pokémon in the dungeon are caught-->
-            <div
+            <img
               data-bind="if: (!DungeonRunner.dungeonCompleted(player.town().dungeon, true) && DungeonRunner.dungeonCompleted(player.town().dungeon, false))"
+              title="You have captured all Pokémon in this dungeon!" class="pokeball-smallest"
+              src="/src/assets/images/pokeball/Pokeball.svg"
             >
-              <img
-                title="You have captured all Pokémon in this dungeon!" class="pokeball-smallest"
-                src="/src/assets/images/pokeball/Pokeball.svg"
-              >
-            </div>
 
             <!--If all Pokémon in the dungeon are caught shiny-->
-            <div data-bind="if: DungeonRunner.dungeonCompleted(player.town().dungeon, true)">
-              <img
-                title="You have captured all Pokémon shiny in this dungeon!"
-                class="pokeball-smallest"
-                src="/src/assets/images/pokeball/Pokeball-shiny.svg"
-              >
-            </div>
+            <img
+              data-bind="if: DungeonRunner.dungeonCompleted(player.town().dungeon, true)"
+              title="You have captured all Pokémon shiny in this dungeon!"
+              class="pokeball-smallest"
+              src="/src/assets/images/pokeball/Pokeball-shiny.svg"
+            >
           </div>
         </h2>
       </div>

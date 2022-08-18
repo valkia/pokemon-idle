@@ -64,21 +64,19 @@ const trainer = computed(() => {
           <!-- ko if: !DungeonBattle.trainer() -->
 
           <!--If all Pokémon in the dungeon are caught-->
-          <div v-if="(!DungeonRunner.dungeonCompleted(dungeon, true) && DungeonRunner.dungeonCompleted(dungeon, false))">
-            <img
-              title="You have captured all Pokémon in this dungeon!" class="pokeball-smallest"
-              src="/src/assets/images/pokeball/Pokeball.svg"
-            >
-          </div>
+          <img
+            v-if="(!DungeonRunner.dungeonCompleted(dungeon, true) && DungeonRunner.dungeonCompleted(dungeon, false))"
+            title="You have captured all Pokémon in this dungeon!" class="pokeball-smallest"
+            src="/src/assets/images/pokeball/Pokeball.svg"
+          >
 
           <!--If all Pokémon in the dungeon are caught shiny-->
-          <div v-if="DungeonRunner.dungeonCompleted(dungeon, true)">
-            <img
-              title="You have captured all Pokémon shiny in this dungeon!"
-              class="pokeball-smallest"
-              src="/src/assets/images/pokeball/Pokeball-shiny.svg"
-            >
-          </div>
+          <img
+            v-if="DungeonRunner.dungeonCompleted(dungeon, true)"
+            title="You have captured all Pokémon shiny in this dungeon!"
+            class="pokeball-smallest"
+            src="/src/assets/images/pokeball/Pokeball-shiny.svg"
+          >
 
         <!-- /ko -->
         </div>

@@ -9,13 +9,13 @@
     >
       <h2 class="pageItemTitle" style="display: block;">
         <div class="right" data-bind="using: App.game.statistics.routeKills[player.region][player.route()]()">
-          <div data-bind="text: $data.toLocaleString('en-US')">
+          <span data-bind="text: $data.toLocaleString('en-US')">
             {{ routeKills }}
-          </div>
-          <div v-show="routeKills < GameConstants.ROUTE_KILLS_NEEDED">
+          </span>
+          <span v-show="routeKills < GameConstants.ROUTE_KILLS_NEEDED">
             /10
-          </div>
-          &nbsp;defeated
+          </span>
+          &nbsp;{{ t(`ui.defeated`) }}
         </div>
 
         <div class="left">
@@ -23,27 +23,23 @@
             {{ Routes.getName(player.route, player.region) }}
           </div>
           <!--If all Pokémon on the route are caught-->
-          <div
+          <img
             v-show="hasCatch"
+            title="You have captured all Pokémon on this route!" class="pokeball-smallest"
+            src="/src/assets/images/pokeball/Pokeball.svg"
           >
-            <img
-              title="You have captured all Pokémon on this route!" class="pokeball-smallest"
-              src="/src/assets/images/pokeball/Pokeball.svg"
-            >
-          </div>
 
           <!--If all Pokémon on the route are caught shiny-->
-          <div v-show="hasCatchShiny">
-            <img
-              title="You have captured all Pokémon shiny on this route!" class="pokeball-smallest"
-              src="/src/assets/images/pokeball/Pokeball-shiny.svg"
-            >
-          </div>
+          <img
+            v-show="hasCatchShiny"
+            title="You have captured all Pokémon shiny on this route!" class="pokeball-smallest"
+            src="/src/assets/images/pokeball/Pokeball-shiny.svg"
+          >
         </div>
 
         <div>
           <div data-bind="text: Battle.enemyPokemon().name">
-            {{ battle.enemyPokemon?.name }}
+            {{ t(`pokemon.${pokemon.name}`) }}
           </div>
           <div
             data-bind="template: { name: 'caughtStatusTemplate', data: {'status': PartyController.getCaughtStatus(Battle.enemyPokemon().id)}}"
@@ -63,11 +59,10 @@
             class="pokeball-animated"
             :src="pokeballImgUrl"
           >
-          <br>
-          Catch Chance:
-          <div data-bind="text:  + '%'">
+          {{ t(`ui.Catch Chance`) }}:
+          <span data-bind="text:  + '%'">
             {{ Math.floor(battle.catchRateActual) }}%
-          </div>
+          </span>
         </div>
       </div>
       <div class="progress hitpoints" style="height: 20px;">
@@ -97,12 +92,13 @@ import { PokemonHelper } from '~/scripts/pokemons/PokemonHelper'
 import { useBattleStore } from '~/stores/battle'
 import { Pokeball } from '~/enums/GameConstants'
 import { RouteHelper } from '~/scripts/wildBattle/RouteHelper'
+const { t, locale } = useI18n()
 const gameState = computed(() => {
   return useGameStore().gameState
 })
 const player = usePlayerStore()
 const routeKills = computed(() => {
-  useStatisticsStore().getRouteKills(player.region, player.route)
+  return useStatisticsStore().getRouteKills(player.region, player.route)
 })
 const battle = computed(() => {
   return useBattleStore()
@@ -128,3 +124,14 @@ const hasCatchShiny = computed(() => {
   return RouteHelper.routeCompleted(player.route, player.region, true)
 })
 </script>
+<style lang="scss">
+.enemy{
+  margin: 25px auto;
+}
+.pageItemTitle{
+  .left{
+    display: flex;
+    align-items: center;
+  }
+}
+</style>
