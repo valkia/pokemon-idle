@@ -16,7 +16,7 @@ import { DungeonTown } from '~/scripts/towns/Town'
 import { PokemonHelper } from '~/scripts/pokemons/PokemonHelper'
 import dataStore from '~/modules/DataStore'
 import { usePartyStore } from '~/stores/party'
-import {MaxIDPerRegion} from "~/enums/GameConstants";
+import { MaxIDPerRegion } from '~/enums/GameConstants'
 enum areaStatus {
   currentLocation,
   locked,
@@ -87,7 +87,8 @@ export default class MapHelper {
   }
 
   public static getCurrentEnvironment(): GameConstants.Environment {
-    const area = player.route() || player.town()?.name || undefined
+    const player = usePlayerStore()
+    const area = player.route || player.town?.name || undefined
 
     const [env] = Object.entries(GameConstants.Environments).find(
       ([, regions]) => regions[player.region]?.has(area),
