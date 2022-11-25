@@ -4,17 +4,11 @@ import { GameState } from '~/enums/GameConstants'
 export const useGameStore = defineStore('game', {
 
   state: () => ({
-    _gameState: GameState.paused,
+    gameState: GameState.paused,
   }),
   getters: {
-    gameState: (state): GameState => {
-      return state._gameState
-    },
   },
   actions: {
-    setGameState(value: GameState) {
-      this._gameState = value
-    },
   },
 })
 

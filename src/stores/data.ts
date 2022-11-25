@@ -5,24 +5,13 @@ import type { Gym } from '~/scripts/gym/Gym'
 export const useDataStore = defineStore('data', {
 
   state: () => ({
-    _townList: {} as Record<string, Town>,
-    _gymList: {} as Record<string, Gym>,
+    townList: {} as Record<string, Town>,
+    gymList: {} as Record<string, Gym>,
   }),
   getters: {
-    TownList: (state): any => {
-      return state._townList
-    },
-    GymList: (state): any => {
-      return state._gymList
-    },
+
   },
   actions: {
-    setTownList(value: any) {
-      this._townList = value
-    },
-    setGymList(value: any) {
-      this._gymList = value
-    },
   },
 })
 

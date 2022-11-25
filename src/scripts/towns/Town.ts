@@ -36,7 +36,7 @@ export class Town {
     this.npcs = optional.npcs
     this.startingTown = GameConstants.StartingTowns.includes(this.name)
     this.content = content
-    const GymList = useDataStore().GymList
+    const GymList = useDataStore().gymList
     if (GymList[name]) {
       const gym = GymList[name]
       this.content.unshift(gym)

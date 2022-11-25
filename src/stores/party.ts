@@ -8,31 +8,27 @@ import * as GameConstants from '~/enums/GameConstants'
 import App from '~/scripts/App'
 import Weather from '~/enums/Weather'
 import Multiplier from '~/modules/multiplier/Multiplier'
-import { AchievementHandler } from '~/scripts/achievements/AchievementHandler'
 import BadgeCase from '~/modules/DataStore/BadgeCase'
 import { PokemonFactory } from '~/scripts/pokemons/PokemonFactory'
 import GameHelper from '~/enums/GameHelper'
-import { LogBookTypes } from '~/modules/logbook/LogBookTypes'
 import Notifier from '~/modules/notifications/Notifier'
 import NotificationConstants from '~/modules/notifications/NotificationConstants'
 export const usePartyStore = defineStore('party', {
   state: () => ({
-    _caughtPokemon: [] as PartyPokemon[],
+    caughtPokemon: [] as PartyPokemon[],
   }),
   getters: {
-    caughtPokemon: (state): PartyPokemon[] => {
-      return state._caughtPokemon
-    },
+
   },
   actions: {
     addCaughtPokemon(value: PartyPokemon) {
-      this._caughtPokemon.push(value)
+      this.caughtPokemon.push(value)
     },
     alreadyCaughtPokemonByName(name: PokemonNameType, shiny = false) {
       return this.alreadyCaughtPokemon(PokemonHelper.getPokemonByName(name).id, shiny)
     },
     alreadyCaughtPokemon(id: number, shiny = false) {
-      const pokemon = this._caughtPokemon.find(p => p.id == id)
+      const pokemon = this.caughtPokemon.find(p => p.id == id)
       if (pokemon)
         return (!shiny || pokemon.shiny)
 
@@ -171,7 +167,7 @@ export const usePartyStore = defineStore('party', {
       }
 
       // App.game.logbook.newLog(LogBookTypes.CAUGHT, `You have captured ${GameHelper.anOrA(pokemon.name)} ${pokemon.name}!`)
-      this._caughtPokemon.push(pokemon)
+      this.caughtPokemon.push(pokemon)
     },
     getPokemon(id: number) {
       for (let i = 0; i < this.caughtPokemon.length; i++) {

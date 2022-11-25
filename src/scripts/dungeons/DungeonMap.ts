@@ -72,7 +72,7 @@ export class DungeonMap {
 
       const dungeonStore = useDungeonStore()
       console.log('this', this)
-      dungeonStore.setMap(this)
+      dungeonStore.map = (this)
       return true
     }
     return false

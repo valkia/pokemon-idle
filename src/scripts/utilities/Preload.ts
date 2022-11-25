@@ -87,7 +87,7 @@ export class Preload {
 
   private static loadTowns() {
     const p = Array<Promise<void>>()
-    const TownList = useDataStore().TownList
+    const TownList = useDataStore().townList
     for (const name in TownList) {
       // Skip unreleased towns unless a feature flag has enabled them
       if (

@@ -21,25 +21,25 @@ export class GymRunner {
     initialRun = true,
   ) {
     const gymStore = useGymStore()
-    gymStore.setInitialRun(initialRun)
-    gymStore.setAutoRestart(autoRestart)
-    gymStore.setRunning(false)
-    gymStore.setGym(gym)
+    gymStore.initialRun = (initialRun)
+    gymStore.autoRestart = (autoRestart)
+    gymStore.running = (false)
+    gymStore.gym = (gym)
     /* todo 冠军gym
     if (gym instanceof Champion)
       gym.setPokemon(player.regionStarters[player.region]())
 */
     const gameStore = useGameStore()
-    gameStore.setGameState(GameState.idle)
+    gameStore.gameState = (GameState.idle)
 
-    gymStore.setTimeLeft(GYM_TIME)
-    gymStore.setTimeLeftPercentage(100)
+    gymStore.timeLeft = (GYM_TIME)
+    gymStore.timeLeftPercentage = (100)
 
-    gymStore.setTotalPokemons(gym.pokemons.length)
-    gymStore.setIndex(0)
+    gymStore.totalPokemons = (gym.pokemons.length)
+    gymStore.index = (0)
     GymBattle.generateNewEnemy()
-    gameStore.setGameState(GameState.gym)
-    gymStore.setRunning(true)
+    gameStore.gameState = (GameState.gym)
+    gymStore.running = (true)
     // todo
     // this.resetGif()
 
@@ -74,20 +74,20 @@ export class GymRunner {
     if (gymStore.timeLeft < 0)
       GymRunner.gymLost()
 
-    gymStore.setTimeLeft(gymStore.timeLeft - GYM_TICK)
-    gymStore.setTimeLeftPercentage(Math.floor(gymStore.timeLeft / GYM_TIME * 100))
+    gymStore.timeLeft = (gymStore.timeLeft - GYM_TICK)
+    gymStore.timeLeftPercentage = (Math.floor(gymStore.timeLeft / GYM_TIME * 100))
   }
 
   public static gymLost() {
     const gymStore = useGymStore()
     if (gymStore.running) {
-      gymStore.setRunning(false)
+      gymStore.running = (false)
       Notifier.notify({
         message: `It appears you are not strong enough to defeat ${GymBattle.gym.leaderName}`,
         type: NotificationConstants.NotificationOption.danger,
       })
       const gameStore = useGameStore()
-      gameStore.setGameState(GameState.town)
+      gameStore.gameState = (GameState.town)
     }
   }
 
@@ -95,7 +95,7 @@ export class GymRunner {
     console.log('gymWon')
     const gymStore = useGymStore()
     if (gymStore.running) {
-      gymStore.setRunning(false)
+      gymStore.running = (false)
       Notifier.notify({
         message: `Congratulations, you defeated ${gymStore.gym.leaderName}!`,
         type: NotificationConstants.NotificationOption.success,
@@ -125,7 +125,7 @@ export class GymRunner {
       // Send the player back to the town they were in
       player.setTown(gym.parent)
       const gameStore = useGameStore()
-      gameStore.setGameState(GameState.town)
+      gameStore.gameState = (GameState.town)
       // App.game.gameState = GameConstants.GameState.town
     }
   }

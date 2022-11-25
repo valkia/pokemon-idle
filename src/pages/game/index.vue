@@ -58,8 +58,8 @@ const start = () => {
 }
 // eslint-disable-next-line no-console
 console.log(t)
-useDataStore().setGymList(gymInit())
-useDataStore().setTownList(townInit())
+useDataStore().gymList = (gymInit())
+useDataStore().townList = (townInit())
 routeInit()
 console.log(Battle.generateNewEnemy())
 </script>

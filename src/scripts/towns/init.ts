@@ -213,7 +213,7 @@ export const init = () => {
       npcs: [ViridianCityOldMan],
     },
   )
-  const GymList = useDataStore().GymList
+  const GymList = useDataStore().gymList
   console.log(GymList)
   TownList['Indigo Plateau Kanto'] = new Town(
     'Indigo Plateau Kanto',

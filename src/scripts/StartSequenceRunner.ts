@@ -15,7 +15,7 @@ export class StartSequenceRunner {
 
   public static start() {
     const gameStore = useGameStore()
-    gameStore.setGameState(GameConstants.GameState.paused)
+    gameStore.gameState = (GameConstants.GameState.paused)
     // $('#startSequenceModal').modal('show')
   }
 
@@ -29,7 +29,7 @@ export class StartSequenceRunner {
     const shiny: boolean = PokemonFactory.generateShiny(GameConstants.SHINY_CHANCE_BATTLE)
 
     const gameStore = useGameStore()
-    gameStore.setGameState(GameConstants.GameState.fighting)
+    gameStore.gameState = (GameConstants.GameState.fighting)
     const battlePokemon = new BattlePokemon(dataPokemon.name, dataPokemon.id, dataPokemon.type1, dataPokemon.type2, 10, 1, 100, 0, new Amount(0, GameConstants.Currency.money), shiny)
     const battleStore = useBattleStore()
     battleStore.setEnemyPokemon(battlePokemon)
@@ -67,7 +67,7 @@ export class StartSequenceRunner {
 
   public static showCaughtMessage() {
     /* const gameStore = useGameStore()
-    gameStore.setGameState(GameConstants.GameState.paused) */
+    gameStore.gameState = (GameConstants.GameState.paused) */
     /* $('#starterCaughtModal').modal('show')
     $('#pokeballSelector').css('display', 'block')
     $('#pokemonListContainer').css('display', 'block')

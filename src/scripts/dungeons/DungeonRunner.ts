@@ -42,7 +42,7 @@ export class DungeonRunner {
 
     DungeonRunner.dungeon = dungeon
     const dungeonStore = useDungeonStore()
-    dungeonStore.setDungeon(dungeon)
+    dungeonStore.dungeon = (dungeon)
     if (!DungeonRunner.hasEnoughTokens()) {
       Notifier.notify({
         message: 'You don\'t have enough dungeon tokens',
@@ -55,9 +55,9 @@ export class DungeonRunner {
     DungeonBattle.trainer = (null)
     DungeonBattle.trainerPokemonIndex = (0)
     DungeonBattle.enemyPokemon = (null)
-    dungeonStore.setTrainer(null)
-    dungeonStore.setTrainerPokemonIndex(0)
-    dungeonStore.setEnemyPokemon(null)
+    dungeonStore.trainer = (null)
+    dungeonStore.trainerPokemonIndex = (0)
+    dungeonStore.enemyPokemon = (null)
     const player = usePlayerStore()
     const statistics = useStatisticsStore()
     // FluteEffectRunner.getFluteMultiplier(GameConstants.FluteItemType.Time_Flute)
@@ -71,7 +71,7 @@ export class DungeonRunner {
     // Dungeon size minimum of MIN_DUNGEON_SIZE
     DungeonRunner.map = new DungeonMap(Math.max(GameConstants.MIN_DUNGEON_SIZE, dungeonSize), flash)
 
-    dungeonStore.setMap(DungeonRunner.map)
+    dungeonStore.map = (DungeonRunner.map)
 
     DungeonRunner.chestsOpened = 0
     DungeonRunner.currentTileType = computed(() => {
@@ -80,11 +80,11 @@ export class DungeonRunner {
     DungeonRunner.fightingBoss = (false)
     DungeonRunner.defeatedBoss = (false)
     DungeonRunner.dungeonFinished = (false)
-    dungeonStore.setFighting(false)
-    dungeonStore.setDefeatedBoss(false)
-    dungeonStore.setDungeonFinished(false)
+    dungeonStore.fighting = (false)
+    dungeonStore.defeatedBoss = (false)
+    dungeonStore.dungeonFinished = (false)
     const gameStore = useGameStore()
-    gameStore.setGameState(GameConstants.GameState.dungeon)
+    gameStore.gameState = (GameConstants.GameState.dungeon)
   }
 
   public static tick() {
@@ -207,7 +207,7 @@ export class DungeonRunner {
     if (dungeon.map.currentTile().type !== GameConstants.DungeonTile.boss || dungeon.fightingBoss)
       return
 
-    dungeon.setFightingBoss(true)
+    dungeon.fightingBoss = (true)
     DungeonBattle.generateNewBoss()
   }
 
@@ -238,7 +238,7 @@ export class DungeonRunner {
     console.log('dungeonWon')
     const dungeon = useDungeonStore()
     if (!dungeon.dungeonFinished) {
-      dungeon.setDungeonFinished(true)
+      dungeon.dungeonFinished = (true)
       // GameHelper.incrementObservable(App.game.statistics.dungeonsCleared[GameConstants.getDungeonIndex(DungeonRunner.dungeon.name)])
       const statistics = useStatisticsStore()
       statistics.addDungeonsCleared(getDungeonIndex(dungeon.dungeon.name))

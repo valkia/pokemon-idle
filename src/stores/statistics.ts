@@ -1,14 +1,13 @@
 // @ts-check
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import type * as GameConstants from '~/enums/GameConstants'
-import { getDungeonIndex } from '~/enums/GameConstants'
 
 export const useStatisticsStore = defineStore({
   id: 'statistics',
   state: () => ({
     rawItems: [],
     // 获取总数
-    _totalMoney: 0, // 总金币
+    totalMoney: 0, // 总金币
     totalDungeonTokens: 0, // 地下城点数
     totalQuestPoints: 0, // 探索点数
     totalDiamonds: 0, // 钻石
@@ -34,46 +33,41 @@ export const useStatisticsStore = defineStore({
     capturedPokemonList: [], // 抓捕到的宝可梦列表
 
     // Battle
-    _routeKills: {} as Record<string, Record<string, number>>,
-    _gymsDefeated: {} as Record<number, number>,
-    _dungeonsCleared: {} as Record<number, number>,
+    routeKills: {} as Record<string, Record<string, number>>,
+    gymsDefeated: {} as Record<number, number>,
+    dungeonsCleared: {} as Record<number, number>,
     temporaryBattleDefeated: [0],
   }),
   getters: {
-    totalMoney: (state): any => {
-      return state._totalMoney
-    },
-    routeKills: (state): any => {
-      return state._routeKills
-    },
+
   },
   actions: {
     setTotalMoney(number: number) {
-      this._totalMoney = number
+      this.totalMoney = number
     },
     setRouteKills(region: GameConstants.Region, route: number) {
       const value = this.getRouteKills(region, route)
-      const tmp = this._routeKills[region] || {}
+      const tmp = this.routeKills[region] || {}
       console.log('setRouteKills', region, route, value)
       tmp[route] = value + 1
-      this._routeKills[region] = tmp
+      this.routeKills[region] = tmp
     },
     getRouteKills(region: GameConstants.Region, route: number) {
-      const tmp = this._routeKills[region] || {}
+      const tmp = this.routeKills[region] || {}
       const tmp2 = tmp[route] || 0
       return tmp2
     },
     getDungeonsCleared(dungeonIndex: number): number {
-      return this._dungeonsCleared[dungeonIndex] || 0
+      return this.dungeonsCleared[dungeonIndex] || 0
     },
     addDungeonsCleared(dungeonIndex: number) {
-      this._dungeonsCleared[dungeonIndex] = (this._dungeonsCleared[dungeonIndex] || 0) + 1
+      this.dungeonsCleared[dungeonIndex] = (this.dungeonsCleared[dungeonIndex] || 0) + 1
     },
     getGymsDefeated(gymIndex: number): number {
-      return this._gymsDefeated[gymIndex] || 0
+      return this.gymsDefeated[gymIndex] || 0
     },
     addGymsDefeated(gymIndex: number) {
-      this._gymsDefeated[gymIndex] = (this._gymsDefeated[gymIndex] || 0) + 1
+      this.gymsDefeated[gymIndex] = (this.gymsDefeated[gymIndex] || 0) + 1
     },
   },
 })

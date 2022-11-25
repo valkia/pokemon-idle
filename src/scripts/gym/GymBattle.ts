@@ -26,7 +26,7 @@ export class GymBattle extends Battle {
 
     // Make gym "route" regionless
     // App.game.breeding.progressEggsBattle(this.gym.badgeReward * 3 + 1, Region.none)
-    gymStore.setIndex(gymStore.index + 1)
+    gymStore.index = (gymStore.index + 1)
     console.log('gymStore.index', gymStore.index)
     console.log('gymStore.gym.pokemons.length', gymStore.gym.pokemons.length)
     if (gymStore.index >= gymStore.gym.pokemons.length)
@@ -43,7 +43,7 @@ export class GymBattle extends Battle {
   public static generateNewEnemy() {
     const gymStore = useGymStore()
     this.counter = 0
-    gymStore.setEnemyPokemon(PokemonFactory.generateGymPokemon(gymStore.gym, gymStore.index))
+    gymStore.enemyPokemon = (PokemonFactory.generateGymPokemon(gymStore.gym, gymStore.index))
   }
 
   public static pokemonsDefeatedComputable = computed(() => {

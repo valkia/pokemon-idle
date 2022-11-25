@@ -49,7 +49,7 @@ export default class MapHelper {
         Battle.generateNewEnemy()
 
       const gameStore = useGameStore()
-      gameStore.setGameState(GameConstants.GameState.fighting)
+      gameStore.gameState = (GameConstants.GameState.fighting)
     }
     else {
       if (!MapHelper.routeExist(route, region)) {
@@ -150,7 +150,7 @@ export default class MapHelper {
       else if (!DungeonRunner.isAchievementsComplete(dungeonList[townName]))
         return areaStatus[areaStatus.missingAchievement]
     } */
-    const TownList = useDataStore().TownList
+    const TownList = useDataStore().townList
     const town = TownList[townName]
     town.content.forEach((c) => {
       states.push(c.areaStatus())
@@ -163,7 +163,7 @@ export default class MapHelper {
 
   public static accessToTown(townName: string): boolean {
     const dataStore = useDataStore()
-    const town = dataStore.TownList[townName]
+    const town = dataStore.townList[townName]
     if (!town)
       return false
 
@@ -171,18 +171,18 @@ export default class MapHelper {
   }
 
   public static moveToTown(townName: string) {
-    const TownList = useDataStore().TownList
+    const TownList = useDataStore().townList
     if (MapHelper.accessToTown(townName)) {
       const player = usePlayerStore()
       const gameStore = useGameStore()
-      gameStore.setGameState(GameConstants.GameState.idle)
+      gameStore.gameState = (GameConstants.GameState.idle)
       player.setRoute(0)
 
       const town = TownList[townName]
       player.setTown(town)
       Battle.enemyPokemon = null
       // this should happen last, so all the values all set beforehand
-      gameStore.setGameState(GameConstants.GameState.town)
+      gameStore.gameState = (GameConstants.GameState.town)
     }
     else {
       const town = TownList[townName]
@@ -257,7 +257,7 @@ export default class MapHelper {
     // If player already reached highest region, they can't move on
     if (player.highestRegion >= GameConstants.MAX_AVAILABLE_REGION)
       return false
-    const TownList = useDataStore().TownList
+    const TownList = useDataStore().townList
     // Check if player doesn't require complete dex to move on to the next region and has access to next regions starter town
     // !App.game.challenges.list.requireCompletePokedex.active()
     if (false)

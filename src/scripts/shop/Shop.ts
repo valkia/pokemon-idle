@@ -24,7 +24,7 @@ export class Shop extends TownContent {
 
   public onclick(): void {
     ShopHandler.showShop(this)
-    useModalStore().setShopModalFlag(true)
+    useModalStore().shopModalFlag = (true)
   }
 
   public tooltip = 'Visit shops to buy items.'
