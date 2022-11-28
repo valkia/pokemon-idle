@@ -49,7 +49,7 @@ export const useWalletStore = defineStore('wallet', {
       console.log(statisticsStore)
       switch (amount.currency) {
         case Currency.money:
-          statisticsStore.setTotalMoney(amount.amount)
+          statisticsStore.totalMoney = (amount.amount)
           break
         case Currency.dungeonToken:
           GameHelper.incrementObservable(App.game.statistics.totalDungeonTokens, amount.amount)

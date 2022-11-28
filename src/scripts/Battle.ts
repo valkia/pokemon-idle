@@ -153,7 +153,7 @@ export class Battle {
 
   protected static prepareCatch(enemyPokemon: BattlePokemon, pokeBall: GameConstants.Pokeball, battleStore: any = useBattleStore()) {
     this.pokeball.value = (pokeBall)
-    battleStore.catching = (true)
+    battleStore.catching = true
     battleStore.catchRateActual = (this.calculateActualCatchRate(enemyPokemon, pokeBall))
     new Pokeballs().usePokeball(pokeBall)
   }
@@ -162,7 +162,7 @@ export class Battle {
     console.log('attemptCatch', battleStore)
     const partyStore = usePartyStore()
     if (enemyPokemon == null) {
-      battleStore.catching = (false)
+      battleStore.catching = false
       return
     }
     if (Rand.chance(battleStore.catchRateActual / 100)) { // Caught
@@ -176,7 +176,7 @@ export class Battle {
       // App.game.logbook.newLog(LogBookTypes.ESCAPED, `The wild ${enemyPokemon.name} escaped!`)
       console.log(`The wild ${enemyPokemon.name} escaped!`)
     }
-    battleStore.catching = (false)
+    battleStore.catching = false
     battleStore.catchRateActual = (0)
   }
 

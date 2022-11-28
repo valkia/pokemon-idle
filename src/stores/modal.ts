@@ -5,6 +5,7 @@ export const useModalStore = defineStore('modal', {
   state: () => ({
     shopModalFlag: false,
     pickStarterModalFlag: true,
+    receiveBadgeModal: false,
   }),
   getters: {
 

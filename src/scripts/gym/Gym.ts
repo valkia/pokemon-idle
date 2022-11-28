@@ -131,7 +131,7 @@ export class Gym extends TownContent {
     // Give the player this gyms badge
     BadgeCase.gainBadge(this.badgeReward)
     // Show the badge modal
-    useModalStore()._receiveBadgeModal = true
+    useModalStore().receiveBadgeModal = true
     // Run the first time reward function
     this.rewardFunction()
   }

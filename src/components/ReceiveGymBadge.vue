@@ -20,10 +20,10 @@ const map = computed(() => {
   return dungeonStore.map
 })
 const showReceiveBadgeModal = computed(() => {
-  return useModalStore()._receiveBadgeModal
+  return useModalStore().receiveBadgeModal
 })
 const toggleShow = () => {
-  useModalStore()._receiveBadgeModal = !useModalStore()._receiveBadgeModal
+  useModalStore().receiveBadgeModal = !useModalStore().receiveBadgeModal
 }
 </script>
 <template>

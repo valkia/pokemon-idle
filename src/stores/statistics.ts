@@ -42,9 +42,6 @@ export const useStatisticsStore = defineStore({
 
   },
   actions: {
-    setTotalMoney(number: number) {
-      this.totalMoney = number
-    },
     setRouteKills(region: GameConstants.Region, route: number) {
       const value = this.getRouteKills(region, route)
       const tmp = this.routeKills[region] || {}

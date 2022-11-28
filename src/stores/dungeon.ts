@@ -23,43 +23,6 @@ export const useDungeonStore = defineStore('dungeon', {
   getters: {
   },
   actions: {
-    /*setDungeon(value: Dungeon | null) {
-      this.dungeon = value
-    },
-    setMap(value: DungeonMap | null) {
-      this.map = value
-    },
-    setEnemyPokemon(value: BattlePokemon | null) {
-      this.enemyPokemon = value
-    },
-    setTrainer(value: DungeonTrainer | null) {
-      this.trainer = value
-    },
-    setCatching(value: boolean) {
-      this.catching = value
-    },
-    setCatchRateActual(value: number) {
-      this.catchRateActual = value
-    },
-    setFightingBoss(value: boolean) {
-      this.fightingBoss = value
-    },
-    setFighting(value: boolean) {
-      this.fighting = value
-    },
-    setCounter(value: number) {
-      this.counter = value
-    },
-    setDefeatedBoss(value: boolean) {
-      this.defeatedBoss = value
-    },
-    setTrainerPokemonIndex(value: number) {
-      this.trainerPokemonIndex = value
-    },
-    setDungeonFinished(value: boolean) {
-      this.dungeonFinished = value
-    },*/
-
   },
 })
 
