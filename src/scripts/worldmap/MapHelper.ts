@@ -39,9 +39,9 @@ export default class MapHelper {
 
     if (this.accessToRoute(route, region)) {
       console.log('accessToRoute', route, region)
-      player.setRoute(route)
+      player.route = (route)
       if (player.region != region) {
-        player.setRegion(region)
+        player.region = (region)
         // Always go back to the main island when changing regions
         player.subregion = 0
       }
@@ -177,10 +177,10 @@ export default class MapHelper {
       const player = usePlayerStore()
       const gameStore = useGameStore()
       gameStore.gameState = (GameConstants.GameState.idle)
-      player.setRoute(0)
+      player.route = (0)
 
       const town = TownList[townName]
-      player.setTown(town)
+      player.town = (town)
       Battle.enemyPokemon = null
       // this should happen last, so all the values all set beforehand
       gameStore.gameState = (GameConstants.GameState.town)

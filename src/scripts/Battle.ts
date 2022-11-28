@@ -130,7 +130,7 @@ export class Battle {
     const enemyPokemon = (PokemonFactory.generateWildPokemon(player.route, player.region))
     console.log('enemyPokemon', enemyPokemon)
     const battleStore = useBattleStore()
-    battleStore.setEnemyPokemon(enemyPokemon)
+    battleStore.enemyPokemon = (enemyPokemon)
     /* GameHelper.incrementObservable(App.game.statistics.pokemonEncountered[enemyPokemon.id])
     GameHelper.incrementObservable(App.game.statistics.totalPokemonEncountered)
     if (enemyPokemon.shiny) {
@@ -153,8 +153,8 @@ export class Battle {
 
   protected static prepareCatch(enemyPokemon: BattlePokemon, pokeBall: GameConstants.Pokeball, battleStore: any = useBattleStore()) {
     this.pokeball.value = (pokeBall)
-    battleStore.setCatching(true)
-    battleStore.setCatchRateActual(this.calculateActualCatchRate(enemyPokemon, pokeBall))
+    battleStore.catching = (true)
+    battleStore.catchRateActual = (this.calculateActualCatchRate(enemyPokemon, pokeBall))
     new Pokeballs().usePokeball(pokeBall)
   }
 
@@ -162,7 +162,7 @@ export class Battle {
     console.log('attemptCatch', battleStore)
     const partyStore = usePartyStore()
     if (enemyPokemon == null) {
-      battleStore.setCatching(false)
+      battleStore.catching = (false)
       return
     }
     if (Rand.chance(battleStore.catchRateActual / 100)) { // Caught
@@ -176,8 +176,8 @@ export class Battle {
       // App.game.logbook.newLog(LogBookTypes.ESCAPED, `The wild ${enemyPokemon.name} escaped!`)
       console.log(`The wild ${enemyPokemon.name} escaped!`)
     }
-    battleStore.setCatching(false)
-    battleStore.setCatchRateActual(0)
+    battleStore.catching = (false)
+    battleStore.catchRateActual = (0)
   }
 
   public static catchPokemon(enemyPokemon: BattlePokemon) {

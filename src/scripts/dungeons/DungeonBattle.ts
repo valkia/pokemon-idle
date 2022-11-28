@@ -176,7 +176,7 @@ export class DungeonBattle extends Battle {
       this.generateTrainerPokemon()
     }
 
-    dungeon.fighting(true)
+    dungeon.fighting = (true)
   }
 
   public static generateNewLootEnemy(pokemon: PokemonNameType) {

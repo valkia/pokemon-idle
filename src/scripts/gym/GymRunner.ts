@@ -123,7 +123,7 @@ export class GymRunner {
       // App.game.wallet.gainMoney(gym.moneyReward)
       const player = usePlayerStore()
       // Send the player back to the town they were in
-      player.setTown(gym.parent)
+      player.town = (gym.parent)
       const gameStore = useGameStore()
       gameStore.gameState = (GameState.town)
       // App.game.gameState = GameConstants.GameState.town

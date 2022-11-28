@@ -32,7 +32,7 @@ export class StartSequenceRunner {
     gameStore.gameState = (GameConstants.GameState.fighting)
     const battlePokemon = new BattlePokemon(dataPokemon.name, dataPokemon.id, dataPokemon.type1, dataPokemon.type2, 10, 1, 100, 0, new Amount(0, GameConstants.Currency.money), shiny)
     const battleStore = useBattleStore()
-    battleStore.setEnemyPokemon(battlePokemon)
+    battleStore.enemyPokemon = (battlePokemon)
     // Show the help information text
     /* Information.show({
       steps: [
@@ -49,7 +49,7 @@ export class StartSequenceRunner {
         setTimeout(() => {
           // Information.hide()
           const player = usePlayerStore()
-          player.setStarter(StartSequenceRunner.starterPicked)
+          player.starter = (StartSequenceRunner.starterPicked)
           usePartyStore().gainPokemonById(dataPokemon.id, shiny, true)
           // App.game.profile.pokemon(dataPokemon.id)
           StartSequenceRunner.showCaughtMessage()
