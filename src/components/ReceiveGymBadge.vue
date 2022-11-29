@@ -25,6 +25,9 @@ const showReceiveBadgeModal = computed(() => {
 const toggleShow = () => {
   useModalStore().receiveBadgeModal = !useModalStore().receiveBadgeModal
 }
+const openHallOfFameModal = () => {
+  useModalStore().hallOfFameModal = true
+}
 </script>
 <template>
   <div
@@ -88,7 +91,7 @@ const toggleShow = () => {
         <div class="modal-footer">
           <button
             type="button" class="btn btn-primary" data-dismiss="modal"
-            @click="$('#hallOfFameModal').modal('show')"
+            @click="openHallOfFameModal"
           >
             Next
           </button>

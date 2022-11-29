@@ -44,7 +44,7 @@ export class DungeonTile {
   }
 
   public calculateCssClass() {
-    if (!this.isVisible) {
+    if (!this.isVisible && this.type !== GameConstants.DungeonTile.boss) {
       this.cssClass = ('tile tile-invisible')
       return
     }

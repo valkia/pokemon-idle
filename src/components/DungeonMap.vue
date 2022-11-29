@@ -17,7 +17,7 @@ const map = computed(() => {
   <div
     v-if="gameState.gameState === GameConstants.GameState.dungeon"
     id="dungeonMap"
-    class="card sortable-disabled border-secondary mb-3 dungeon no-select"
+    class="card sortable-disabled border-secondary mb-3 dungeon no-select main-width"
   >
     <!--    <div class="card-header p-0">
       <span>{{ dungeon.name }}</span>
@@ -40,5 +40,9 @@ const map = computed(() => {
 <style lang="scss">
 :root{
   --trainer-image: url('/src/assets/images/profile/trainer-0.png');
+}
+
+.main-width{
+  width: 600px;
 }
 </style>

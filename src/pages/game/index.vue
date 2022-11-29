@@ -20,7 +20,7 @@
         <DungeonView />
         <GymView />
       </div>
-      <KantoSVG />
+      <KantoSVG v-show="gameState !== GameConstants.GameState.dungeon" />
 
       <DungeonMap />
     </div>
@@ -30,6 +30,7 @@
   <!--    <starterCaught />-->
   <ShopModal />
   <ReceiveGymBadge />
+  <HallOfFameModal />
 
   <button @click="start()">
     ok
@@ -43,6 +44,7 @@ layout: game
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
+import HallOfFameModal from '~/components/HallOfFame.vue'
 import { pokemonMap } from '~/scripts/pokemons/PokemonList'
 import { Battle } from '~/scripts/Battle'
 import KantoSVG from '~/components/map/Kanto/KantoSVG.vue'

@@ -1,5 +1,5 @@
 <template>
-  <svg id="map" width="600" height="500" viewBox="0,0,1600,960" preserveAspectRatio="xMaxYMax meet">
+  <svg id="map" width="600" height="360" viewBox="0,0,1600,960" preserveAspectRatio="xMaxYMax meet">
     <g>
       <image width="1600" height="960" :xlink:href="'/map/kanto.png'" href="/map/kanto.png" />
       <!-- ------ -->
