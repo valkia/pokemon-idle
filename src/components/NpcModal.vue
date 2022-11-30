@@ -1,3 +1,4 @@
+<template>
 <div class="modal fade noselect" id="npc-modal" role="dialog" tabindex="-1">
   <div class="modal-dialog modal-dialog-scrollable modal-sm" role="document">
     <div class="modal-content">
@@ -10,3 +11,8 @@
     </div>
   </div>
 </div>
+</template>
+
+<script>
+
+</script>

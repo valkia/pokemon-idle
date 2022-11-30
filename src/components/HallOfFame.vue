@@ -3,7 +3,7 @@
 import { usePlayerStore } from '~/stores/player'
 import { Starter } from '~/enums/GameConstants'
 import { useModalStore } from '~/stores/modal'
-
+import Modal from '~/components/common/Modal.vue'
 const player = usePlayerStore()
 
 const show = computed(() => {
@@ -11,13 +11,7 @@ const show = computed(() => {
 })
 </script>
 <template>
-  <div
-    v-show="show"
-    id="hallOfFameModal" data-keyboard="false" data-backdrop="static" tabindex="-1"
-    role="dialog"
-    aria-labelledby="hallOfFameModalLabel" aria-hidden="true"
-    class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full justify-center items-center flex"
-  >
+  <Modal :modalShow="show">
     <div class="relative p-4 w-full max-w-md h-full md:h-auto relative bg-white rounded-lg shadow dark:bg-gray-700">
       <div class="modal-header">
         <div style="width: 100%;">
@@ -33,7 +27,7 @@ const show = computed(() => {
           You are the new Pokémon League champion!<br>
           You have grown up so much since you first left with <span
             data-bind="text: GameConstants.Starter[player.starter()]"
-          >{{ Starter[player.starter] }}</span>!<br>
+        >{{ Starter[player.starter] }}</span>!<br>
           <br>
           There are many more regions to explore!
           <!-- ko if: App.game.challenges.list.requireCompletePokedex.active() -->
@@ -42,10 +36,11 @@ const show = computed(() => {
         </p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal" @click="useModalStore().hallOfFameModal=false">
+        <button type="button" class="btn btn-primary" data-dismiss="modal"
+                @click="useModalStore().hallOfFameModal=false">
           Close
         </button>
       </div>
     </div>
-  </div>
+  </Modal>
 </template>
