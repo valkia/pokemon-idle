@@ -20,6 +20,7 @@ declare module 'vue' {
     MapTown: typeof import('./components/map/Kanto/mapTown.vue')['default']
     Modal: typeof import('./components/common/Modal.vue')['default']
     Notification: typeof import('./components/Notification.vue')['default']
+    NpcModal: typeof import('./components/NpcModal.vue')['default']
     PickStarterTutorialModal: typeof import('./components/PickStarterTutorialModal.vue')['default']
     README: typeof import('./components/README.md')['default']
     ReceiveGymBadge: typeof import('./components/ReceiveGymBadge.vue')['default']

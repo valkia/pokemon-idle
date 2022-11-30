@@ -102,7 +102,7 @@ export const usePartyStore = defineStore('party', {
       // Shiny pokemon help with a 50% boost
       //  * (1 + AchievementHandler.achievementBonus())
 
-      const debugValue = 10000000000
+      const debugValue = 1
 
       const clickAttack = Math.pow(this.caughtPokemon.length + (this.caughtPokemon.filter(p => p.shiny).length / 2) + 1, 1.4) + debugValue
 

@@ -1,7 +1,7 @@
 <template>
   <div v-if="props.modalShow" id="popup-modal" tabindex="-1" class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full justify-center items-center flex">
-    <div class="relative p-4 w-full max-w-md h-full md:h-auto">
-      <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+    <div class="relative  w-full max-w-md h-full md:h-auto">
+      <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-700">
         <slot />
       </div>
     </div>
@@ -19,7 +19,7 @@ const show = computed(() => {
   return useModalStore().pickStarterModalFlag
 })
 const toggleShow = useModalStore().togglePickStarterModal
-const props = defineProps<{ modalShow: Boolean }>()
+const props = defineProps<{ modalShow: Boolean;closeBtn: false }>()
 </script>
 
 <style scoped lang="scss">

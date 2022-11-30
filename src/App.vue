@@ -15,4 +15,5 @@ useHead({
 </template>
 <style lang="scss">
 @import "app.scss";
+@import "common.scss";
 </style>
