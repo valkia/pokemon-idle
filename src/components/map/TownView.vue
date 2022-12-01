@@ -68,7 +68,7 @@ const backgroundImage = computed(() => {
         </h2>
       </div>
     </div>
-    <div class="row no-gutters">
+    <div class="row no-gutters" flex justify-between p-4>
       <div class="col-4 no-gutters">
         <div class="list-group">
           <!--     :class="player.town.dungeon && App.game.wallet.currencies[GameConstants.Currency.dungeonToken]() >= player.town.dungeon.tokenCost ? 'btn btn-success p-0' : 'btn btn-secondary p-0'"     -->
@@ -90,8 +90,9 @@ const backgroundImage = computed(() => {
           <div
             v-for="data in player.town.content"
             :key="data.id"
-            class="btn-group btn-block"
-            style="margin-top: 0px;"
+            class="btn-group btn-block "
+            text-left
+            mt-1
           >
             <button
               v-if="data.isVisible()"
@@ -116,9 +117,8 @@ const backgroundImage = computed(() => {
           <!-- /ko -->
         </div>
       </div>
-      <div class="col-5" />
       <div class="col-3 no-gutters">
-        <div v-for="data in player.town.npcs" class="list-group">
+        <div v-for="data in player.town.npcs" class="list-group" mt-1 text-right>
           <!-- ko if: $data.isVisible() -->
           <button
             class="btn btn-info"

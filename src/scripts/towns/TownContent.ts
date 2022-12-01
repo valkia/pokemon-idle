@@ -77,7 +77,7 @@ export class DockTownContent extends TownContent {
 
   public isVisible() {
     const player = usePlayerStore()
-    return player.highestRegion() > 0
+    return player.highestRegion > 0
   }
 
   public onclick(): void {

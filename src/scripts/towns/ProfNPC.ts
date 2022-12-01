@@ -2,6 +2,7 @@ import * as GameConstants from '~/enums/GameConstants'
 import App from '~/scripts/App'
 import { TownList } from '~/scripts/towns/TownList'
 import { NPC } from '~/scripts/towns/NPC'
+import { AchievementHandler } from '~/scripts/achievements/AchievementHandler'
 export class ProfNPC extends NPC {
   constructor(
     public name: string,
@@ -14,7 +15,8 @@ export class ProfNPC extends NPC {
   }
 
   get dialogHTML(): string {
-    const requiresCompleteDex = App.game.challenges.list.requireCompletePokedex.active()
+    // const requiresCompleteDex = App.game.challenges.list.requireCompletePokedex.active()
+    const requiresCompleteDex = true
     const nextRegionUnlocked = TownList[GameConstants.StartingTowns[this.region + 1]]?.isUnlocked() ?? false
     const completeDexAchievement = AchievementHandler.findByName(`${GameConstants.camelCaseToString(GameConstants.Region[this.region])} Master`)
 

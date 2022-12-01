@@ -109,7 +109,7 @@ export class Battle {
           if (Battle.route != 0)
             this.generateNewEnemy()
         },
-        GameConstants.debug ? 50 : new Pokeballs().calculateCatchTime(pokeBall),
+        GameConstants.debug ? 200 : new Pokeballs().calculateCatchTime(pokeBall),
       )
     }
     else {

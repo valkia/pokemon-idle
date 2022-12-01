@@ -28,7 +28,7 @@ export const init = () => {
     GameConstants.Region.kanto,
     'Congratulations on completing your Kanto Pokédex!',
     'Your journey isn\'t over yet, a whole world awaits you! Onwards to Johto!',
-    'assets/images/oak.png')
+    '/src/assets/images/oak.png')
 
   const PalletMom = new NPC('Mom', [
     'Traveling on your own can be scary. But remember that there are nice people everywhere you go. So strike up a converstation. You will probably learn something useful.',

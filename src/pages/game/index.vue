@@ -31,6 +31,7 @@
   <ShopModal />
   <ReceiveGymBadge />
   <HallOfFameModal />
+  <NpcModal />
 
   <button @click="start()">
     ok
@@ -56,6 +57,7 @@ import TownView from '~/components/map/TownView.vue'
 import Enemy from '~/components/pokemon/Enemy.vue'
 import BattleList from '~/components/pokemon/BattleList.vue'
 import PickStarterTutorialModal from '~/components/PickStarterTutorialModal.vue'
+import NpcModal from '~/components/NpcModal.vue'
 import StarterCaught from '~/components/StarterCaught.vue'
 import Notificaton from '~/components/Notification.vue'
 import ReceiveGymBadge from '~/components/ReceiveGymBadge.vue'

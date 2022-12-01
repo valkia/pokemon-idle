@@ -26,7 +26,7 @@ const autoRestart = computed(() => {
 </script>
 <template>
   <div v-if="gameState === GameState.gym" class="row justify-content-center no-gutters">
-    <div class="col no-gutters clickable" style="height: 220px; display: block;" @click="GymBattle.clickAttack()">
+    <div class="col no-gutters clickable" style="height: 240px; display: block;" @click="GymBattle.clickAttack()">
       <h2 class="pageItemTitle" style="display: block;">
         <div class="left">
           <div data-bind="text: ">

@@ -29,7 +29,7 @@ const trainer = computed(() => {
     <!--    -->
     <div
       class="col no-gutters clickable"
-      style="height: 220px; display: block;"
+      style="height: 240px; display: block;"
       data-bind="click: function() { DungeonRunner.handleClick() }"
       @click="DungeonRunner.handleClick()"
     >
@@ -334,7 +334,7 @@ const trainer = computed(() => {
 }
 
 .battle-view {
-  min-height: 220px !important;
+  min-height: 240px !important;
 
   background-image: url(/src/assets/images/battleBackground/default.png);
   background-size: cover;

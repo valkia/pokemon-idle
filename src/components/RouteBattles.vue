@@ -4,7 +4,7 @@
     class="row justify-content-center no-gutters"
   >
     <div
-      class="col no-gutters clickable" style="height: 220px; display: block;"
+      class="col no-gutters clickable" style="height: 240px; display: block;"
       @click="Battle.clickAttack()"
     >
       <h2 class="pageItemTitle" style="display: block;">
