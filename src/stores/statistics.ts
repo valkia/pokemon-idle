@@ -67,6 +67,7 @@ export const useStatisticsStore = defineStore({
       this.gymsDefeated[gymIndex] = (this.gymsDefeated[gymIndex] || 0) + 1
     },
   },
+  persist: true,
 })
 
 if (import.meta.hot)

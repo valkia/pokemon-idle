@@ -1,4 +1,5 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
+import { parse, stringify } from 'zipson'
 import type { PartyPokemon } from '~/scripts/party/PartyPokemon'
 import type { PokemonNameType } from '~/enums/PokemonNameType'
 import { PokemonHelper } from '~/scripts/pokemons/PokemonHelper'
@@ -102,7 +103,7 @@ export const usePartyStore = defineStore('party', {
       // Shiny pokemon help with a 50% boost
       //  * (1 + AchievementHandler.achievementBonus())
 
-      const debugValue = 1
+      const debugValue = 100000000
 
       const clickAttack = Math.pow(this.caughtPokemon.length + (this.caughtPokemon.filter(p => p.shiny).length / 2) + 1, 1.4) + debugValue
 
@@ -167,6 +168,7 @@ export const usePartyStore = defineStore('party', {
       }
 
       // App.game.logbook.newLog(LogBookTypes.CAUGHT, `You have captured ${GameHelper.anOrA(pokemon.name)} ${pokemon.name}!`)
+      console.log('caughtPokemon pokemon', pokemon)
       this.caughtPokemon.push(pokemon)
     },
     getPokemon(id: number) {
@@ -176,6 +178,14 @@ export const usePartyStore = defineStore('party', {
       }
     },
   },
+  persist: {
+    serializer: {
+      deserialize: parse,
+      serialize: stringify,
+    },
+  },
+  debug: true,
+
 })
 
 if (import.meta.hot)

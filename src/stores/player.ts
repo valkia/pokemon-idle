@@ -24,8 +24,9 @@ export const usePlayerStore = defineStore({
     },
     setRegionStarters(region: GameConstants.Region, starter: GameConstants.Starter) {
       this.regionStarters[region] = starter
-    }
+    },
   },
+  persist: true,
 })
 
 if (import.meta.hot)

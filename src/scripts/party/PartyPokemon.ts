@@ -19,9 +19,7 @@ enum PartyPokemonSaveKeys {
   levelEvolutionTriggered,
 }
 
-export class PartyPokemon implements Saveable {
-  saveKey: string
-
+export class PartyPokemon {
   defaults = {
     attackBonusPercent: 0,
     attackBonusAmount: 0,
