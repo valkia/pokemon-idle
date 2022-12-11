@@ -79,6 +79,7 @@ export class PartyPokemon {
   }
 
   public gainExp(exp: number) {
+    console.log('gainExp', exp)
     this.exp += exp
     const oldLevel = this.level
     const newLevel = this.calculateLevelFromExp()

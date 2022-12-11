@@ -14,6 +14,7 @@ import { PokemonFactory } from '~/scripts/pokemons/PokemonFactory'
 import GameHelper from '~/enums/GameHelper'
 import Notifier from '~/modules/notifications/Notifier'
 import NotificationConstants from '~/modules/notifications/NotificationConstants'
+// @ts-expect-error
 export const usePartyStore = defineStore('party', {
   state: () => ({
     caughtPokemon: [] as PartyPokemon[],
@@ -112,6 +113,7 @@ export const usePartyStore = defineStore('party', {
       return Math.floor(clickAttack * bonus)
     },
     gainExp(exp = 0, level = 1, trainer = false) {
+      console.log('partystore gainExp', this.caughtPokemon)
       const multBonus = new Multiplier().getBonus('exp', true)
       const trainerBonus = trainer ? 1.5 : 1
       const expTotal = Math.floor(exp * level * trainerBonus * multBonus / 9)
@@ -177,11 +179,21 @@ export const usePartyStore = defineStore('party', {
           return this.caughtPokemon[i]
       }
     },
+    fromJSON(): void {
+      const caughtPokemonSave = this.caughtPokemon || []
+      if (caughtPokemonSave.length === 0)
+        return
+      for (let i = 0; i < caughtPokemonSave.length; i++) {
+        const partyPokemon = PokemonFactory.generatePartyPokemon(caughtPokemonSave[i].id)
+        partyPokemon.fromJSON(caughtPokemonSave[i])
+        this.caughtPokemon.push(partyPokemon)
+      }
+    },
   },
   persist: {
     serializer: {
-      deserialize: parse,
-      serialize: stringify,
+      deserialize: JSON.parse,
+      serialize: JSON.stringify,
     },
   },
   debug: true,
