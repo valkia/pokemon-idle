@@ -6,7 +6,7 @@ import ClearDungeonRequirement from '~/scripts/achievements/ClearDungeonRequirem
 import MultiRequirement from '~/scripts/achievements/MultiRequirement'
 import RouteKillRequirement from '~/scripts/achievements/RouteKillRequirement'
 import BadgeEnums from '~/modules/enums/Badges'
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 import type { Gym } from '~/scripts/gym/Gym'
 import { GymPokemon } from '~/scripts/gym/GymPokemon'
 import { Champion } from '~/scripts/gym/Champion'

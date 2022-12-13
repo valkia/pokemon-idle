@@ -1,9 +1,9 @@
 /// <reference path="Requirement.ts"/>
 
-import Weather from '~/enums/Weather'
+import Weather from '~/scripts/weather/Weather'
 import Requirement from '~/scripts/achievements/Requirement'
-import WeatherType from '~/enums/WeatherType'
-import * as GameConstants from '~/enums/GameConstants'
+import WeatherType from '~/scripts/weather/WeatherType'
+import * as GameConstants from '~/scripts/GameConstants'
 export default class WeatherRequirement extends Requirement {
   private weather: WeatherType[]
 

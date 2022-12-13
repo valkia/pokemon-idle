@@ -1,4 +1,4 @@
-import type * as GameConstants from '~/enums/GameConstants'
+import type * as GameConstants from '~/scripts/GameConstants'
 import type RoutePokemon from '~/scripts/wildBattle/RoutePokemon'
 import type OneFromManyRequirement from '~/scripts/achievements/OneFromManyRequirement'
 import type Requirement from '~/scripts/achievements/Requirement'

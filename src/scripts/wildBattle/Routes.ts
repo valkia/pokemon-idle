@@ -1,5 +1,5 @@
 
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 import type RegionRoute from '~/scripts/wildBattle/RegionRoute'
 import { RoutePokemon, SpecialRoutePokemon } from '~/scripts/wildBattle/RoutePokemon'
 import BadgeEnums from '~/enums/Badges'
@@ -12,7 +12,7 @@ import ObtainedPokemonRequirement from '~/scripts/achievements/ObtainedPokemonRe
 import MultiRequirement from '~/scripts/achievements/MultiRequirement'
 import WeatherRequirement from '~/scripts/achievements/WeatherRequirement'
 import { pokemonMap } from '~/scripts/pokemons/PokemonList'
-import WeatherType from '~/enums/WeatherType'
+import WeatherType from '~/scripts/weather/WeatherType'
 export default class Routes {
   public static regionRoutes: RegionRoute[] = []
   constructor() {}

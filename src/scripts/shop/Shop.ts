@@ -5,7 +5,7 @@ import { TownContent } from '~/scripts/towns/TownContent'
 import type { Item } from '~/scripts/items/Item'
 import { ItemList } from '~/scripts/items/Item'
 import { PokeballItem } from '~/scripts/items/PokeballItem'
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 import { ShopHandler } from '~/scripts/shop/ShopHandler'
 import { useModalStore } from '~/stores/modal'
 

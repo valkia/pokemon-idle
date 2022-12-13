@@ -1,4 +1,4 @@
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 import Routes from '~/scripts/wildBattle/Routes'
 import AchievementRequirement from '~/scripts/achievements/AchievementRequirement'
 import { useStatisticsStore } from '~/stores/statistics'

@@ -1,5 +1,5 @@
 import AchievementRequirement from '~/scripts/achievements/AchievementRequirement'
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 import App from '~/scripts/App'
 export default class ClearGymRequirement extends AchievementRequirement {
   public gymIndex: number // Gym name index in array GameConstants.Gyms

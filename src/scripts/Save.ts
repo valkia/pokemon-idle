@@ -1,7 +1,4 @@
-import NotificationConstants from '~/modules/notifications/NotificationConstants'
-import App from '~/scripts/App'
-import Settings from '~/modules/settings'
-import Notifier from '~/modules/notifications/Notifier'
+import { Player } from '~/scripts/Player'
 
 export class Save {
   static counter = 0
@@ -31,10 +28,10 @@ export class Save {
 
     // Load our settings, or the saved default settings, or no settings
     const settings = localStorage.getItem(`settings${Save.key}`) || localStorage.getItem('settings') || '{}'
-    Settings.fromJSON(JSON.parse(settings))
+    // Settings.fromJSON(JSON.parse(settings))
 
     // Sort modules now, save settings, load settings
-    SortModules()
+    // SortModules()
 
     if (saved !== 'null')
       return new Player(JSON.parse(saved))

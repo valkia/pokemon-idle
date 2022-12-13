@@ -87,10 +87,10 @@ import { useStatisticsStore } from '~/stores/statistics'
 import { usePlayerStore } from '~/stores/player'
 import Routes from '~/scripts/wildBattle/Routes'
 import { useGameStore } from '~/stores/game'
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 import { PokemonHelper } from '~/scripts/pokemons/PokemonHelper'
 import { useBattleStore } from '~/stores/battle'
-import { Pokeball } from '~/enums/GameConstants'
+import { Pokeball } from '~/scripts/GameConstants'
 import { RouteHelper } from '~/scripts/wildBattle/RouteHelper'
 const { t, locale } = useI18n()
 const gameState = computed(() => {

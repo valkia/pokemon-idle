@@ -1,5 +1,5 @@
 import Requirement from './Requirement'
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 
 export default class DayOfWeekRequirement extends Requirement {
   public static date = new Date().getDay()

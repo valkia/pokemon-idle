@@ -3,7 +3,7 @@
 import type { PokemonNameType } from '~/enums/PokemonNameType'
 import { Evolution } from '~/enums/Evolution'
 import { EvolutionType } from '~/enums/EvolutionType'
-import type * as GameConstants from '~/enums/GameConstants'
+import type * as GameConstants from '~/scripts/GameConstants'
 export class StoneEvolution extends Evolution {
   constructor(
     basePokemon: PokemonNameType,

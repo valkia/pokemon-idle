@@ -1,6 +1,6 @@
 /// <reference path="../../declarations/GameHelper.d.ts" />
 /// <reference path="Item.ts" />
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 import App from '~/scripts/App'
 import { Item, ItemList } from '~/scripts/items/Item'
 export class PokeballItem extends Item {

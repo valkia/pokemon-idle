@@ -1,7 +1,7 @@
 import type Setting from './Setting'
 import SettingOption from './SettingOption'
-import { camelCaseToString } from '~/enums/GameConstants'
-import GameHelper from '~/enums/GameHelper'
+import { camelCaseToString } from '~/scripts/GameConstants'
+import GameHelper from '~/scripts/GameHelper'
 
 export default class Settings {
   static list: Setting<any>[] = []

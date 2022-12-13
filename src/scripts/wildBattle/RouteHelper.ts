@@ -1,4 +1,4 @@
-import type * as GameConstants from '~/enums/GameConstants'
+import type * as GameConstants from '~/scripts/GameConstants'
 import type { PokemonNameType } from '~/enums/PokemonNameType'
 import App from '~/scripts/App'
 import { PokemonHelper } from '~/scripts/pokemons/PokemonHelper'

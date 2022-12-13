@@ -1,4 +1,4 @@
-import type * as GameConstants from '~/enums/GameConstants'
+import type * as GameConstants from '~/scripts/GameConstants'
 import type { MinimalEvo } from '~/enums/Evolution'
 import { EvolutionType } from '~/enums/EvolutionType'
 

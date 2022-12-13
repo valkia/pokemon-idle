@@ -1,4 +1,4 @@
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 import { useDataStore } from '~/stores/data'
 export class Preload {
   static itemsToLoad = []

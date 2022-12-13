@@ -1,12 +1,12 @@
 /* eslint-disable arrow-body-style */
 import { computed, watch } from 'vue'
 import type { ComputedRef } from 'vue-demi'
-import GameHelper from '~/enums/GameHelper'
-import { Region } from '~/enums/GameConstants'
+import GameHelper from '~/scripts/GameHelper'
+import { Region } from '~/scripts/GameConstants'
 import PokemonType from '~/enums/PokemonType'
 import SeededRand from '~/utilities/SeededRand'
-import WeatherCondition from '~/enums/WeatherCondition'
-import WeatherType from '~/enums/WeatherType'
+import WeatherCondition from '~/scripts/weather/WeatherCondition'
+import WeatherType from '~/scripts/weather/WeatherType'
 
 export default class Weather {
   public static regionalWeather: WeatherType[] = Array<WeatherType>(GameHelper.enumLength(Region)).fill(WeatherType.Clear).map(v => <WeatherType>(v))

@@ -1,5 +1,6 @@
 import { Preload } from '~/scripts/utilities/Preload'
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
+import { Save } from '~/scripts/Save'
 export default class App {
   static game: Game
 
@@ -9,7 +10,7 @@ export default class App {
 
     Preload.load(GameConstants.debug).then(() => {
       // ko.options.deferUpdates = true
-
+      Save.load()
       console.log(`[${GameConstants.formatDate(new Date())}] %cLoading Game Data..`, 'color:#8e44ad;font-weight:900;')
       // Needs to be loaded first so save data can be updated (specifically "player" data)
       // const update = new Update()

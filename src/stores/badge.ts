@@ -1,5 +1,5 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
-import GameHelper from '~/enums/GameHelper'
+import GameHelper from '~/scripts/GameHelper'
 import BadgeEnums from '~/modules/enums/Badges'
 
 const emptyBadgeList = new Array(GameHelper.enumLength(BadgeEnums)).fill(false)

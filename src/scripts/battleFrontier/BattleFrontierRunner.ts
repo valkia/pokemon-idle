@@ -1,8 +1,8 @@
 /// <reference path="../../declarations/GameHelper.d.ts" />
 import { computed, ref } from 'vue'
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 import App from '~/scripts/App'
-import GameHelper from '~/enums/GameHelper'
+import GameHelper from '~/scripts/GameHelper'
 import { BattleFrontierBattle } from '~/scripts/battleFrontier/BattleFrontierBattle'
 export class BattleFrontierRunner {
   public static timeLeft = ref(GameConstants.GYM_TIME)

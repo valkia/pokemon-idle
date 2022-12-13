@@ -1,7 +1,7 @@
 import Rand from '~/modules/utilities/Rand'
 import { DungeonTile } from '~/scripts/dungeons/DungeonTile'
 import { Point } from '~/scripts/dungeons/Point'
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 import { DungeonBattle } from '~/scripts/dungeons/DungeonBattle'
 import { useDungeonStore } from '~/stores/dungeon'
 export class DungeonMap {

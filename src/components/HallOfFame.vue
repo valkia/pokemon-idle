@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 
 import { usePlayerStore } from '~/stores/player'
-import { Starter } from '~/enums/GameConstants'
+import { Starter } from '~/scripts/GameConstants'
 import { useModalStore } from '~/stores/modal'
 import Modal from '~/components/common/Modal.vue'
 const player = usePlayerStore()

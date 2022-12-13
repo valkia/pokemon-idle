@@ -5,7 +5,7 @@ import Notifier from '~/modules/notifications/Notifier'
 import NotificationConstants from '~/modules/notifications/NotificationConstants'
 import MapHelper from '~/scripts/worldmap/MapHelper'
 import App from '~/scripts/App'
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 import { TownList } from '~/scripts/towns/TownList'
 import { usePlayerStore } from '~/stores/player'
 enum areaStatus {

@@ -1,5 +1,5 @@
 import PokemonType from '~/enums/PokemonType'
-import type WeatherType from '~/enums/WeatherType'
+import type WeatherType from '~/scripts/weather/WeatherType'
 
 export default class WeatherCondition {
   constructor(

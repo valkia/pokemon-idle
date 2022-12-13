@@ -1,6 +1,6 @@
 import Requirement from './Requirement'
 import { usePlayerStore } from '~/stores/player'
-import { AchievementOption, Region, camelCaseToString } from '~/enums/GameConstants'
+import { AchievementOption, Region, camelCaseToString } from '~/scripts/GameConstants'
 
 export default class SubregionRequirement extends Requirement {
   constructor(public region: Region, public subregion: number, option: AchievementOption = AchievementOption.equal) {

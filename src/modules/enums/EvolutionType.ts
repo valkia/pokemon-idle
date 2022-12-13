@@ -1,10 +1,10 @@
 enum EvolutionType {
-    Level,
-    Stone,
-    Timed,
-    Location,
-    Environment,
-    Other,
+  Level,
+  Stone,
+  Timed,
+  Location,
+  Environment,
+  Other,
 }
 
-export default EvolutionType;
+export default EvolutionType

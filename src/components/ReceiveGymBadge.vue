@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { useGameStore } from '~/stores/game'
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 import { DungeonRunner } from '~/scripts/dungeons/DungeonRunner'
 import { useDungeonStore } from '~/stores/dungeon'
 import { useGymStore } from '~/stores/gym'

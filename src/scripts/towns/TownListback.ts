@@ -1,7 +1,7 @@
 /* eslint-disable array-bracket-newline */
 
 import { DungeonTown, Town } from '~/scripts/towns/Town'
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 import { Shop } from '~/scripts/shop/Shop'
 import { PokeballItem } from '~/scripts/items/PokeballItem'
 import RouteKillRequirement from '~/scripts/achievements/RouteKillRequirement'

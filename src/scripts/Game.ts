@@ -1,11 +1,11 @@
 /**
  * Main game class.
  */
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 import { StartSequenceRunner } from '~/scripts/StartSequenceRunner'
 import { usePlayerStore } from '~/stores/player'
 import { Battle } from '~/scripts/Battle'
-import GameHelper from '~/enums/GameHelper'
+import GameHelper from '~/scripts/GameHelper'
 import { Save } from '~/scripts/Save'
 
 export class Game {

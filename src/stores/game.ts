@@ -1,5 +1,5 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
-import { GameState } from '~/enums/GameConstants'
+import { GameState } from '~/scripts/GameConstants'
 
 export const useGameStore = defineStore('game', {
 

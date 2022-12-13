@@ -69,7 +69,7 @@
 import { storeToRefs } from 'pinia'
 import { StartSequenceRunner } from '~/scripts/StartSequenceRunner'
 import { usePlayerStore } from '~/stores/player'
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 import { useModalStore } from '~/stores/modal'
 import Modal from '~/components/common/Modal.vue'
 

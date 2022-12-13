@@ -68,7 +68,7 @@ import { init as gymInit } from '~/scripts/gym/init'
 import { init as routeInit } from '~/scripts/wildBattle/init'
 import App from '~/scripts/App'
 import MapHelper from '~/scripts/worldmap/MapHelper'
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 import { useGameStore } from '~/stores/game'
 
 const { t, locale } = useI18n()

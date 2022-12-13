@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 import { useGameStore } from '~/stores/game'
 import { usePlayerStore } from '~/stores/player'
 import { DungeonTown } from '~/scripts/towns/Town'

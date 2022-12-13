@@ -2,7 +2,7 @@
 
 import type { MinimalEvo } from '~/enums/Evolution'
 import { LocationRestricted } from '~/enums/LocationRestriction'
-import type * as GameConstants from '~/enums/GameConstants'
+import type * as GameConstants from '~/scripts/GameConstants'
 function ByRegion<EvoClass extends MinimalEvo>(Base: EvoClass) {
   return class extends Base implements LocationRestricted {
     region: string

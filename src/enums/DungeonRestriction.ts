@@ -3,7 +3,7 @@
 import type { MinimalEvo } from '~/enums/Evolution'
 import { restrictEvoWith } from '~/enums/Evolution'
 import { EvolutionType } from '~/enums/EvolutionType'
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 import { LocationRestricted } from '~/enums/LocationRestriction'
 function ByDungeon<EvoClass extends MinimalEvo>(Base: EvoClass) {
   return class extends Base implements LocationRestricted {

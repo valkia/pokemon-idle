@@ -1,4 +1,4 @@
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 import App from '~/scripts/App'
 import ObtainedPokemonRequirement from '~/scripts/achievements/ObtainedPokemonRequirement'
 import KeyItemType from '~/modules/enums/KeyItemType'

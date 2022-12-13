@@ -1,5 +1,5 @@
 import RegionRoute from '~/scripts/wildBattle/RegionRoute'
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 import { RoutePokemon, SpecialRoutePokemon } from '~/scripts/wildBattle/RoutePokemon'
 import RouteKillRequirement from '~/scripts/achievements/RouteKillRequirement'
 import GymBadgeRequirement from '~/scripts/achievements/GymBadgeRequirement'
@@ -9,7 +9,7 @@ import OneFromManyRequirement from '~/scripts/achievements/OneFromManyRequiremen
 import MultiRequirement from '~/scripts/achievements/MultiRequirement'
 import ObtainedPokemonRequirement from '~/scripts/achievements/ObtainedPokemonRequirement'
 import WeatherRequirement from '~/scripts/achievements/WeatherRequirement'
-import WeatherType from '~/enums/WeatherType'
+import WeatherType from '~/scripts/weather/WeatherType'
 import Routes from '~/scripts/wildBattle/Routes'
 import { pokemonMap } from '~/scripts/pokemons/PokemonList'
 

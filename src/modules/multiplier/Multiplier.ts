@@ -1,5 +1,5 @@
 import MultiplierType from './MultiplierType'
-import GameHelper from '~/enums/GameHelper'
+import GameHelper from '~/scripts/GameHelper'
 
 export type GetMultiplierFunction = (useBonus: boolean) => number
 export type MultTypeString = keyof typeof MultiplierType

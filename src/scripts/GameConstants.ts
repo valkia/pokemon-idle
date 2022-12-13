@@ -593,7 +593,7 @@ export enum StoneType {
   'Water_stone',
   'Thunder_stone',
   'Moon_stone',
-  'Trade_stone',
+  'Linking_cord',
   'Sun_stone',
   'Soothe_bell',
   'Metal_coat',
@@ -617,7 +617,18 @@ export enum StoneType {
   'White_DNA',
   'Sachet',
   'Whipped_dream',
+  'Key_stone',
   'Ice_stone',
+  'Solar_light',
+  'Lunar_light',
+  'Pure_light',
+  'Sweet_apple',
+  'Tart_apple',
+  'Cracked_pot',
+  'Galarica_cuff',
+  'Galarica_wreath',
+  'Black_mane_hair',
+  'White_mane_hair',
 }
 
 export enum BattleItemType {
@@ -1165,4 +1176,10 @@ export enum DayOfWeek {
   'Thursday',
   'Friday',
   'Saturday',
+}
+
+// Gender Types
+export enum Genders {
+  Genderless = 0,
+  MaleFemale, // Default
 }

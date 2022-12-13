@@ -1,11 +1,10 @@
 import type { PokemonNameType } from '~/enums/PokemonNameType'
 import { PokemonHelper } from '~/scripts/pokemons/PokemonHelper'
-import App from '~/scripts/App'
 import NotificationConstants from '~/modules/notifications/NotificationConstants'
 import { PokemonFactory } from '~/scripts/pokemons/PokemonFactory'
 import Notifier from '~/modules/notifications/Notifier'
 import type { EvolutionType } from '~/enums/EvolutionType'
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 import { usePlayerStore } from '~/stores/player'
 import { usePartyStore } from '~/stores/party'
 export abstract class Evolution {

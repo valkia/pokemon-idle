@@ -3,7 +3,7 @@ import type { Town } from '~/scripts/towns/Town'
 import type { Gym } from '~/scripts/gym/Gym'
 import type Amount from '~/modules/wallet/Amount'
 import { useStatisticsStore } from '~/stores/statistics'
-import { Currency } from '~/enums/GameConstants'
+import { Currency } from '~/scripts/GameConstants'
 import Multiplier from '~/modules/multiplier/Multiplier'
 
 export const useWalletStore = defineStore('wallet', {

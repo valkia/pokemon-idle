@@ -1,4 +1,4 @@
-import { BREEDING_ATTACK_BONUS } from '~/enums/GameConstants'
+import { BREEDING_ATTACK_BONUS } from '~/scripts/GameConstants'
 import { pokemonMap } from '~/scripts/pokemons/PokemonList'
 
 export enum SortOptions {

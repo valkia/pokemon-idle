@@ -4,13 +4,13 @@ import Requirement from '~/scripts/achievements/Requirement'
 import App from '~/scripts/App'
 import type { PokemonListData } from '~/scripts/pokemons/PokemonList'
 import { pokemonMap } from '~/scripts/pokemons/PokemonList'
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 export default class ObtainedPokemonRequirement extends Requirement {
   public pokemonID: number
 
   constructor(pokemon: PokemonListData, value = 1, option: GameConstants.AchievementOption = GameConstants.AchievementOption.more) {
     super(value, option)
-    this.pokemonID = pokemon.id
+    this.pokemonID = pokemon?.id
   }
 
   public getProgress() {

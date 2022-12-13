@@ -17,7 +17,7 @@ import { computed } from 'vue'
 import type { BattlePokemon } from '~/scripts/pokemons/BattlePokemon'
 import { Battle } from '~/scripts/Battle'
 import { useBattleStore } from '~/stores/battle'
-import { GameState, Pokeball } from '~/enums/GameConstants'
+import { GameState, Pokeball } from '~/scripts/GameConstants'
 import { useGameStore } from '~/stores/game'
 const { t, locale } = useI18n()
 console.log('locale', locale.value)

@@ -1,5 +1,5 @@
 /// <reference path="./LocationRestriction.ts" />
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 import type { MinimalEvo } from '~/enums/Evolution'
 import { restrictEvoWith } from '~/enums/Evolution'
 import { LocationRestricted } from '~/enums/LocationRestriction'

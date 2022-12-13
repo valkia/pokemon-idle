@@ -1,4 +1,4 @@
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 
 export default class KeyItem {
   public name: KeyItemType

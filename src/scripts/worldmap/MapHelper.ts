@@ -1,5 +1,5 @@
 import { usePlayerStore } from '~/stores/player'
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 import Routes from '~/scripts/wildBattle/Routes'
 import App from '~/scripts/App'
 import { RouteHelper } from '~/scripts/wildBattle/RouteHelper'
@@ -10,13 +10,13 @@ import NotificationConstants from '~/modules/notifications/NotificationConstants
 import { init } from '~/scripts/towns/init'
 import { useDataStore } from '~/stores/data'
 import { useStatisticsStore } from '~/stores/statistics'
-import GameHelper from '~/enums/GameHelper'
+import GameHelper from '~/scripts/GameHelper'
 import { Gym } from '~/scripts/gym/Gym'
 import { DungeonTown } from '~/scripts/towns/Town'
 import { PokemonHelper } from '~/scripts/pokemons/PokemonHelper'
 import dataStore from '~/modules/DataStore'
 import { usePartyStore } from '~/stores/party'
-import { MaxIDPerRegion } from '~/enums/GameConstants'
+import { MaxIDPerRegion } from '~/scripts/GameConstants'
 enum areaStatus {
   currentLocation,
   locked,

@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { useGameStore } from '~/stores/game'
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 import { DungeonRunner } from '~/scripts/dungeons/DungeonRunner'
 import { useDungeonStore } from '~/stores/dungeon'
-import { GameState } from '~/enums/GameConstants'
+import { GameState } from '~/scripts/GameConstants'
 import { GymBattle } from '~/scripts/gym/GymBattle'
 import { useGymStore } from '~/stores/gym'
 import { GymRunner } from '~/scripts/gym/GymRunner'

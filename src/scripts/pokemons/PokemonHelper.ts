@@ -1,14 +1,18 @@
-/// <reference path="PokemonList.ts"/>
-/// <reference path="../GameConstants.d.ts"/>
-import * as GameConstants from '~/enums/GameConstants'
+import P from './mapProvider'
+import * as GameConstants from '~/scripts/GameConstants'
 import App from '~/scripts/App'
 import type { PokemonListData } from '~/scripts/pokemons/PokemonList'
-import { pokemonMap } from '~/scripts/pokemons/PokemonList'
+import { pokemonList, pokemonMap } from '~/scripts/pokemons/PokemonList'
 import type { PokemonNameType } from '~/enums/PokemonNameType'
 import PokemonType from '~/enums/PokemonType'
 import type PokemonInterface from '~/interfaces/Pokemon'
 import Routes from '~/scripts/wildBattle/Routes'
 import { DataPokemon } from '~/scripts/pokemons/DataPokemon'
+import type { PartyPokemon } from '~/scripts/party/PartyPokemon'
+import { dungeonList } from '~/scripts/dungeons/Dungeon'
+import { RoamingPokemonList } from '~/scripts/pokemons/RoamingPokemonList'
+import { Shop } from '~/scripts/shop/Shop'
+import { MaxIDPerRegion, Region } from '~/scripts/GameConstants'
 enum PokemonLocationType {
   Route,
   Roaming,
@@ -23,7 +27,15 @@ enum PokemonLocationType {
   BattleFrontier,
   Wandering,
 }
+export function calcNativeRegion(pokemonName: PokemonNameType) {
+  const pokemon = P.pokemonMap[pokemonName]
+  if (pokemon.nativeRegion !== undefined)
+    return pokemon.nativeRegion
 
+  const { id } = pokemon
+  const region = MaxIDPerRegion.findIndex(maxRegionID => maxRegionID >= Math.floor(id))
+  return region >= 0 ? region : Region.none
+}
 export class PokemonHelper {
   public static getPokemonsWithEvolution(evoType: GameConstants.StoneType): PartyPokemon[] {
     return App.game.party.caughtPokemon.filter((partyPokemon: PartyPokemon) => {

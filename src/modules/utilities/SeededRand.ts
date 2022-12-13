@@ -1,4 +1,4 @@
-import { HOUR, MINUTE } from '~/enums/GameConstants'
+import { HOUR, MINUTE } from '~/scripts/GameConstants'
 
 export default class SeededRand {
   public static state = 12345

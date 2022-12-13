@@ -1,7 +1,7 @@
 import { Shop } from '~/scripts/shop/Shop'
 import { usePlayerStore } from '~/stores/player'
 import Amount from '~/modules/wallet/Amount'
-import GameHelper from '~/enums/GameHelper'
+import GameHelper from '~/scripts/GameHelper'
 
 export class ShopHandler {
   static shopObservable: Shop

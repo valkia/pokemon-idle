@@ -1,6 +1,6 @@
 import type Requirement from '~/scripts/achievements/Requirement'
 import MultiRequirement from '~/scripts/achievements/MultiRequirement'
-import type * as GameConstants from '~/enums/GameConstants'
+import type * as GameConstants from '~/scripts/GameConstants'
 export class Pokeball {
   public quantity: number
 

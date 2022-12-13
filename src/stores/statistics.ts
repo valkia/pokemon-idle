@@ -1,6 +1,6 @@
 // @ts-check
 import { acceptHMRUpdate, defineStore } from 'pinia'
-import type * as GameConstants from '~/enums/GameConstants'
+import type * as GameConstants from '~/scripts/GameConstants'
 
 export const useStatisticsStore = defineStore({
   id: 'statistics',

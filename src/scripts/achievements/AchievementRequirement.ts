@@ -1,4 +1,4 @@
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 import Requirement from '~/scripts/achievements/Requirement'
 export default abstract class AchievementRequirement extends Requirement {
   constructor(

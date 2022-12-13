@@ -2,7 +2,7 @@
 
 import type { Town } from '~/scripts/towns/Town'
 import { DungeonTown } from '~/scripts/towns/Town'
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 import {
   CeladonCityShop, CeladonDepartmentStoreShop, CeruleanCityShop,
   CinnabarIslandShop, FuchsiaCityShop, LavenderTownShop,

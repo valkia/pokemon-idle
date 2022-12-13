@@ -1,12 +1,12 @@
 /// <reference path="../shop/ShopHandler.ts"/>
 import type { Ref } from 'vue'
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 import { usePlayerStore } from '~/stores/player'
 import Notifier from '~/modules/notifications/Notifier'
 import NotificationConstants from '~/modules/notifications/NotificationConstants'
 import App from '~/scripts/App'
 import Amount from '~/modules/wallet/Amount'
-import GameHelper from '~/enums/GameHelper'
+import GameHelper from '~/scripts/GameHelper'
 /**
  * Source event for decreasing shop multipliers
  */

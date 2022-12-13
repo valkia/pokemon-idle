@@ -2,10 +2,10 @@ import type { ComputedRef, Ref } from 'vue'
 import { computed, ref } from 'vue'
 import BadgeEnums from '../enums/Badges'
 import type { Feature } from './common/Feature'
-import GameHelper from '~/enums/GameHelper'
-import { camelCaseToString } from '~/enums/GameConstants'
+import GameHelper from '~/scripts/GameHelper'
+import { camelCaseToString } from '~/scripts/GameConstants'
 import App from '~/scripts/App'
-import WeatherType from '~/enums/WeatherType'
+import WeatherType from '~/scripts/weather/WeatherType'
 import { useBadgeStore } from '~/stores/badge'
 
 const emptyBadgeList = new Array(GameHelper.enumLength(BadgeEnums)).fill(false)

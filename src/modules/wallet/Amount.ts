@@ -1,4 +1,4 @@
-import { Currency } from '~/enums/GameConstants'
+import { Currency } from '~/scripts/GameConstants'
 
 export default class Amount {
   constructor(

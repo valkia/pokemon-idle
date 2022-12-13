@@ -1,8 +1,8 @@
 /// <reference path="../../declarations/GameHelper.d.ts" />
 
 import Settings from '~/modules/settings'
-import GameHelper from '~/enums/GameHelper'
-import * as GameConstants from '~/enums/GameConstants'
+import GameHelper from '~/scripts/GameHelper'
+import * as GameConstants from '~/scripts/GameConstants'
 import type AchievementRequirement from '~/scripts/achievements/AchievementRequirement'
 export class AchievementHandler {
   public static achievementList: Achievement[] = []

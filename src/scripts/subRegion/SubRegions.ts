@@ -1,5 +1,5 @@
 import SubRegion from './SubRegion'
-import { Region } from '~/enums/GameConstants'
+import { Region } from '~/scripts/GameConstants'
 import GymBadgeRequirement from '~/scripts/achievements/GymBadgeRequirement'
 import BadgeEnums from '~/enums/Badges'
 import MultiRequirement from '~/scripts/achievements/MultiRequirement'

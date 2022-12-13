@@ -1,4 +1,4 @@
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 import type OneFromManyRequirement from '~/scripts/achievements/OneFromManyRequirement'
 import type Requirement from '~/scripts/achievements/Requirement'
 import type { TownContent } from '~/scripts/towns/TownContent'

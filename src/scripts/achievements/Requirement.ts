@@ -1,5 +1,5 @@
-import * as GameConstants from '~/enums/GameConstants'
-import { debug } from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
+import { debug } from '~/scripts/GameConstants'
 export default abstract class Requirement {
   public requiredValue: number
   public option: GameConstants.AchievementOption

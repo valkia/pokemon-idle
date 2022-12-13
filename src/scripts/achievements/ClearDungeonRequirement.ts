@@ -1,7 +1,7 @@
 /// <reference path="AchievementRequirement.ts"/>
 
 import AchievementRequirement from '~/scripts/achievements/AchievementRequirement'
-import * as GameConstants from '~/enums/GameConstants'
+import * as GameConstants from '~/scripts/GameConstants'
 import App from '~/scripts/App'
 import { useStatisticsStore } from '~/stores/statistics'
 export default class ClearDungeonRequirement extends AchievementRequirement {

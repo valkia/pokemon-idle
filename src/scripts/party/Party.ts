@@ -2,13 +2,13 @@
 /// <reference path="../../declarations/DataStore/common/Feature.d.ts" />
 /// <reference path="../../declarations/enums/CaughtStatus.d.ts"/>
 
-import GameHelper from '~/enums/GameHelper'
+import GameHelper from '~/scripts/GameHelper'
 import App from '~/scripts/App'
 import type { Feature } from '~/modules/DataStore/common/Feature'
 import { LogBookTypes } from '~/modules/logbook/LogBookTypes'
-import Weather from '~/enums/Weather'
+import Weather from '~/scripts/weather/Weather'
 import NotificationConstants from '~/modules/notifications/NotificationConstants'
-import type WeatherType from '~/enums/WeatherType'
+import type WeatherType from '~/scripts/weather/WeatherType'
 import type Multiplier from '~/modules/multiplier/Multiplier'
 import { PokemonFactory } from '~/scripts/pokemons/PokemonFactory'
 import { PokemonHelper } from '~/scripts/pokemons/PokemonHelper'

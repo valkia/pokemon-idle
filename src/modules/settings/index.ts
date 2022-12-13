@@ -8,7 +8,7 @@ import CssVariableSetting from './CssVariableSetting'
 import RangeSetting from './RangeSetting'
 import { SortOptionConfigs, SortOptions } from './SortOptions'
 import HotkeySetting from './HotkeySetting'
-import { AchievementType, Region } from '~/enums/GameConstants'
+import { AchievementType, Region } from '~/scripts/GameConstants'
 import { AchievementSortOptionConfigs, AchievementSortOptions } from '~/modules/achievements/AchievementSortOptions'
 
 export default Settings

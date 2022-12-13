@@ -1,13 +1,13 @@
 import type { Saveable } from '~/modules/DataStore/common/Saveable'
 import { PokemonHelper } from '~/scripts/pokemons/PokemonHelper'
 import App from '~/scripts/App'
-import GameHelper from '~/enums/GameHelper'
+import GameHelper from '~/scripts/GameHelper'
 import NotificationConstants from '~/modules/notifications/NotificationConstants'
 import { levelRequirements } from '~/enums/LevelType'
 import type { PokemonNameType } from '~/enums/PokemonNameType'
 import Settings from '~/modules/settings'
 import Notifier from '~/modules/notifications/Notifier'
-import { LevelEvolution } from '~/enums/LevelEvolution'
+import { LevelEvolution } from '~/scripts/pokemons/evolutions/Base'
 enum PartyPokemonSaveKeys {
   attackBonusPercent = 0,
   attackBonusAmount,

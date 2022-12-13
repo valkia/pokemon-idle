@@ -1,5 +1,5 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
-import { GYM_TIME } from '~/enums/GameConstants'
+import { GYM_TIME } from '~/scripts/GameConstants'
 import {BattlePokemon} from "~/scripts/pokemons/BattlePokemon";
 export const useGymStore = defineStore('gym', {
 

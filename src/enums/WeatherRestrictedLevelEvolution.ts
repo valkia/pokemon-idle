@@ -1,7 +1,7 @@
-import type WeatherType from '~/enums/WeatherType'
+import type WeatherType from '~/scripts/weather/WeatherType'
 import type { PokemonNameType } from '~/enums/PokemonNameType'
 import { LevelEvolution } from '~/enums/LevelEvolution'
-import Weather from '~/enums/Weather'
+import Weather from '~/scripts/weather/Weather'
 import { EvolutionType } from '~/enums/EvolutionType'
 
 export class WeatherRestrictedLevelEvolution extends LevelEvolution {
