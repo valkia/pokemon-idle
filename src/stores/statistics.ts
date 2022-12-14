@@ -37,6 +37,8 @@ export const useStatisticsStore = defineStore({
     gymsDefeated: {} as Record<number, number>,
     dungeonsCleared: {} as Record<number, number>,
     temporaryBattleDefeated: [0],
+
+    pokemonCaptured: {} as Record<number, number>,
   }),
   getters: {
 
@@ -65,6 +67,13 @@ export const useStatisticsStore = defineStore({
     },
     addGymsDefeated(gymIndex: number) {
       this.gymsDefeated[gymIndex] = (this.gymsDefeated[gymIndex] || 0) + 1
+    },
+
+    getPokemonCaptured(pokemonId: number): number {
+      return this.pokemonCaptured[pokemonId] || 0
+    },
+    addPokemonCaptured(pokemonId: number) {
+      this.pokemonCaptured[pokemonId] = (this.pokemonCaptured[pokemonId] || 0) + 1
     },
   },
   persist: true,

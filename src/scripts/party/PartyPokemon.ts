@@ -7,16 +7,26 @@ import { levelRequirements } from '~/enums/LevelType'
 import type { PokemonNameType } from '~/enums/PokemonNameType'
 import Settings from '~/modules/settings'
 import Notifier from '~/modules/notifications/Notifier'
-import { LevelEvolution } from '~/scripts/pokemons/evolutions/Base'
+import type { EvoData, StoneEvoData } from '~/scripts/pokemons/evolutions/Base'
+import { EvoTrigger, LevelEvolution } from '~/scripts/pokemons/evolutions/Base'
+import { EvolutionHandler } from '~/scripts/party/evolutions/EvolutionHandler'
+import Rand from '~/modules/utilities/Rand'
 enum PartyPokemonSaveKeys {
   attackBonusPercent = 0,
   attackBonusAmount,
-  proteinsUsed,
+  vitaminsUsed,
   exp,
   breeding,
   shiny,
   category,
   levelEvolutionTriggered,
+  pokerus,
+  effortPoints,
+  heldItem,
+  defaultFemaleSprite,
+  hideShinyImage,
+  nickname,
+  megaStone,
 }
 
 export class PartyPokemon {
@@ -43,7 +53,7 @@ export class PartyPokemon {
   constructor(
     public id: number,
     public name: PokemonNameType,
-    public evolutions: Evolution[],
+    public evolutions: EvoData[],
     public baseAttack: number,
     attackBonusPercent = 0,
     attackBonusAmount = 0,
@@ -79,35 +89,41 @@ export class PartyPokemon {
   }
 
   public gainExp(exp: number) {
-    console.log('gainExp', exp)
-    this.exp += exp
+    this.exp += exp * this.getExpMultiplier()
     const oldLevel = this.level
     const newLevel = this.calculateLevelFromExp()
     if (oldLevel !== newLevel) {
       this.level = newLevel
-      this.attack = this.calculateAttack()
       this.checkForLevelEvolution()
     }
+  }
+
+  private getExpMultiplier() {
+    const result = 1
+    /* if (this.heldItem() && this.heldItem() instanceof ExpGainedBonusHeldItem)
+      result *= (this.heldItem() as ExpGainedBonusHeldItem).gainedBonus
+*/
+    return result
   }
 
   public checkForLevelEvolution() {
     if (this.breeding || this.evolutions == null || this.evolutions.length == 0)
       return
 
-    for (const evolution of this.evolutions) {
-      if (evolution instanceof LevelEvolution && evolution.isSatisfied())
-        evolution.evolve()
+    for (const evo of this.evolutions) {
+      if (evo.trigger === EvoTrigger.LEVEL && EvolutionHandler.isSatisfied(evo))
+        EvolutionHandler.evolve(evo)
     }
   }
 
   public useStone(stoneType: GameConstants.StoneType): boolean {
-    const possibleEvolutions = []
-    for (const evolution of this.evolutions) {
-      if (evolution instanceof StoneEvolution && evolution.stone == stoneType && evolution.isSatisfied())
-        possibleEvolutions.push(evolution)
+    const possibleEvolutions: EvoData[] = []
+    for (const evo of this.evolutions) {
+      if (evo.trigger === EvoTrigger.STONE && (evo as StoneEvoData).stone == stoneType && EvolutionHandler.isSatisfied(evo))
+        possibleEvolutions.push(evo)
     }
     if (possibleEvolutions.length !== 0)
-      return Rand.fromArray(possibleEvolutions).evolve()
+      return EvolutionHandler.evolve(Rand.fromArray(possibleEvolutions))
 
     return false
   }

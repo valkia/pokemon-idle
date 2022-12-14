@@ -1,6 +1,7 @@
 import type { PokemonNameType } from '../pokemons/PokemonNameType'
 import Requirement from './Requirement'
 import { AchievementOption } from '~/scripts/GameConstants'
+import { usePartyStore } from '~/stores/party'
 
 export default class PokemonLevelRequirement extends Requirement {
   constructor(public pokemon: PokemonNameType, level: number, option = AchievementOption.more) {
@@ -8,7 +9,7 @@ export default class PokemonLevelRequirement extends Requirement {
   }
 
   public getProgress() {
-    return Math.min(App.game.party.getPokemonByName(this.pokemon)?.level || 0, this.requiredValue)
+    return Math.min(usePartyStore().getPokemonByName(this.pokemon)?.level || 0, this.requiredValue)
   }
 
   public hint(): string {

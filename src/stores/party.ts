@@ -14,23 +14,38 @@ import { PokemonFactory } from '~/scripts/pokemons/PokemonFactory'
 import GameHelper from '~/scripts/GameHelper'
 import Notifier from '~/modules/notifications/Notifier'
 import NotificationConstants from '~/modules/notifications/NotificationConstants'
+import { pokemonList, pokemonMap } from '~/scripts/pokemons/PokemonList'
 // @ts-expect-error
 export const usePartyStore = defineStore('party', {
   state: () => ({
     caughtPokemon: [] as PartyPokemon[],
   }),
   getters: {
-
+    caughtPokemonLookup: (state) => {
+      return state.caughtPokemon.reduce((map, p) => {
+        map.set(p.id, p)
+        return map
+      }, new Map())
+    },
   },
   actions: {
+    removePokemonByName(name: PokemonNameType) {
+      this.caughtPokemon = this.caughtPokemon.filter(p => p.name !== name)
+    },
+    getPokemon(id: number): PartyPokemon | undefined {
+      return this.caughtPokemonLookup.get(id)
+    },
     addCaughtPokemon(value: PartyPokemon) {
       this.caughtPokemon.push(value)
     },
     alreadyCaughtPokemonByName(name: PokemonNameType, shiny = false) {
       return this.alreadyCaughtPokemon(PokemonHelper.getPokemonByName(name).id, shiny)
     },
+    getPokemonByName(name: PokemonNameType): PartyPokemon | undefined {
+      return this.caughtPokemonLookup.get(pokemonMap[name].id)
+    },
     alreadyCaughtPokemon(id: number, shiny = false) {
-      const pokemon = this.caughtPokemon.find(p => p.id == id)
+      const pokemon = this.getPokemon(id)
       if (pokemon)
         return (!shiny || pokemon.shiny)
 
@@ -172,12 +187,6 @@ export const usePartyStore = defineStore('party', {
       // App.game.logbook.newLog(LogBookTypes.CAUGHT, `You have captured ${GameHelper.anOrA(pokemon.name)} ${pokemon.name}!`)
       console.log('caughtPokemon pokemon', pokemon)
       this.caughtPokemon.push(pokemon)
-    },
-    getPokemon(id: number) {
-      for (let i = 0; i < this.caughtPokemon.length; i++) {
-        if (this.caughtPokemon[i].id === id)
-          return this.caughtPokemon[i]
-      }
     },
     fromJSON(): void {
       const caughtPokemonSave = this.caughtPokemon || []

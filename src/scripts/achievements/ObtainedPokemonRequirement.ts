@@ -1,10 +1,9 @@
-/// <reference path="Requirement.ts"/>
 
 import Requirement from '~/scripts/achievements/Requirement'
-import App from '~/scripts/App'
 import type { PokemonListData } from '~/scripts/pokemons/PokemonList'
 import { pokemonMap } from '~/scripts/pokemons/PokemonList'
 import * as GameConstants from '~/scripts/GameConstants'
+import { useStatisticsStore } from '~/stores/statistics'
 export default class ObtainedPokemonRequirement extends Requirement {
   public pokemonID: number
 
@@ -14,7 +13,7 @@ export default class ObtainedPokemonRequirement extends Requirement {
   }
 
   public getProgress() {
-    return Math.min(App.game?.statistics?.pokemonCaptured[this.pokemonID](), this.requiredValue)
+    return Math.min(useStatisticsStore().getPokemonCaptured(this.pokemonID), this.requiredValue)
   }
 
   public hint(): string {

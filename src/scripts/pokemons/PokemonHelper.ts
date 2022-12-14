@@ -13,6 +13,7 @@ import { dungeonList } from '~/scripts/dungeons/Dungeon'
 import { RoamingPokemonList } from '~/scripts/pokemons/RoamingPokemonList'
 import { Shop } from '~/scripts/shop/Shop'
 import { MaxIDPerRegion, Region } from '~/scripts/GameConstants'
+
 enum PokemonLocationType {
   Route,
   Roaming,
@@ -36,6 +37,7 @@ export function calcNativeRegion(pokemonName: PokemonNameType) {
   const region = MaxIDPerRegion.findIndex(maxRegionID => maxRegionID >= Math.floor(id))
   return region >= 0 ? region : Region.none
 }
+
 export class PokemonHelper {
   public static getPokemonsWithEvolution(evoType: GameConstants.StoneType): PartyPokemon[] {
     return App.game.party.caughtPokemon.filter((partyPokemon: PartyPokemon) => {
@@ -48,6 +50,13 @@ export class PokemonHelper {
       }
       return false
     }).sort((a, b) => a.id - b.id)
+  }
+
+  public static displayName(englishName: string): string {
+    /* const t = i18n.global.t
+    return t(`pokemon.${englishName}`) */
+    // todo i18n
+    return englishName
   }
 
   public static getEvolution(id: number, evoType: GameConstants.StoneType): string {

@@ -1,6 +1,7 @@
 import type { PokemonNameType } from '../pokemons/PokemonNameType'
 import Requirement from './Requirement'
 import { AchievementOption } from '~/scripts/GameConstants'
+import { usePartyStore } from '~/stores/party'
 
 export default class ObtainedPokemonRequirement extends Requirement {
   constructor(public pokemon: PokemonNameType, uncaught = false) {
@@ -8,7 +9,7 @@ export default class ObtainedPokemonRequirement extends Requirement {
   }
 
   public getProgress() {
-    return App.game.party.alreadyCaughtPokemonByName(this.pokemon) ? 1 : 0
+    return usePartyStore().alreadyCaughtPokemonByName(this.pokemon) ? 1 : 0
   }
 
   public hint(): string {

@@ -1183,3 +1183,10 @@ export enum Genders {
   Genderless = 0,
   MaleFemale, // Default
 }
+
+// EVs
+export const BASE_EP_YIELD = 100
+export const STONE_EP_YIELD = 1000
+export const WANDERER_EP_YIELD = 500
+export const SHOPMON_EP_YIELD = 1000
+export const SAFARI_EP_YIELD = 1000

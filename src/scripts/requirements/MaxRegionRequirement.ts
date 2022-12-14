@@ -1,5 +1,7 @@
 import Requirement from './Requirement'
 import { AchievementOption, Region } from '~/scripts/GameConstants'
+import { usePartyStore } from '~/stores/party'
+import { usePlayerStore } from '~/stores/player'
 
 export default class MaxRegionRequirement extends Requirement {
   constructor(maxRegion = Region.none, option: AchievementOption = AchievementOption.more) {
@@ -7,7 +9,7 @@ export default class MaxRegionRequirement extends Requirement {
   }
 
   public getProgress() {
-    return Math.min(player.highestRegion(), this.requiredValue)
+    return Math.min(usePlayerStore().highestRegion, this.requiredValue)
   }
 
   public hint(): string {
