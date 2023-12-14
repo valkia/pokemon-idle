@@ -22,6 +22,8 @@ declare module 'vue' {
     Notification: typeof import('./components/Notification.vue')['default']
     NpcModal: typeof import('./components/NpcModal.vue')['default']
     PickStarterTutorialModal: typeof import('./components/PickStarterTutorialModal.vue')['default']
+    QuestDisplay: typeof import('./components/QuestDisplay.vue')['default']
+    QuestModal: typeof import('./components/QuestModal.vue')['default']
     README: typeof import('./components/README.md')['default']
     ReceiveGymBadge: typeof import('./components/ReceiveGymBadge.vue')['default']
     RouteBattles: typeof import('./components/RouteBattles.vue')['default']

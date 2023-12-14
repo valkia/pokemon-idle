@@ -1,30 +1,29 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
+import { ref } from 'vue'
 
-export const useModalStore = defineStore('modal', {
+export const useModalStore = defineStore('modal', () => {
+  const shopModalFlag = ref(false)
+  const pickStarterModalFlag = ref(true)
+  const receiveBadgeModal = ref(false)
+  const hallOfFameModal = ref(false)
 
-  state: () => ({
-    shopModalFlag: false,
-    pickStarterModalFlag: true,
-    receiveBadgeModal: false,
-    hallOfFameModal: false,
-  }),
-  getters: {
+  const setShopModalFlag = (value: boolean) => {
+    shopModalFlag.value = value
+  }
 
-  },
-  actions: {
-    setShopModalFlag(value: any) {
-      this.shopModalFlag = value
-    },
-    setPickStarterModalFlag(value: any) {
-      this.pickStarterModalFlag = value
-    },
-    toggleShopModal() {
-      this.shopModalFlag = !this.shopModalFlag
-    },
-    togglePickStarterModal() {
-      this.pickStarterModalFlag = !this.pickStarterModalFlag
-    },
-  },
+  const setPickStarterModalFlag = (value: boolean) => {
+    pickStarterModalFlag.value = value
+  }
+
+  const toggleShopModal = () => {
+    shopModalFlag.value = !shopModalFlag.value
+  }
+
+  const togglePickStarterModal = () => {
+    pickStarterModalFlag.value = !pickStarterModalFlag.value
+  }
+
+  return { shopModalFlag, pickStarterModalFlag, receiveBadgeModal, hallOfFameModal, setShopModalFlag, setPickStarterModalFlag, toggleShopModal, togglePickStarterModal }
 })
 
 if (import.meta.hot)

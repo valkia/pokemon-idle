@@ -4,26 +4,34 @@ import type { DungeonMap } from '~/scripts/dungeons/DungeonMap'
 import type { BattlePokemon } from '~/scripts/pokemons/BattlePokemon'
 import type { DungeonTrainer } from '~/scripts/dungeons/DungeonTrainer'
 
-export const useDungeonStore = defineStore('dungeon', {
+export const useDungeonStore = defineStore('dungeon', () => {
+  const dungeon = ref<Dungeon | null>(null)
+  const map = ref<DungeonMap | null>(null)
+  const enemyPokemon = ref<BattlePokemon | null>(null)
+  const trainer = ref<DungeonTrainer | null>(null)
+  const catching = ref(false)
+  const catchRateActual = ref(0)
+  const fightingBoss = ref(false)
+  const fighting = ref(false)
+  const counter = ref(0)
+  const defeatedBoss = ref(false)
+  const trainerPokemonIndex = ref(0)
+  const dungeonFinished = ref(false)
 
-  state: () => ({
-    dungeon: null as Dungeon | null,
-    map: null as DungeonMap | null,
-    enemyPokemon: null as BattlePokemon | null,
-    trainer: null as DungeonTrainer | null,
-    catching: false,
-    catchRateActual: 0,
-    fightingBoss: false,
-    fighting: false,
-    counter: 0,
-    defeatedBoss: false,
-    trainerPokemonIndex: 0,
-    dungeonFinished: false,
-  }),
-  getters: {
-  },
-  actions: {
-  },
+  return {
+    dungeon,
+    map,
+    enemyPokemon,
+    trainer,
+    catching,
+    catchRateActual,
+    fightingBoss,
+    fighting,
+    counter,
+    defeatedBoss,
+    trainerPokemonIndex,
+    dungeonFinished,
+  }
 })
 
 if (import.meta.hot)

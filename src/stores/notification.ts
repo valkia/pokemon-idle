@@ -1,23 +1,18 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import type NotificationOption from '~/modules/notifications/NotificationOption'
 
-export const useNotificationStore = defineStore('notification', {
+export const useNotificationStore = defineStore('notification', () => {
+  const notifications = ref<NotificationOption[]>([])
 
-  state: () => ({
-    notification: [] as NotificationOption[],
-  }),
-  getters: {
+  const addNotification = (value: NotificationOption) => {
+    notifications.value.unshift(value)
+    setTimeout(() => {
+      notifications.value.pop()
+    }, value.timeout)
+    console.log('notifications', notifications.value)
+  }
 
-  },
-  actions: {
-    addNotification(value: NotificationOption) {
-      this.notification.unshift(value)
-      setTimeout(() => {
-        this.notification.splice(this.notification.length - 1, 1)
-      }, value.timeout)
-      console.log('this.notification', this.notification)
-    },
-  },
+  return { notifications, addNotification }
 })
 
 if (import.meta.hot)
