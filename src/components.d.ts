@@ -5,6 +5,7 @@
 declare module 'vue' {
   export interface GlobalComponents {
     BattleList: typeof import('./components/pokemon/BattleList.vue')['default']
+    CatchList: typeof import('./components/pokemon/CatchList.vue')['default']
     Counter: typeof import('./components/Counter.vue')['default']
     DungeonMap: typeof import('./components/DungeonMap.vue')['default']
     DungeonView: typeof import('./components/DungeonView.vue')['default']

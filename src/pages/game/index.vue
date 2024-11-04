@@ -1,6 +1,9 @@
 <template>
   <div container mx-auto flex>
     <div w-xs>
+      <CatchList />
+    </div>
+    <div w-xs>
       <BattleList />
     </div>
     <div>
@@ -34,7 +37,7 @@
   <NpcModal />
 
   <button @click="start()">
-    ok
+    start
   </button>
 </template>
 
@@ -56,6 +59,7 @@ import RouteBattles from '~/components/RouteBattles.vue'
 import TownView from '~/components/map/TownView.vue'
 import Enemy from '~/components/pokemon/Enemy.vue'
 import BattleList from '~/components/pokemon/BattleList.vue'
+import CatchList from '~/components/pokemon/CatchList.vue'
 import PickStarterTutorialModal from '~/components/PickStarterTutorialModal.vue'
 import NpcModal from '~/components/NpcModal.vue'
 import StarterCaught from '~/components/StarterCaught.vue'

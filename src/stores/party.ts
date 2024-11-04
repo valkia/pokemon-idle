@@ -19,6 +19,7 @@ import { pokemonList, pokemonMap } from '~/scripts/pokemons/PokemonList'
 export const usePartyStore = defineStore('party', {
   state: () => ({
     caughtPokemon: [] as PartyPokemon[],
+    battlePokemon: [] as PartyPokemon[],
   }),
   getters: {
     caughtPokemonLookup: (state) => {
@@ -53,7 +54,7 @@ export const usePartyStore = defineStore('party', {
     },
     calculatePokemonAttack(type1: PokemonType = PokemonType.None, type2: PokemonType = PokemonType.None, ignoreRegionMultiplier = false, region: GameConstants.Region = player.region, includeBreeding = false, useBaseAttack = false, overrideWeather?: WeatherType, ignoreLevel = false, includeFlute = true): number {
       let attack = 0
-      for (const pokemon of this.caughtPokemon)
+      for (const pokemon of this.battlePokemon)
         attack += this.calculateOnePokemonAttack(pokemon, type1, type2, region, ignoreRegionMultiplier, includeBreeding, useBaseAttack, overrideWeather, ignoreLevel, includeFlute)
 
       const bonus = new Multiplier().getBonus('shiny')
@@ -128,13 +129,13 @@ export const usePartyStore = defineStore('party', {
       return Math.floor(clickAttack * bonus)
     },
     gainExp(exp = 0, level = 1, trainer = false) {
-      console.log('partystore gainExp', this.caughtPokemon)
+      console.log('partystore gainExp', this.battlePokemon)
       const multBonus = new Multiplier().getBonus('exp', true)
       const trainerBonus = trainer ? 1.5 : 1
       const expTotal = Math.floor(exp * level * trainerBonus * multBonus / 9)
 
       const maxLevel = BadgeCase.maxLevel()
-      for (const pokemon of this.caughtPokemon) {
+      for (const pokemon of this.battlePokemon) {
         if (pokemon.level < maxLevel)
           pokemon.gainExp(expTotal)
       }

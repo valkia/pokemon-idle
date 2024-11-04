@@ -1,14 +1,14 @@
 <template>
   <div class="battle-pokemon-list">
-    <div v-for="(pokemon,index) in pokemonList">
+    <div v-for="pokemon in pokemonList">
       <div flex justify-center items-center>
         <img :src="pokemonImgUrl(pokemon)" class="avatar">
         <div>{{ t(`pokemon.${pokemon.name}`) }}</div>
         <div ml="2">
           等级{{ pokemon._level }}
         </div>
-        <div v-if="canRemoveBattle" ml="2" @click="removeBattle(index)">
-          移出队伍
+        <div v-if="canAddBattle" ml="2" @click="addBattle(pokemon)">
+          加入队伍
         </div>
       </div>
     </div>
@@ -25,19 +25,19 @@ import type { PartyPokemon } from '~/scripts/party/PartyPokemon'
 const { t, locale } = useI18n()
 console.log('locale', locale.value)
 const pokemonList = computed(() => {
-  return usePartyStore().battlePokemon
+  return usePartyStore().caughtPokemon
 })
 const pokemonImgUrl = (pokemon: PartyPokemon) => {
   return `/src/assets/images/pokemon/${pokemon.id}.png`
 }
-
-const canRemoveBattle = computed(() => {
-  return usePartyStore().battlePokemon.length > 1
+const canAddBattle = computed(() => {
+  return usePartyStore().battlePokemon.length < 3
 })
-const removeBattle = (index: number) => {
-  console.log('removeBattle', index)
-  usePartyStore().battlePokemon.splice(index, 1)
+const addBattle = (pokemon) => {
+  console.log('addBattle', pokemon)
+  usePartyStore().battlePokemon.push(pokemon)
 }
+
 </script>
 
 <style scoped>
