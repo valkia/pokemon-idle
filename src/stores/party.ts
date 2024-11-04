@@ -1,21 +1,19 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
-import { parse, stringify } from 'zipson'
-import type { PartyPokemon } from '~/scripts/party/PartyPokemon'
+import { computed, ref } from 'vue'
 import type { PokemonNameType } from '~/enums/PokemonNameType'
-import { PokemonHelper } from '~/scripts/pokemons/PokemonHelper'
-import type WeatherType from '~/scripts/weather/WeatherType'
 import PokemonType from '~/enums/PokemonType'
-import * as GameConstants from '~/scripts/GameConstants'
-import App from '~/scripts/App'
-import Weather from '~/scripts/weather/Weather'
 import Multiplier from '~/modules/multiplier/Multiplier'
-import BadgeCase from '~/modules/DataStore/BadgeCase'
-import { PokemonFactory } from '~/scripts/pokemons/PokemonFactory'
-import GameHelper from '~/scripts/GameHelper'
-import Notifier from '~/modules/notifications/Notifier'
-import NotificationConstants from '~/modules/notifications/NotificationConstants'
-import { pokemonList, pokemonMap } from '~/scripts/pokemons/PokemonList'
-// @ts-expect-error
+import type * as GameConstants from '~/scripts/GameConstants'
+import type { PartyPokemon } from '~/scripts/party/PartyPokemon'
+import { PokemonHelper } from '~/scripts/pokemons/PokemonHelper'
+import { pokemonMap } from '~/scripts/pokemons/PokemonList'
+import type WeatherType from '~/scripts/weather/WeatherType'
+import NotificationConstants from '../modules/notifications/NotificationConstants'
+import Notifier from '../modules/notifications/Notifier'
+import GameHelper from '../scripts/GameHelper'
+import { PokemonFactory } from '../scripts/pokemons/PokemonFactory'
+
+/*
 export const usePartyStore = defineStore('party', {
   state: () => ({
     caughtPokemon: [] as PartyPokemon[],
@@ -145,12 +143,12 @@ export const usePartyStore = defineStore('party', {
     },
 
     gainPokemon(pokemon: PartyPokemon, suppressNotification = false) {
-      /* GameHelper.incrementObservable(App.game.statistics.pokemonCaptured[pokemon.id])
-      GameHelper.incrementObservable(App.game.statistics.totalPokemonCaptured) */
+      /!* GameHelper.incrementObservable(App.game.statistics.pokemonCaptured[pokemon.id])
+      GameHelper.incrementObservable(App.game.statistics.totalPokemonCaptured) *!/
 
       if (pokemon.shiny) {
-        /* GameHelper.incrementObservable(App.game.statistics.shinyPokemonCaptured[pokemon.id])
-        GameHelper.incrementObservable(App.game.statistics.totalShinyPokemonCaptured) */
+        /!* GameHelper.incrementObservable(App.game.statistics.shinyPokemonCaptured[pokemon.id])
+        GameHelper.incrementObservable(App.game.statistics.totalShinyPokemonCaptured) *!/
         // Add all shiny catches to the log book
         // App.game.logbook.newLog(LogBookTypes.CAUGHT, `You have captured a shiny ${pokemon.name}!`)
         // Already caught (shiny)
@@ -208,6 +206,159 @@ export const usePartyStore = defineStore('party', {
   },
   debug: true,
 
+})
+*/
+
+export const usePartyStore = defineStore('party', () => {
+  const caughtPokemon = ref<PartyPokemon[]>([])
+  const battlePokemon = ref<PartyPokemon[]>([])
+
+  const caughtPokemonLookup = computed(() => {
+    return caughtPokemon.value.reduce((map, p) => {
+      map.set(p.id, p)
+      return map
+    }, new Map<number, PartyPokemon>())
+  })
+
+  function removePokemonByName(name: PokemonNameType) {
+    caughtPokemon.value = caughtPokemon.value.filter(p => p.name !== name)
+  }
+
+  function getPokemon(id: number): PartyPokemon | undefined {
+    return caughtPokemonLookup.value.get(id)
+  }
+
+  function addCaughtPokemon(value: PartyPokemon) {
+    caughtPokemon.value.push(value)
+  }
+
+  function alreadyCaughtPokemonByName(name: PokemonNameType, shiny = false) {
+    return alreadyCaughtPokemon(PokemonHelper.getPokemonByName(name).id, shiny)
+  }
+
+  function getPokemonByName(name: PokemonNameType): PartyPokemon | undefined {
+    return caughtPokemonLookup.value.get(pokemonMap[name].id)
+  }
+
+  function alreadyCaughtPokemon(id: number, shiny = false) {
+    const pokemon = getPokemon(id)
+    if (pokemon)
+      return (!shiny || pokemon.shiny)
+
+    return false
+  }
+
+  function calculatePokemonAttack(type1: PokemonType = PokemonType.None, type2: PokemonType = PokemonType.None, ignoreRegionMultiplier = false, region: GameConstants.Region = player.region, includeBreeding = false, useBaseAttack = false, overrideWeather?: WeatherType, ignoreLevel = false, includeFlute = true): number {
+    let attack = 0
+    for (const pokemon of caughtPokemon.value)
+      attack += calculateOnePokemonAttack(pokemon, type1, type2, region, ignoreRegionMultiplier, includeBreeding, useBaseAttack, overrideWeather, ignoreLevel, includeFlute)
+
+    const bonus = new Multiplier().getBonus('shiny')
+
+    return Math.round(attack * bonus)
+  }
+
+  // ...其他actions方法...
+
+  function calculateClickAttack(useItem = false): number {
+    // Base power
+    // Shiny pokemon help with a 50% boost
+    //  * (1 + AchievementHandler.achievementBonus())
+
+    const debugValue = 100000000
+
+    const clickAttack = (caughtPokemon.value.length + (caughtPokemon.value.filter(p => p.shiny).length / 2) + 1) ** 1.4 + debugValue
+
+    const bonus = new Multiplier().getBonus('clickAttack', useItem)
+
+    return Math.floor(clickAttack * bonus)
+  }
+  function gainExp(exp = 0, level = 1, trainer = false) {
+    console.log('partystore gainExp', battlePokemon.value)
+    const multBonus = new Multiplier().getBonus('exp', true)
+    const trainerBonus = trainer ? 1.5 : 1
+    const expTotal = Math.floor(exp * level * trainerBonus * multBonus / 9)
+
+    // const maxLevel = BadgeCase.maxLevel()
+    const maxLevel = 99
+    for (const pokemon of battlePokemon.value) {
+      if (pokemon.level < maxLevel)
+        pokemon.gainExp(expTotal)
+    }
+  }
+  function gainPokemonById(id: number, shiny = false, suppressNotification = false) {
+    gainPokemon(PokemonFactory.generatePartyPokemon(id, shiny), suppressNotification)
+  }
+  function gainPokemon(pokemon: PartyPokemon, suppressNotification = false) {
+    /* GameHelper.incrementObservable(App.game.statistics.pokemonCaptured[pokemon.id])
+    GameHelper.incrementObservable(App.game.statistics.totalPokemonCaptured) */
+
+    if (pokemon.shiny) {
+      /* GameHelper.incrementObservable(App.game.statistics.shinyPokemonCaptured[pokemon.id])
+      GameHelper.incrementObservable(App.game.statistics.totalShinyPokemonCaptured) */
+      // Add all shiny catches to the log book
+      // App.game.logbook.newLog(LogBookTypes.CAUGHT, `You have captured a shiny ${pokemon.name}!`)
+      // Already caught (shiny)
+      if (alreadyCaughtPokemon(pokemon.id, true))
+        return
+
+      // Notify if not already caught
+      Notifier.notify({
+        message: `✨ You have captured a shiny ${pokemon.name}! ✨`,
+        type: NotificationConstants.NotificationOption.warning,
+        sound: NotificationConstants.NotificationSound.General.new_catch,
+        setting: NotificationConstants.NotificationSetting.General.new_catch,
+      })
+
+      // Already caught (non shiny) we need to update the party pokemon directly
+      if (alreadyCaughtPokemon(pokemon.id, false)) {
+        const p = getPokemon(pokemon.id)
+        if (p)
+          p.shiny = true
+        return
+      }
+    }
+
+    // Already caught (non shiny)
+    if (alreadyCaughtPokemon(pokemon.id, false))
+      return
+
+    if (!suppressNotification) {
+      Notifier.notify({
+        message: `You have captured ${GameHelper.anOrA(pokemon.name)} ${pokemon.name}!`,
+        type: NotificationConstants.NotificationOption.success,
+        sound: NotificationConstants.NotificationSound.General.new_catch,
+        setting: NotificationConstants.NotificationSetting.General.new_catch,
+      })
+    }
+
+    // App.game.logbook.newLog(LogBookTypes.CAUGHT, `You have captured ${GameHelper.anOrA(pokemon.name)} ${pokemon.name}!`)
+    console.log('caughtPokemon pokemon', pokemon)
+    caughtPokemon.value.push(pokemon)
+  }
+  return {
+    caughtPokemon,
+    caughtPokemonLookup,
+    removePokemonByName,
+    getPokemon,
+    addCaughtPokemon,
+    alreadyCaughtPokemonByName,
+    getPokemonByName,
+    alreadyCaughtPokemon,
+    calculatePokemonAttack,
+    calculateClickAttack,
+    gainExp,
+    gainPokemonById,
+    battlePokemon,
+  }
+}, {
+  persist: {
+    serializer: {
+      deserialize: JSON.parse,
+      serialize: JSON.stringify,
+    },
+  },
+  debug: true,
 })
 
 if (import.meta.hot)

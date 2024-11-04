@@ -1,20 +1,22 @@
-import { ViteSSG } from 'vite-ssg'
-import generatedRoutes from 'virtual:generated-pages'
-import { setupLayouts } from 'virtual:generated-layouts'
+import { createPinia } from 'pinia'
+import { createApp } from 'vue'
+import { createRouter, createWebHistory } from 'vue-router/auto'
+import { handleHotUpdate, routes } from 'vue-router/auto-routes'
 import App from './App.vue'
-
+import i18n from './i18n'
 import '@unocss/reset/tailwind.css'
 import './styles/main.css'
 import 'uno.css'
 
-const routes = setupLayouts(generatedRoutes)
+const pinia = createPinia()
 
-// https://github.com/antfu/vite-ssg
-export const createApp = ViteSSG(
-  App,
-  { routes, base: import.meta.env.BASE_URL },
-  (ctx) => {
-    // install all modules under `modules/`
-    Object.values(import.meta.globEager('./modules/*.ts')).forEach(i => i.install?.(ctx))
-  },
-)
+const router = createRouter({
+  routes,
+  history: createWebHistory(),
+})
+createApp(App).use(i18n).use(pinia).use(router).mount('#app')
+
+// This will update routes at runtime without reloading the page
+if (import.meta.hot) {
+  handleHotUpdate(router)
+}

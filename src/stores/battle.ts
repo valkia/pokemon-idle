@@ -1,17 +1,11 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import type { BattlePokemon } from '~/scripts/pokemons/BattlePokemon'
-export const useBattleStore = defineStore('battle', {
+export const useBattleStore = defineStore('battle', () => {
+  const enemyPokemon = ref<BattlePokemon | null>(null)
+  const catching = ref(false)
+  const catchRateActual = ref(0)
 
-  state: () => ({
-    enemyPokemon: null as BattlePokemon | null,
-    catching: false,
-    catchRateActual: 0,
-  }),
-  getters: {
-
-  },
-  actions: {
-  },
+  return { enemyPokemon, catching, catchRateActual }
 })
 
 if (import.meta.hot)

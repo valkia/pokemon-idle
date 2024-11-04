@@ -45,6 +45,20 @@ const allButGalar: Array<Region> = [
   Region.kalos,
   Region.alola,
 ]
+export interface PokemonBaseStats {
+  hitpoints: number
+  attack: number
+  specialAttack: number
+  defense: number
+  specialDefense: number
+  speed: number
+}
+
+export interface PokemonGender {
+  type?: number
+  femaleRatio?: number
+  visualDifference?: boolean
+}
 export interface PokemonListData {
   id: number
   name: PokemonNameType
@@ -52,25 +66,13 @@ export interface PokemonListData {
   catchRate: number
   evolutions?: EvoData[]
   type: PokemonType[]
-  base: {
-    hitpoints: number
-    attack: number
-    specialAttack: number
-    defense: number
-    specialDefense: number
-    speed: number
-  }
+  base: PokemonBaseStats
   levelType: LevelType
   exp: number
   eggCycles: number
   baby?: boolean
-  attack?: number
   heldItem?: BagItem
-  gender?: {
-    type?: number
-    femaleRatio?: number
-    visualDifference?: boolean
-  }
+  gender?: PokemonGender
 }
 
 function createPokemonArray<T extends readonly PokemonListData[] & Array<{ name: V }>, V extends string>(...args: T) {

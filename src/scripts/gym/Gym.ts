@@ -14,6 +14,7 @@ import { GymRunner } from '~/scripts/gym/GymRunner'
 import { GymBattle } from '~/scripts/gym/GymBattle'
 import { useGymStore } from '~/stores/gym'
 import { useModalStore } from '~/stores/modal'
+import {GymState} from "~/types";
 /**
  * Data list that contains all gymLeaders, accessible by townName.
  */
@@ -137,7 +138,7 @@ export class Gym extends TownContent {
   }
 
   get imagePath(): string {
-    const gymStore = useGymStore()
+    const gymStore:GymState = useGymStore()
     return `/src/assets/images/gymLeaders/${gymStore.gym.leaderName}.png`
   }
 }

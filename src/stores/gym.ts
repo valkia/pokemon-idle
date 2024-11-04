@@ -1,24 +1,21 @@
-import { acceptHMRUpdate, defineStore } from 'pinia'
+import { acceptHMRUpdate, defineStore, storeToRefs } from 'pinia'
 import { GYM_TIME } from '~/scripts/GameConstants'
-import {BattlePokemon} from "~/scripts/pokemons/BattlePokemon";
-export const useGymStore = defineStore('gym', {
-
-  state: () => ({
-    timeLeft: GYM_TIME as number,
+import { BattlePokemon } from '~/scripts/pokemons/BattlePokemon'
+import type { GymState } from '~/types'
+export const useGymStore = defineStore('gym', () => {
+  const state = ref<GymState>({
+    timeLeft: GYM_TIME,
     timeLeftPercentage: 100,
-    gym: null as any, // Gym
+    gym: null,
     running: false,
     autoRestart: false,
     initialRun: true,
     index: 0,
     totalPokemons: 0,
-    enemyPokemon: null as BattlePokemon | null,
-  }),
-  getters: {
-  },
-  actions: {
+    enemyPokemon: null,
+  })
 
-  },
+  return { ...storeToRefs(state) }
 })
 
 if (import.meta.hot)
