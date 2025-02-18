@@ -22,6 +22,7 @@ declare module 'vue' {
     Modal: typeof import('./components/common/Modal.vue')['default']
     Notification: typeof import('./components/Notification.vue')['default']
     NpcModal: typeof import('./components/NpcModal.vue')['default']
+    PartyModal: typeof import('./components/PartyModal.vue')['default']
     PickStarterTutorialModal: typeof import('./components/PickStarterTutorialModal.vue')['default']
     QuestDisplay: typeof import('./components/QuestDisplay.vue')['default']
     QuestModal: typeof import('./components/QuestModal.vue')['default']

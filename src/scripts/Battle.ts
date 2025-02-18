@@ -60,30 +60,32 @@ export class Battle {
   /**
      * Attacks with clicks and checks if the enemy is defeated.
      */
-  public static clickAttack(battleStore = useBattleStore()) {
+public static clickAttack(battleStore = useBattleStore()) {
     const player = usePlayerStore()
-    // click attacks disabled and we already beat the starter
-    /* if (App.game.challenges.list.disableClickAttack.active() && player.starter() != GameConstants.Starter.None)
-      return
-*/
-    // TODO: figure out a better way of handling this
-    // Limit click attack speed, Only allow 1 attack per 50ms (20 per second)
-    const now = Date.now()
-    if (this.lastClickAttack > now - 50)
-      return
+    const gameStore = useGameStore()
+    
+    // 设置游戏状态为战斗中
+    gameStore.gameState = GameState.fighting
+    
+    // 调试日志
+    console.log('Current game state:', gameStore.gameState)
+    console.log('Enemy pokemon:', battleStore.enemyPokemon)
 
-    this.lastClickAttack = now
-    console.log('clickAttack', battleStore)
+    // 移除过于严格的点击限制
+    /*const now = Date.now()
+    if (this.lastClickAttack > now - 50) 
+      return
+    this.lastClickAttack = now*/
+
     const enemyPokemon = battleStore.enemyPokemon
     if (!enemyPokemon?.isAlive())
       return
 
-    /* GameHelper.incrementObservable(App.game.statistics.clickAttacks) */
     const partyStore = usePartyStore()
     enemyPokemon.damage(partyStore.calculateClickAttack(true))
     if (!enemyPokemon.isAlive())
       this.defeatPokemon()
-  }
+}
 
   /**
      * Award the player with money and exp, and throw a Pokéball if applicable
