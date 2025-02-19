@@ -1,30 +1,33 @@
-import path from 'path'
+import { fileURLToPath, URL } from 'node:url'
+import process from 'node:process'
 import { defineConfig } from 'vite'
 import Vue from '@vitejs/plugin-vue'
 import Pages from 'vite-plugin-pages'
 import Layouts from 'vite-plugin-vue-layouts'
 import Components from 'unplugin-vue-components/vite'
 import AutoImport from 'unplugin-auto-import/vite'
-import Markdown from 'vite-plugin-md'
 import { VitePWA } from 'vite-plugin-pwa'
-import VueI18n from '@intlify/vite-plugin-vue-i18n'
+import VueI18n from '@intlify/unplugin-vue-i18n/vite'
 import Inspect from 'vite-plugin-inspect'
-import Prism from 'markdown-it-prism'
-import LinkAttributes from 'markdown-it-link-attributes'
 import Unocss from 'unocss/vite'
 
-const markdownWrapperClasses = 'prose prose-sm m-auto text-left'
+// https://vitejs.dev/config/
 
 export default defineConfig({
   resolve: {
     alias: {
-      '~/': `${path.resolve(__dirname, 'src')}/`,
-      '~/enums': `${path.resolve(__dirname, 'src')}/enums`,
+      '~/': fileURLToPath(new URL('./src', import.meta.url)) + '/',
+      '~/enums': fileURLToPath(new URL('./src/enums', import.meta.url)),
     },
   },
   plugins: [
+    // https://github.com/vitejs/vite/tree/main/packages/plugin-vue
     Vue({
-      include: [/\.vue$/, /\.md$/],
+      script: {
+        defineModel: true,
+        propsDestructure: true
+      },
+      include: [/\.vue$/, /\.md$/]
     }),
 
     // https://github.com/hannoeru/vite-plugin-pages
@@ -60,14 +63,12 @@ export default defineConfig({
     // see unocss.config.ts for config
     Unocss(),
 
-    // https://github.com/antfu/vite-plugin-md
-    // Don't need this? Try vitesse-lite: https://github.com/antfu/vitesse-lite
 
-    // https://github.com/intlify/bundle-tools/tree/main/packages/vite-plugin-vue-i18n
+
+    // https://github.com/intlify/bundle-tools/tree/main/packages/unplugin-vue-i18n
     VueI18n({
       runtimeOnly: true,
-      compositionOnly: true,
-      include: [path.resolve(__dirname, 'locales/**')],
+      include: [fileURLToPath(new URL('./locales/**', import.meta.url))]
     }),
 
     // https://github.com/antfu/vite-plugin-inspect
@@ -81,6 +82,18 @@ export default defineConfig({
   ssgOptions: {
     script: 'async',
     formatting: 'minify',
+    format: 'esm',
+    dirStyle: 'nested',
+    onFinished() {
+      process.exit(0)
+    },
+  },
+
+  server: {
+    allowedHosts: [
+      '*.clackypaas.com',
+      '3333-313fb16056b2-web.clackypaas.com'
+    ]
   },
 
   optimizeDeps: {
