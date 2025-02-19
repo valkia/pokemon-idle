@@ -1,5 +1,5 @@
 <template>
-  <div v-if=" gameState === GameState.fighting" @click="enemyClick">
+  <div @click="enemyClick">
     <img
       v-if="catching"
       class="pokeball-animated"
@@ -14,15 +14,19 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import type { BattlePokemon } from '~/scripts/pokemons/BattlePokemon'
 import { Battle } from '~/scripts/Battle'
 import { useBattleStore } from '~/stores/battle'
 import { GameState, Pokeball } from '~/scripts/GameConstants'
 import { useGameStore } from '~/stores/game'
+
 const { t, locale } = useI18n()
-console.log('locale', locale.value)
+console.log('[Enemy] Current locale:', locale.value)
+const gameStore = useGameStore()
 const gameState = computed(() => {
-  return useGameStore().gameState
+  console.log('[Enemy] Game state changed:', gameStore.gameState)
+  return gameStore.gameState
 })
 const pokemon = computed(() => {
   return useBattleStore().enemyPokemon
@@ -37,7 +41,15 @@ const pokemonImgUrl = computed(() => {
   return `/src/assets/images/pokemon/${pokemon.value.id}.png`
 })
 const enemyClick = () => {
-  Battle.clickAttack()
+  console.log('[Enemy] Click event triggered')
+  console.log('[Enemy] Current game state:', gameState.value)
+  console.log('[Enemy] Current pokemon:', pokemon.value)
+  if (gameState.value === GameState.fighting) {
+    Battle.clickAttack()
+    console.log('[Enemy] Attack initiated')
+  } else {
+    console.log('[Enemy] Attack blocked - not in fighting state')
+  }
 }
 </script>
 
