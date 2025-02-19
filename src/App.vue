@@ -13,7 +13,8 @@ useHead({
 <template>
   <router-view />
 </template>
+
 <style lang="scss">
-@import "app.scss";
-@import "common.scss";
+@use "app";
+@use "common";
 </style>
