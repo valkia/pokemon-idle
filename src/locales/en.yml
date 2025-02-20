@@ -1,27 +1,27 @@
 button:
-  about: About
-  back: Back
-  go: Start Game
-  home: Home
-  toggle_dark: Toggle dark mode
-  toggle_langs: Change languages
+  about: "About"
+  back: "Back"
+  go: "Start Game"
+  home: "Home"
+  toggle_dark: "Toggle dark mode"
+  toggle_langs: "Change languages"
 
 intro:
-  welcome: Welcome to Pokemon Game
-  desc: Begin your journey as a Pokemon trainer! Explore the world, catch Pokemon, battle trainers and become a Pokemon Master.
-  start: Click "Start Game" to begin your adventure
-  hint: Use arrow keys or WASD to move
+  welcome: "Welcome to Pokemon Game"
+  desc: "Begin your journey as a Pokemon trainer! Explore the world, catch Pokemon, battle trainers and become a Pokemon Master."
+  start: "Click 'Start Game' to begin your adventure"
+  hint: "Use arrow keys or WASD to move"
 
 menu:
-  stats: Stats
-  pokedex: Pokedex
-  settings: Settings
-  help: Help
+  stats: "Stats"
+  pokedex: "Pokedex"
+  settings: "Settings"
+  help: "Help"
 
-game: 
-  title: Pokemon Adventure
-  subtitle: Your journey starts here!
-  loading: Loading...
-  save_hint: Game autosaves automatically
+game:
+  title: "Pokemon Adventure"
+  subtitle: "Your journey starts here!"
+  loading: "Loading..."
+  save_hint: "Game autosaves automatically"
 
-not-found: Not found
+not-found: "Not found"

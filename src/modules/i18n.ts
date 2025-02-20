@@ -2,16 +2,14 @@ import { createI18n } from 'vue-i18n'
 import type { UserModule } from '~/types'
 import { nextTick } from 'vue'
 
+// Import language files synchronously
+import en from '../locales/en.yml'
+import zhCN from '../locales/zh-CN.yml'
+
 const messages = {
-  en: Object.fromEntries(
-    Object.entries(import.meta.glob('../locales/en.yml', { eager: true }))
-      .map(([_, value]) => ['en', value.default])
-  )['en'],
-  'zh-CN': Object.fromEntries(
-    Object.entries(import.meta.glob('../locales/zh-CN.yml', { eager: true }))
-      .map(([_, value]) => ['zh-CN', value.default])
-  )['zh-CN']
-}
+    en,
+    'zh-CN': zhCN
+  }
 
 export const i18n = createI18n({
   legacy: false,

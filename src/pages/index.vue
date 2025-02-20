@@ -18,7 +18,7 @@ const startGame = async () => {
   <div class="game-container">
     <Transition name="fade" appear>
       <div class="logo-container">
-        <img src="/src/assets/images/pokemon/logo.png" alt="Pokemon Logo" class="pokemon-logo" />
+        <img src="/src/assets/images/oak.png" alt="Pokemon Oak" class="pokemon-logo" />
       </div>
     </Transition>
 

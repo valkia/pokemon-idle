@@ -19,6 +19,7 @@ export default defineConfig({
       '~/enums': fileURLToPath(new URL('./src/enums', import.meta.url)),
     },
   },
+  assetsInclude: ['**/*.yml'],
   plugins: [
     // https://github.com/vitejs/vite/tree/main/packages/plugin-vue
     Vue({
@@ -62,7 +63,14 @@ export default defineConfig({
     // see unocss.config.ts for config
     Unocss(),
 
-
+    // YAML loader
+    {
+      name: 'yaml-loader',
+      transform(code, id) {
+        if (!id.endsWith('.yml')) return
+        return `export default ${JSON.stringify(code)}`
+      },
+    },
 
     // https://github.com/antfu/vite-plugin-inspect
     Inspect({
@@ -83,10 +91,7 @@ export default defineConfig({
   },
 
   server: {
-    allowedHosts: [
-      '*.clackypaas.com',
-      '3333-313fb16056b2-web.clackypaas.com'
-    ]
+    allowedHosts: true
   },
 
   optimizeDeps: {
