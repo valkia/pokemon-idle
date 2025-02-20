@@ -1,0 +1,27 @@
+button:
+  about: 关于
+  back: 返回
+  go: 开始游戏
+  home: 首页
+  toggle_dark: 切换深色模式
+  toggle_langs: 切换语言
+
+intro:
+  welcome: 欢迎来到精灵宝可梦游戏
+  desc: 开启你的宝可梦训练师之旅！探索世界、收服宝可梦、挑战训练师、成为宝可梦大师。
+  start: 点击"开始游戏"按钮开始冒险
+  hint: 使用方向键或WASD移动
+
+menu:
+  stats: 数据
+  pokedex: 图鉴
+  settings: 设置
+  help: 帮助
+
+game:
+  title: 宝可梦大冒险
+  subtitle: 你的旅程从这里开始！
+  loading: 加载中...
+  save_hint: 游戏将自动保存
+
+not-found: 未找到页面

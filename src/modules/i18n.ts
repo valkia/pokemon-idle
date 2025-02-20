@@ -1,25 +1,55 @@
 import { createI18n } from 'vue-i18n'
 import type { UserModule } from '~/types'
+import { nextTick } from 'vue'
 
-// Import i18n resources
-// https://vitejs.dev/guide/features.html#glob-import
-//
-// Don't need this? Try vitesse-lite: https://github.com/antfu/vitesse-lite
-const messages = Object.fromEntries(
-  Object.entries(
-    import.meta.glob('../../locales/*.y(a)?ml', { eager: true }))
-    .map(([key, value]) => {
-      const yaml = key.endsWith('.yaml')
-      return [key.slice(14, yaml ? -5 : -4), value.default]
-    }),
-)
+const messages = {
+  en: Object.fromEntries(
+    Object.entries(import.meta.glob('../locales/en.yml', { eager: true }))
+      .map(([_, value]) => ['en', value.default])
+  )['en'],
+  'zh-CN': Object.fromEntries(
+    Object.entries(import.meta.glob('../locales/zh-CN.yml', { eager: true }))
+      .map(([_, value]) => ['zh-CN', value.default])
+  )['zh-CN']
+}
+
+export const i18n = createI18n({
+  legacy: false,
+  locale: localStorage.getItem('locale') || navigator.language?.split('-')[0] || 'en',
+  fallbackLocale: 'en',
+  messages,
+  silentTranslationWarn: true,
+  silentFallbackWarn: true,
+  missingWarn: false,
+  fallbackWarn: false
+})
 
 export const install: UserModule = ({ app }) => {
-  const i18n = createI18n({
-    legacy: false,
-    locale: 'en',
-    messages,
-  })
-
   app.use(i18n)
+}
+
+export function setI18nLanguage(locale: string) {
+  if (i18n.mode === 'legacy') {
+    i18n.global.locale = locale
+  } else {
+    (i18n.global.locale as any).value = locale
+  }
+  localStorage.setItem('locale', locale)
+  document.querySelector('html')?.setAttribute('lang', locale)
+  return locale
+}
+
+export async function loadLocaleMessages(locale: string) {
+  const messages = i18n.global.getLocaleMessage(locale)
+  if (Object.keys(messages).length === 0) {
+    try {
+      const messages = await import(`../locales/${locale}.yml`)
+      i18n.global.setLocaleMessage(locale, messages.default)
+      await nextTick()
+    } catch (e) {
+      console.error(`Could not load locale messages for ${locale}`, e)
+      return Promise.reject(e)
+    }
+  }
+  return locale
 }

@@ -7,7 +7,6 @@ import Layouts from 'vite-plugin-vue-layouts'
 import Components from 'unplugin-vue-components/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import { VitePWA } from 'vite-plugin-pwa'
-import VueI18n from '@intlify/unplugin-vue-i18n/vite'
 import Inspect from 'vite-plugin-inspect'
 import Unocss from 'unocss/vite'
 
@@ -64,12 +63,6 @@ export default defineConfig({
     Unocss(),
 
 
-
-    // https://github.com/intlify/bundle-tools/tree/main/packages/unplugin-vue-i18n
-    VueI18n({
-      runtimeOnly: true,
-      include: [fileURLToPath(new URL('./locales/**', import.meta.url))]
-    }),
 
     // https://github.com/antfu/vite-plugin-inspect
     Inspect({
