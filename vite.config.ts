@@ -7,7 +7,6 @@ import Layouts from 'vite-plugin-vue-layouts'
 import Components from 'unplugin-vue-components/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import { VitePWA } from 'vite-plugin-pwa'
-import VueI18n from '@intlify/unplugin-vue-i18n/vite'
 import Inspect from 'vite-plugin-inspect'
 import Unocss from 'unocss/vite'
 
@@ -20,6 +19,7 @@ export default defineConfig({
       '~/enums': fileURLToPath(new URL('./src/enums', import.meta.url)),
     },
   },
+  assetsInclude: ['**/*.yml'],
   plugins: [
     // https://github.com/vitejs/vite/tree/main/packages/plugin-vue
     Vue({
@@ -63,13 +63,14 @@ export default defineConfig({
     // see unocss.config.ts for config
     Unocss(),
 
-
-
-    // https://github.com/intlify/bundle-tools/tree/main/packages/unplugin-vue-i18n
-    VueI18n({
-      runtimeOnly: true,
-      include: [fileURLToPath(new URL('./locales/**', import.meta.url))]
-    }),
+    // YAML loader
+    {
+      name: 'yaml-loader',
+      transform(code, id) {
+        if (!id.endsWith('.yml')) return
+        return `export default ${JSON.stringify(code)}`
+      },
+    },
 
     // https://github.com/antfu/vite-plugin-inspect
     Inspect({
@@ -90,10 +91,7 @@ export default defineConfig({
   },
 
   server: {
-    allowedHosts: [
-      '*.clackypaas.com',
-      '3333-313fb16056b2-web.clackypaas.com'
-    ]
+    allowedHosts: true
   },
 
   optimizeDeps: {
