@@ -1,15 +1,15 @@
-import { createI18n } from 'vue-i18n'
 import type { UserModule } from '~/types'
 import { nextTick } from 'vue'
+import { createI18n } from 'vue-i18n'
 
 // Import language files synchronously
 import en from '../locales/en.yml'
 import zhCN from '../locales/zh-CN.yml'
 
 const messages = {
-    en,
-    'zh-CN': zhCN
-  }
+  en,
+  'zh-CN': zhCN,
+}
 
 export const i18n = createI18n({
   legacy: false,
@@ -19,7 +19,7 @@ export const i18n = createI18n({
   silentTranslationWarn: true,
   silentFallbackWarn: true,
   missingWarn: false,
-  fallbackWarn: false
+  fallbackWarn: false,
 })
 
 export const install: UserModule = ({ app }) => {
@@ -29,7 +29,8 @@ export const install: UserModule = ({ app }) => {
 export function setI18nLanguage(locale: string) {
   if (i18n.mode === 'legacy') {
     i18n.global.locale = locale
-  } else {
+  }
+  else {
     (i18n.global.locale as any).value = locale
   }
   localStorage.setItem('locale', locale)
@@ -44,7 +45,8 @@ export async function loadLocaleMessages(locale: string) {
       const messages = await import(`../locales/${locale}.yml`)
       i18n.global.setLocaleMessage(locale, messages.default)
       await nextTick()
-    } catch (e) {
+    }
+    catch (e) {
       console.error(`Could not load locale messages for ${locale}`, e)
       return Promise.reject(e)
     }

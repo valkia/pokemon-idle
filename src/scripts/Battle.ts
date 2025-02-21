@@ -1,22 +1,17 @@
-
-import { computed, ref } from 'vue'
-import type { Ref } from 'vue-demi'
 import type { BattlePokemon } from '~/scripts/pokemons/BattlePokemon'
-import { GameState, Pokeball } from '~/scripts/GameConstants'
+import { ref } from 'vue'
+import { LogBookTypes } from '~/modules/logbook/LogBookTypes'
 import App from '~/scripts/App'
-import { usePlayerStore } from '~/stores/player'
-import { useGameStore } from '~/stores/game'
-import { useBattleStore } from '~/stores/battle'
-import GameHelper from '~/scripts/GameHelper'
+import { clipNumber, debug, GameState, Pokeball } from '~/scripts/GameConstants'
+import { Pokeballs } from '~/scripts/pokeballs/Pokeballs'
 import { PokemonFactory } from '~/scripts/pokemons/PokemonFactory'
 import MapHelper from '~/scripts/worldmap/MapHelper'
-import Rand from '~/utilities/Rand'
-import { LogBookTypes } from '~/modules/logbook/LogBookTypes'
-import OakItemType from '~/modules/enums/OakItemType'
+import { useBattleStore } from '~/stores/battle'
+import { useGameStore } from '~/stores/game'
 import { usePartyStore } from '~/stores/party'
+import { usePlayerStore } from '~/stores/player'
 import { useStatisticsStore } from '~/stores/statistics'
-import { Pokeballs } from '~/scripts/pokeballs/Pokeballs'
-import { useDungeonStore } from '~/stores/dungeon'
+import Rand from '~/utilities/Rand'
 /**
  * Handles all logic related to battling
  */
@@ -30,16 +25,16 @@ export class Battle {
   static route: number
 
   /**
-     * Probably not needed right now, but might be if we add more logic to a gameTick.
-     */
+   * Probably not needed right now, but might be if we add more logic to a gameTick.
+   */
   public static tick() {
     this.counter = 0
     this.pokemonAttack()
   }
 
   /**
-     * Attacks with Pokémon and checks if the enemy is defeated.
-     */
+   * Attacks with Pokémon and checks if the enemy is defeated.
+   */
   public static pokemonAttack() {
     // TODO: figure out a better way of handling this
     // Limit pokemon attack speed, Only allow 1 attack per 900ms
@@ -59,21 +54,21 @@ export class Battle {
   }
 
   /**
-     * Attacks with clicks and checks if the enemy is defeated.
-     */
-public static clickAttack(battleStore = useBattleStore(), gameStore = useGameStore()) {
+   * Attacks with clicks and checks if the enemy is defeated.
+   */
+  public static clickAttack(battleStore = useBattleStore(), gameStore = useGameStore()) {
     const player = usePlayerStore()
 
     // Skip if already fighting
     if (gameStore.gameState === GameState.fighting) {
       // More lenient click limit
-      const now = Date.now() 
+      const now = Date.now()
       if (this.lastClickAttack > now - 10)
         return
       this.lastClickAttack = now
     }
 
-    const enemyPokemon = battleStore.enemyPokemon 
+    const enemyPokemon = battleStore.enemyPokemon
     if (!enemyPokemon?.isAlive())
       return
 
@@ -85,13 +80,13 @@ public static clickAttack(battleStore = useBattleStore(), gameStore = useGameSto
     // Log battle state for debugging
     console.debug('Battle status:', {
       enemyPokemon,
-      damage: partyStore.calculateClickAttack(true)
+      damage: partyStore.calculateClickAttack(true),
     })
   }
 
   /**
-     * Award the player with money and exp, and throw a Pokéball if applicable
-     */
+   * Award the player with money and exp, and throw a Pokéball if applicable
+   */
   public static defeatPokemon() {
     const player = usePlayerStore()
     const battleStore = useBattleStore()
@@ -104,9 +99,9 @@ public static clickAttack(battleStore = useBattleStore(), gameStore = useGameSto
     // Handle auto-catching defeated Pokemon
     if (enemyPokemon?.health <= 0 || enemyPokemon?.isAlive() === false) {
       const isShiny: boolean = enemyPokemon.shiny
-      const pokeBall: GameConstants.Pokeball = new Pokeballs().calculatePokeballToUse(enemyPokemon.id, isShiny)
+      const pokeBall: Pokeball = new Pokeballs().calculatePokeballToUse(enemyPokemon.id, isShiny)
 
-      if (pokeBall !== GameConstants.Pokeball.None) {
+      if (pokeBall !== Pokeball.None) {
         this.prepareCatch(enemyPokemon, pokeBall)
         setTimeout(
           () => {
@@ -114,7 +109,7 @@ public static clickAttack(battleStore = useBattleStore(), gameStore = useGameSto
             if (Battle.route != 0)
               this.generateNewEnemy()
           },
-          GameConstants.debug ? 200 : new Pokeballs().calculateCatchTime(pokeBall),
+          debug ? 200 : new Pokeballs().calculateCatchTime(pokeBall),
         )
         return
       }
@@ -125,9 +120,9 @@ public static clickAttack(battleStore = useBattleStore(), gameStore = useGameSto
   }
 
   /**
-     * Generate a new enemy based on the current route and region.
-     * Reset the counter.
-     */
+   * Generate a new enemy based on the current route and region.
+   * Reset the counter.
+   */
   public static generateNewEnemy() {
     const player = usePlayerStore()
     this.counter = 0
@@ -153,8 +148,8 @@ public static clickAttack(battleStore = useBattleStore(), gameStore = useGameSto
     const selectedBall = pokeballs.pokeballs[pokeBall]
     const pokeballBonus = selectedBall.calculateCatchProbability(enemyPokemon.health)
     const statusBonus = enemyPokemon.status ? 10 : 0 // Bonus for status conditions
-    const oakBonus = App.game.oakItems.calculateBonus(OakItemType.Magic_Ball) || 0
-
+    // const oakBonus = App.game.oakItems.calculateBonus(OakItemType.Magic_Ball) || 0
+    const oakBonus = 0
     const totalChance = clipNumber(pokeballBonus + statusBonus + oakBonus, 0, 100)
     return totalChance
   }
@@ -181,14 +176,16 @@ public static clickAttack(battleStore = useBattleStore(), gameStore = useGameSto
     if (Rand.chance(catchRate / 100)) {
       App.game.logbook.newLog(LogBookTypes.CAUGHT, `You caught ${enemyPokemon.shiny ? 'a shiny' : 'a'} ${enemyPokemon.name}!`)
       this.catchPokemon(enemyPokemon)
-      this.triggerCatchAnimation(true, criticalCatch)
-    } else {
+      // this.triggerCatchAnimation(true, criticalCatch)
+    }
+    else {
       if (enemyPokemon.shiny) {
-        App.game.logbook.newLog(LogBookTypes.ESCAPED, `The Shiny ${enemyPokemon.name} escaped!`)
-      } else if (!partyStore.alreadyCaughtPokemon(enemyPokemon.id)) {
-        App.game.logbook.newLog(LogBookTypes.ESCAPED, `The wild ${enemyPokemon.name} escaped!`)
+        // App.game.logbook.newLog(LogBookTypes.ESCAPED, `The Shiny ${enemyPokemon.name} escaped!`)
       }
-      this.triggerCatchAnimation(false)
+      else if (!partyStore.alreadyCaughtPokemon(enemyPokemon.id)) {
+        // App.game.logbook.newLog(LogBookTypes.ESCAPED, `The wild ${enemyPokemon.name} escaped!`)
+      }
+      // this.triggerCatchAnimation(false)
     }
     battleStore.catching = false
     battleStore.catchRateActual = (0)

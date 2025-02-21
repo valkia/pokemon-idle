@@ -1,16 +1,18 @@
-import App from '~/scripts/App'
-import GameHelper from '~/scripts/GameHelper'
-import MapHelper from '~/scripts/worldmap/MapHelper'
-import Routes from '~/scripts/wildBattle/Routes'
 import type { Feature } from '~/modules/DataStore/common/Feature'
-import RouteKillRequirement from '~/scripts/achievements/RouteKillRequirement'
-import { Battle } from '~/scripts/Battle'
 import NotificationConstants from '~/modules/notifications/NotificationConstants'
 import Notifier from '~/modules/notifications/Notifier'
-import { Pokeball } from '~/scripts/pokeballs/Pokeball'
+import RouteKillRequirement from '~/scripts/achievements/RouteKillRequirement'
+import App from '~/scripts/App'
+import { Battle } from '~/scripts/Battle'
 import * as GameConstants from '~/scripts/GameConstants'
-import { usePlayerStore } from '~/stores/player'
+import GameHelper from '~/scripts/GameHelper'
+import { Pokeball } from '~/scripts/pokeballs/Pokeball'
+import Routes from '~/scripts/wildBattle/Routes'
+import MapHelper from '~/scripts/worldmap/MapHelper'
 import { usePartyStore } from '~/stores/party'
+import { usePlayerStore } from '~/stores/player'
+import { useStatisticsStore } from '~/stores/statistics'
+
 export class Pokeballs implements Feature {
   name = 'Pokeballs'
   saveKey = 'pokeballs'
@@ -44,10 +46,10 @@ export class Pokeballs implements Feature {
         if (App.game.gameState == GameConstants.GameState.fighting && player.route) {
           const kills = App.game.statistics.routeKills[GameConstants.Region[player.region]]?.[player.route]?.() || 0
           // between 15 (0 kills) → 0 (4012 kills)
-          return Math.min(15, Math.max(0, Math.pow(16, 1 - Math.pow(Math.max(0, kills - 10), 0.6) / 145) - 1))
+          return Math.min(15, Math.max(0, 16 ** (1 - Math.max(0, kills - 10) ** 0.6 / 145) - 1))
         }
         if (App.game.gameState == GameConstants.GameState.dungeon)
-          return Math.min(15, Math.pow(DungeonRunner.timeLeftPercentage(), 2) / 500)
+          return Math.min(15, DungeonRunner.timeLeftPercentage() ** 2 / 500)
 
         return 0
       }, 1000, 'Increased catch rate on routes with less Pokémon defeated', new RouteKillRequirement(10, GameConstants.Region.johto, 34)),
@@ -55,7 +57,7 @@ export class Pokeballs implements Feature {
         if (App.game.gameState == GameConstants.GameState.fighting && player.route) {
           const kills = App.game.statistics.routeKills[GameConstants.Region[player.region]]?.[player.route]?.() || 0
           // between 0 (0 kills) → 15 (9920 kills)
-          return Math.min(15, Math.max(0, Math.pow(16, Math.pow(kills, 0.6) / 250) - 1))
+          return Math.min(15, Math.max(0, 16 ** (kills ** 0.6 / 250) - 1))
         }
         if (App.game.gameState == GameConstants.GameState.dungeon) {
           const maxBonus = 15
@@ -106,7 +108,7 @@ export class Pokeballs implements Feature {
       new Pokeball(GameConstants.Pokeball.Repeatball, () => {
         const amountCaught = App.game.statistics.pokemonCaptured[Battle.enemyPokemon().id]()
 
-        return Math.min(15, Math.pow(amountCaught, 2) / 5000)
+        return Math.min(15, amountCaught ** 2 / 5000)
       }, 1250, 'Increased catch rate with more catches', new RouteKillRequirement(10, GameConstants.Region.johto, 34)),
 
     ]
@@ -151,12 +153,12 @@ export class Pokeballs implements Feature {
   }
 
   /**
-     * Checks the players preferences to see what pokéball needs to be used on the next throw.
-     * Checks from the players pref to the most basic ball to see if the player has any.
-     * @param id the pokemon we are trying to catch.
-     * @param isShiny if the Pokémon is shiny.
-     * @returns {GameConstants.Pokeball} pokéball to use.
-     */
+   * Checks the players preferences to see what pokéball needs to be used on the next throw.
+   * Checks from the players pref to the most basic ball to see if the player has any.
+   * @param id the pokemon we are trying to catch.
+   * @param isShiny if the Pokémon is shiny.
+   * @returns {GameConstants.Pokeball} pokéball to use.
+   */
   public calculatePokeballToUse(id: number, isShiny: boolean): GameConstants.Pokeball {
     const party = usePartyStore()
     const alreadyCaught = party.alreadyCaughtPokemon(id)
@@ -206,7 +208,8 @@ export class Pokeballs implements Feature {
   }
 
   gainPokeballs(ball: GameConstants.Pokeball, amount: number, purchase = true): void {
-    if(!this.pokeballs[ball] || amount <= 0) return
+    if (!this.pokeballs[ball] || amount <= 0)
+      return
 
     GameHelper.incrementObservable(this.pokeballs[ball].quantity, amount)
     GameHelper.incrementObservable(App.game.statistics.pokeballsObtained[ball], amount)
@@ -217,9 +220,10 @@ export class Pokeballs implements Feature {
   }
 
   public usePokeball(ball: GameConstants.Pokeball): void {
-    if(this.pokeballs[ball].quantity <= 0) return
-    GameHelper.incrementObservable(this.pokeballs[ball].quantity, -1)
-    GameHelper.incrementObservable(App.game.statistics.pokeballsUsed[ball])
+    if (this.pokeballs[ball].quantity <= 0)
+      return
+    // GameHelper.incrementObservable(this.pokeballs[ball].quantity, -1)
+    // GameHelper.incrementObservable(App.game.statistics.pokeballsUsed[ball])
   }
 
   getCatchBonus(ball: GameConstants.Pokeball): number {
@@ -249,10 +253,11 @@ export class Pokeballs implements Feature {
       }
 
       this.notCaughtSelection = this.pokeballs[json.notCaughtSelection] ? json.notCaughtSelection : this.defaults.notCaughtSelection
-      this.notCaughtShinySelection = this.pokeballs[json.notCaughtShinySelection] ? json.notCaughtShinySelection : this.defaults.notCaughtShinySelection 
+      this.notCaughtShinySelection = this.pokeballs[json.notCaughtShinySelection] ? json.notCaughtShinySelection : this.defaults.notCaughtShinySelection
       this.alreadyCaughtSelection = this.pokeballs[json.alreadyCaughtSelection] ? json.alreadyCaughtSelection : this.defaults.alreadyCaughtSelection
       this.alreadyCaughtShinySelection = this.pokeballs[json.alreadyCaughtShinySelection] ? json.alreadyCaughtShinySelection : this.defaults.alreadyCaughtShinySelection
-    } catch (e) {
+    }
+    catch (e) {
       console.error('Error loading pokeball data:', e)
       this.resetToDefaults()
     }

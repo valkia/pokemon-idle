@@ -1,13 +1,16 @@
 <script setup lang="ts">
+import lockIcon from '~/assets/images/breeding/lock.svg'
+import bossIcon from '~/assets/images/dungeons/boss.svg'
+import pokeBallShinyIcon from '~/assets/images/pokeball/Pokeball-shiny.svg'
+import pokeBallIcon from '~/assets/images/pokeball/Pokeball.svg'
+import { DungeonRunner } from '~/scripts/dungeons/DungeonRunner'
 import * as GameConstants from '~/scripts/GameConstants'
+import { Gym } from '~/scripts/gym/Gym'
+import { DungeonTown } from '~/scripts/towns/Town'
 import { useGameStore } from '~/stores/game'
 import { usePlayerStore } from '~/stores/player'
-import { DungeonTown } from '~/scripts/towns/Town'
-import { Gym } from '~/scripts/gym/Gym'
-import { useStatisticsStore } from '~/stores/statistics'
-import { DungeonRunner } from '~/scripts/dungeons/DungeonRunner'
 
-import lockIcon from '@/assets/images/breeding/lock.svg'
+import { useStatisticsStore } from '~/stores/statistics'
 
 const statistics = useStatisticsStore()
 const gameState = computed(() => {
@@ -15,7 +18,7 @@ const gameState = computed(() => {
 })
 const player = usePlayerStore()
 const backgroundImage = computed(() => {
-  return { backgroundImage: `url('@/assets/images/towns/${player.town?.name.replaceAll("'", "'")}.png')` }
+  return { backgroundImage: `url('~/assets/images/towns/${player.town?.name.replaceAll('\'', '\'')}.png')` }
 })
 </script>
 
@@ -29,7 +32,7 @@ const backgroundImage = computed(() => {
     <div class="row justify-content-center no-gutters">
       <div class="col no-gutters">
         <button
-          type="button" class="btn btn-outline-info" style="float: right;"
+          type="button" class="btn-outline-info btn" style="float: right;"
           data-bind="visible: player.town() instanceof DungeonTown && !QuestLineHelper.isQuestLineCompleted('Tutorial Quests'), tooltip: { title: 'Capture Pokémon to gain Dungeon Tokens in order to battle dungeons.', trigger: 'hover', placement:'left' }"
         >
           ?
@@ -52,19 +55,19 @@ const backgroundImage = computed(() => {
               </div>
             </div>
             <!-- /ko -->
-            <!--If all Pokémon in the dungeon are caught-->
+            <!-- If all Pokémon in the dungeon are caught -->
             <img
               data-bind="if: (!DungeonRunner.dungeonCompleted(player.town().dungeon, true) && DungeonRunner.dungeonCompleted(player.town().dungeon, false))"
               title="You have captured all Pokémon in this dungeon!" class="pokeball-smallest"
-              src="@/assets/images/pokeball/Pokeball.svg"
+              :src="pokeBallIcon"
             >
 
-            <!--If all Pokémon in the dungeon are caught shiny-->
+            <!-- If all Pokémon in the dungeon are caught shiny -->
             <img
               data-bind="if: DungeonRunner.dungeonCompleted(player.town().dungeon, true)"
               title="You have captured all Pokémon shiny in this dungeon!"
               class="pokeball-smallest"
-              src="@/assets/images/pokeball/Pokeball-shiny.svg"
+              :src="pokeBallShinyIcon"
             >
           </div>
         </h2>
@@ -76,7 +79,7 @@ const backgroundImage = computed(() => {
           <!--     :class="player.town.dungeon && App.game.wallet.currencies[GameConstants.Currency.dungeonToken]() >= player.town.dungeon.tokenCost ? 'btn btn-success p-0' : 'btn btn-secondary p-0'"     -->
           <button
             v-if="player.town instanceof DungeonTown"
-            class="btn btn-secondary p-0"
+            class="btn-secondary p-0 btn"
             @click="DungeonRunner.initializeDungeon(player.town.dungeon)"
           >
             Start<br>
@@ -92,9 +95,9 @@ const backgroundImage = computed(() => {
           <div
             v-for="data in player.town.content"
             :key="data.id"
-            class="btn-group btn-block "
-            text-left
-            mt-1
+            class="btn-group btn-block"
+
+            mt-1 text-left
           >
             <button
               v-if="data.isVisible()"
@@ -108,7 +111,7 @@ const backgroundImage = computed(() => {
             <!-- ko if: $data instanceof Gym -->
             <button
               v-if="data instanceof Gym && data.isUnlocked() && statistics.getGymsDefeated(GameConstants.getGymIndex(data.town)) >= 100"
-              class="btn btn-info p-0 btn-gym-auto-restart"
+              class="btn-info btn-gym-auto-restart p-0 btn"
               tooltip=" { html: true, title: `Auto restart Gym fight<br/>Cost: <img src='assets/images/currency/money.svg' height='18px'></button> ${($data.moneyReward * 2).toLocaleString('en-US')} per battle<br/><br/><i class='text-warning'>You will not receive Pokédollars for clearing the gym</i>`, trigger: 'hover', placement:'right' }"
               @click="GymRunner.startGym(data, true)"
             >
@@ -123,7 +126,7 @@ const backgroundImage = computed(() => {
         <div v-for="data in player.town.npcs" class="list-group" mt-1 text-right>
           <!-- ko if: $data.isVisible() -->
           <button
-            class="btn btn-info"
+            class="btn-info btn"
             @click="data.openDialog"
           >
             {{ data.name }}
@@ -135,13 +138,13 @@ const backgroundImage = computed(() => {
     <div style="flex-grow: 1;" />
     <div v-if="(player.town.dungeon && player.town instanceof DungeonTown)">
       <div id="dungeonPokemonList" class="card">
-        <!--Display all available Pokémon in this dungeon-->
+        <!-- Display all available Pokémon in this dungeon -->
         <ul class="list-inline">
           <!-- ko foreach: player.town().dungeon.normalEncounterList -->
           <li v-for="$data in player.town.dungeon.normalEncounterList" class="list-inline-item">
             <img
               class="dungeon-pokemon-preview"
-              :class="$data.hidden?'dungeon-pokemon-locked':''"
+              :class="$data.hidden ? 'dungeon-pokemon-locked' : ''"
               :src="$data.image" data-bind="attr:{ src: $data.image },
             css: { 'dungeon-pokemon-locked': $data.hidden }"
             >
@@ -160,16 +163,16 @@ const backgroundImage = computed(() => {
             >
           </li>
           <!-- /ko -->
-          <!--Display all available bosses in this dungeon-->
+          <!-- Display all available bosses in this dungeon -->
           <!-- ko foreach: player.town().dungeon.bossEncounterList -->
           <li
             v-for="$data in player.town.dungeon.bossEncounterList" class="list-inline-item"
             data-bind="hidden: $data.hide"
           >
-            <img class="boss" src="@/assets/images/dungeons/boss.svg">
+            <img class="boss" :src="bossIcon">
             <img
               class="dungeon-pokemon-preview"
-              :class="$data.hidden?'dungeon-pokemon-locked':''"
+              :class="$data.hidden ? 'dungeon-pokemon-locked' : ''"
               :src="$data.image" data-bind="attr:{ src: $data.image },
             css: { 'dungeon-pokemon-locked': $data.hidden }"
             >

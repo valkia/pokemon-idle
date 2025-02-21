@@ -1,9 +1,11 @@
 import type Requirement from '~/scripts/achievements/Requirement'
-import MultiRequirement from '~/scripts/achievements/MultiRequirement'
 import type * as GameConstants from '~/scripts/GameConstants'
-import { usePlayerStore } from '~/stores/player'
+import MultiRequirement from '~/scripts/achievements/MultiRequirement'
 import { Battle } from '~/scripts/Battle'
 import MapHelper from '~/scripts/worldmap/MapHelper'
+import { useBattleStore } from '~/stores/battle'
+import { usePlayerStore } from '~/stores/player'
+import { usePartyStore } from '../../stores/party'
 
 export enum PokeBallType {
   None = -1,
@@ -19,7 +21,7 @@ export enum PokeBallType {
   Diveball = 9,
   Lureball = 10,
   Nestball = 11,
-  Repeatball = 12
+  Repeatball = 12,
 }
 
 export class Pokeball {
@@ -35,7 +37,7 @@ export class Pokeball {
     public unlockRequirement: Requirement | MultiRequirement = new MultiRequirement(),
     quantity = 0,
     price = 0,
-    baseCatchRate = 0
+    baseCatchRate = 0,
   ) {
     this.quantity = quantity
     this.price = price
@@ -48,23 +50,24 @@ export class Pokeball {
 
   public calculateCatchProbability(enemyHealth: number): number {
     const player = usePlayerStore()
-    const healthModifier = 1 - (enemyHealth / Battle.enemyPokemon().maxHealth())
+    const healthModifier = 1 - (enemyHealth / useBattleStore().enemyPokemon.maxHealth)
     let catchRate = this.baseCatchRate + this.catchBonus()
 
     // Apply special effects based on ball type
     switch (this.type) {
       case PokeBallType.Quickball:
-        if (Battle.turns <= 3) catchRate *= 2
+        if (Battle.turns <= 3)
+          catchRate *= 2
         break
       case PokeBallType.Timerball:
         catchRate *= Math.min(4, 1 + Battle.turns / 10)
         break
       case PokeBallType.Duskball:
-        if (MapHelper.getCurrentEnvironment() === 'Cave' || new Date().getHours() >= 18 || new Date().getHours() < 6) 
+        if (MapHelper.getCurrentEnvironment() === 'Cave' || new Date().getHours() >= 18 || new Date().getHours() < 6)
           catchRate *= 2
         break
       case PokeBallType.Nestball:
-        const enemyLevel = Battle.enemyPokemon().level
+        const enemyLevel = useBattleStore().enemyPokemon.level
         if (enemyLevel <= 30)
           catchRate *= (40 - enemyLevel) / 10
         break
@@ -79,7 +82,7 @@ export class Pokeball {
 
   public isCriticalCatch(): boolean {
     const player = usePlayerStore()
-    const critRate = Math.min(player.caughtPokemonList.length / 600, 0.1)
+    const critRate = Math.min(usePartyStore().caughtPokemon.length / 600, 0.1)
     return Math.random() < critRate
   }
 
