@@ -7,13 +7,15 @@ import { Gym } from '~/scripts/gym/Gym'
 import { useStatisticsStore } from '~/stores/statistics'
 import { DungeonRunner } from '~/scripts/dungeons/DungeonRunner'
 
+import lockIcon from '@/assets/images/breeding/lock.svg'
+
 const statistics = useStatisticsStore()
 const gameState = computed(() => {
   return useGameStore().gameState
 })
 const player = usePlayerStore()
 const backgroundImage = computed(() => {
-  return { backgroundImage: `url('/src/assets/images/towns/${player.town?.name.replace(/'/, '\\\'')}.png')` }
+  return { backgroundImage: `url('@/assets/images/towns/${player.town?.name.replaceAll("'", "'")}.png')` }
 })
 </script>
 
@@ -54,7 +56,7 @@ const backgroundImage = computed(() => {
             <img
               data-bind="if: (!DungeonRunner.dungeonCompleted(player.town().dungeon, true) && DungeonRunner.dungeonCompleted(player.town().dungeon, false))"
               title="You have captured all Pokémon in this dungeon!" class="pokeball-smallest"
-              src="/src/assets/images/pokeball/Pokeball.svg"
+              src="@/assets/images/pokeball/Pokeball.svg"
             >
 
             <!--If all Pokémon in the dungeon are caught shiny-->
@@ -62,7 +64,7 @@ const backgroundImage = computed(() => {
               data-bind="if: DungeonRunner.dungeonCompleted(player.town().dungeon, true)"
               title="You have captured all Pokémon shiny in this dungeon!"
               class="pokeball-smallest"
-              src="/src/assets/images/pokeball/Pokeball-shiny.svg"
+              src="@/assets/images/pokeball/Pokeball-shiny.svg"
             >
           </div>
         </h2>
@@ -146,7 +148,7 @@ const backgroundImage = computed(() => {
             <sup v-if="$data.shiny" class="shiny" data-bind="visible: $data.shiny">✨</sup>
             <img
               v-if="$data.lock" class="lock"
-              src="/src/assets/images/breeding/lock.svg"
+              :src="lockIcon"
               data-bind="
             hidden: !$data.lock,
             tooltip: {
@@ -164,7 +166,7 @@ const backgroundImage = computed(() => {
             v-for="$data in player.town.dungeon.bossEncounterList" class="list-inline-item"
             data-bind="hidden: $data.hide"
           >
-            <img class="boss" src="/src/assets/images/dungeons/boss.svg">
+            <img class="boss" src="@/assets/images/dungeons/boss.svg">
             <img
               class="dungeon-pokemon-preview"
               :class="$data.hidden?'dungeon-pokemon-locked':''"
@@ -178,7 +180,7 @@ const backgroundImage = computed(() => {
             >✨</sup>
             <img
               v-if="$data.lock" class="lock"
-              src="/src/assets/images/breeding/lock.svg"
+              :src="lockIcon"
               data-bind="hidden: !$data.lock,
             tooltip: {
                 title: 'Try talking to the locals. Sometimes they know more than you think.',
