@@ -27,6 +27,8 @@ declare module 'vue' {
     NpcModal: typeof import('./components/NpcModal.vue')['default']
     PartyModal: typeof import('./components/PartyModal.vue')['default']
     PickStarterTutorialModal: typeof import('./components/PickStarterTutorialModal.vue')['default']
+    PokeBallSelector: typeof import('./components/battle/PokeBallSelector.vue')['default']
+    PokeBallShop: typeof import('./components/shop/PokeBallShop.vue')['default']
     QuestDisplay: typeof import('./components/QuestDisplay.vue')['default']
     QuestModal: typeof import('./components/QuestModal.vue')['default']
     README: typeof import('./components/README.md')['default']

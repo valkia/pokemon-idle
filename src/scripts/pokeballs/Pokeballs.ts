@@ -33,6 +33,7 @@ export class Pokeballs implements Feature {
 
   constructor() {
     const player = usePlayerStore()
+    const stats = useStatisticsStore()
     this.pokeballs = [
       new Pokeball(GameConstants.Pokeball.Pokeball, () => 0, 1250, 'A standard Pokéball', undefined, 25),
       new Pokeball(GameConstants.Pokeball.Greatball, () => 5, 1000, '+5% chance to catch'),
@@ -117,6 +118,14 @@ export class Pokeballs implements Feature {
     this.selectedSelection = (this._alreadyCaughtSelection)
   }
 
+  resetToDefaults(): void {
+    this._notCaughtSelection = this.defaults.notCaughtSelection
+    this._notCaughtShinySelection = this.defaults.notCaughtShinySelection
+    this._alreadyCaughtSelection = this.defaults.alreadyCaughtSelection
+    this._alreadyCaughtShinySelection = this.defaults.alreadyCaughtShinySelection
+    this.pokeballs.forEach(ball => ball.quantity = 0)
+  }
+
   initialize(): void {
     ([
       this._alreadyCaughtSelection,
@@ -197,15 +206,20 @@ export class Pokeballs implements Feature {
   }
 
   gainPokeballs(ball: GameConstants.Pokeball, amount: number, purchase = true): void {
+    if(!this.pokeballs[ball] || amount <= 0) return
+
     GameHelper.incrementObservable(this.pokeballs[ball].quantity, amount)
     GameHelper.incrementObservable(App.game.statistics.pokeballsObtained[ball], amount)
-    if (purchase === true)
+    if (purchase === true) {
       GameHelper.incrementObservable(App.game.statistics.pokeballsBought[ball], amount)
+      App.game.logbook.newLog(LogBookTypes.ITEM, `Purchased ${amount} ${this.pokeballs[ball].name}`)
+    }
   }
 
-  usePokeball(ball: GameConstants.Pokeball): void {
-    // GameHelper.incrementObservable(this.pokeballs[ball].quantity, -1)
-    // GameHelper.incrementObservable(App.game.statistics.pokeballsUsed[ball])
+  public usePokeball(ball: GameConstants.Pokeball): void {
+    if(this.pokeballs[ball].quantity <= 0) return
+    GameHelper.incrementObservable(this.pokeballs[ball].quantity, -1)
+    GameHelper.incrementObservable(App.game.statistics.pokeballsUsed[ball])
   }
 
   getCatchBonus(ball: GameConstants.Pokeball): number {
@@ -225,13 +239,23 @@ export class Pokeballs implements Feature {
     if (json == null)
       return
 
-    if (json.pokeballs != null)
-      json.pokeballs.map((amt: number, type: number) => this.pokeballs[type].quantity(amt))
+    try {
+      if (json.pokeballs != null) {
+        json.pokeballs.forEach((amt: number, type: number) => {
+          if (this.pokeballs[type]) {
+            this.pokeballs[type].quantity = Math.max(0, amt)
+          }
+        })
+      }
 
-    this.notCaughtSelection = json.notCaughtSelection ?? this.defaults.notCaughtSelection
-    this.notCaughtShinySelection = json.notCaughtShinySelection ?? this.defaults.notCaughtShinySelection
-    this.alreadyCaughtSelection = json.alreadyCaughtSelection ?? this.defaults.alreadyCaughtSelection
-    this.alreadyCaughtShinySelection = json.alreadyCaughtShinySelection ?? this.defaults.alreadyCaughtShinySelection
+      this.notCaughtSelection = this.pokeballs[json.notCaughtSelection] ? json.notCaughtSelection : this.defaults.notCaughtSelection
+      this.notCaughtShinySelection = this.pokeballs[json.notCaughtShinySelection] ? json.notCaughtShinySelection : this.defaults.notCaughtShinySelection 
+      this.alreadyCaughtSelection = this.pokeballs[json.alreadyCaughtSelection] ? json.alreadyCaughtSelection : this.defaults.alreadyCaughtSelection
+      this.alreadyCaughtShinySelection = this.pokeballs[json.alreadyCaughtShinySelection] ? json.alreadyCaughtShinySelection : this.defaults.alreadyCaughtShinySelection
+    } catch (e) {
+      console.error('Error loading pokeball data:', e)
+      this.resetToDefaults()
+    }
   }
 
   toJSON(): Record<string, any> {
