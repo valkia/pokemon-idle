@@ -2,16 +2,17 @@
 import { computed, ref } from 'vue'
 import type { Ref } from 'vue-demi'
 import type { BattlePokemon } from '~/scripts/pokemons/BattlePokemon'
-import * as GameConstants from '~/scripts/GameConstants'
+import { GameState, Pokeball } from '~/scripts/GameConstants'
 import App from '~/scripts/App'
 import { usePlayerStore } from '~/stores/player'
+import { useGameStore } from '~/stores/game'
+import { useBattleStore } from '~/stores/battle'
 import GameHelper from '~/scripts/GameHelper'
 import { PokemonFactory } from '~/scripts/pokemons/PokemonFactory'
 import MapHelper from '~/scripts/worldmap/MapHelper'
 import Rand from '~/utilities/Rand'
 import { LogBookTypes } from '~/modules/logbook/LogBookTypes'
 import OakItemType from '~/modules/enums/OakItemType'
-import { useBattleStore } from '~/stores/battle'
 import { usePartyStore } from '~/stores/party'
 import { useStatisticsStore } from '~/stores/statistics'
 import { Pokeballs } from '~/scripts/pokeballs/Pokeballs'
@@ -21,12 +22,12 @@ import { useDungeonStore } from '~/stores/dungeon'
  */
 export class Battle {
   static counter = 0
-  static catching = ref(false)
-  static catchRateActual = ref(0)
-  static pokeball = ref(GameConstants.Pokeball.Pokeball)
+  static catching = ref<boolean>(false)
+  static catchRateActual = ref<number>(0)
+  static pokeball = ref<Pokeball>(Pokeball.Pokeball)
   static lastPokemonAttack = Date.now()
   static lastClickAttack = Date.now()
-  static route
+  static route: number
 
   /**
      * Probably not needed right now, but might be if we add more logic to a gameTick.
@@ -60,24 +61,19 @@ export class Battle {
   /**
      * Attacks with clicks and checks if the enemy is defeated.
      */
-public static clickAttack(battleStore = useBattleStore()) {
+public static clickAttack(battleStore = useBattleStore(), gameStore = useGameStore()) {
     const player = usePlayerStore()
-    const gameStore = useGameStore()
-    
-    // 设置游戏状态为战斗中
-    gameStore.gameState = GameState.fighting
-    
-    // 调试日志
-    console.log('Current game state:', gameStore.gameState)
-    console.log('Enemy pokemon:', battleStore.enemyPokemon)
 
-    // 移除过于严格的点击限制
-    /*const now = Date.now()
-    if (this.lastClickAttack > now - 50) 
-      return
-    this.lastClickAttack = now*/
+    // Skip if already fighting
+    if (gameStore.gameState === GameState.fighting) {
+      // More lenient click limit
+      const now = Date.now() 
+      if (this.lastClickAttack > now - 10)
+        return
+      this.lastClickAttack = now
+    }
 
-    const enemyPokemon = battleStore.enemyPokemon
+    const enemyPokemon = battleStore.enemyPokemon 
     if (!enemyPokemon?.isAlive())
       return
 
@@ -85,7 +81,13 @@ public static clickAttack(battleStore = useBattleStore()) {
     enemyPokemon.damage(partyStore.calculateClickAttack(true))
     if (!enemyPokemon.isAlive())
       this.defeatPokemon()
-}
+
+    // Log battle state for debugging
+    console.debug('Battle status:', {
+      enemyPokemon,
+      damage: partyStore.calculateClickAttack(true)
+    })
+  }
 
   /**
      * Award the player with money and exp, and throw a Pokéball if applicable
@@ -145,18 +147,18 @@ public static clickAttack(battleStore = useBattleStore()) {
     } */
   }
 
-  protected static calculateActualCatchRate(enemyPokemon: BattlePokemon, pokeBall: GameConstants.Pokeball) {
+  protected static calculateActualCatchRate(enemyPokemon: BattlePokemon, pokeBall: Pokeball): number {
     const pokeballBonus = new Pokeballs().getCatchBonus(pokeBall)
     // const oakBonus = App.game.oakItems.calculateBonus(OakItemType.Magic_Ball)
     const oakBonus = 0
-    const totalChance = GameConstants.clipNumber(enemyPokemon.catchRate + pokeballBonus + oakBonus, 0, 100)
+    const totalChance = clipNumber(enemyPokemon.catchRate + pokeballBonus + oakBonus, 0, 100)
     return totalChance
   }
 
-  protected static prepareCatch(enemyPokemon: BattlePokemon, pokeBall: GameConstants.Pokeball, battleStore: any = useBattleStore()) {
-    this.pokeball.value = (pokeBall)
+  protected static prepareCatch(enemyPokemon: BattlePokemon, pokeBall: Pokeball, battleStore = useBattleStore()): void {
+    this.pokeball.value = pokeBall
     battleStore.catching = true
-    battleStore.catchRateActual = (this.calculateActualCatchRate(enemyPokemon, pokeBall))
+    battleStore.catchRateActual = this.calculateActualCatchRate(enemyPokemon, pokeBall)
     new Pokeballs().usePokeball(pokeBall)
   }
 

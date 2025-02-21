@@ -236,7 +236,7 @@ export const usePartyStore = defineStore('party', () => {
   }
 
   function alreadyCaughtPokemonByName(name: PokemonNameType, shiny = false) {
-    return alreadyCaughtPokemon(PokemonHelper.getPokemonByName(name).id, shiny)
+    return alreadyCaughtPokemon(PokemonHelper.getPokemonByName(name).id, shiny) 
   }
 
   function getPokemonByName(name: PokemonNameType): PartyPokemon | undefined {
@@ -247,21 +247,23 @@ export const usePartyStore = defineStore('party', () => {
     const pokemon = getPokemon(id)
     if (pokemon)
       return (!shiny || pokemon.shiny)
-
     return false
   }
 
-  function calculatePokemonAttack(type1: PokemonType = PokemonType.None, type2: PokemonType = PokemonType.None, ignoreRegionMultiplier = false, region: GameConstants.Region = player.region, includeBreeding = false, useBaseAttack = false, overrideWeather?: WeatherType, ignoreLevel = false, includeFlute = true): number {
-    let attack = 0
-    for (const pokemon of caughtPokemon.value)
-      attack += calculateOnePokemonAttack(pokemon, type1, type2, region, ignoreRegionMultiplier, includeBreeding, useBaseAttack, overrideWeather, ignoreLevel, includeFlute)
-
-    const bonus = new Multiplier().getBonus('shiny')
-
-    return Math.round(attack * bonus)
+  function calculatePokemonAttack(type1: PokemonType = PokemonType.None, type2: PokemonType = PokemonType.None): number {
+    const debugValue = 100
+    return debugValue
   }
 
-  // ...其他actions方法...
+  function calculateClickAttack(useItem = false): number {
+    // Base power calculation with shiny pokemon bonus  
+    const clickAttack = Math.pow(caughtPokemon.value.length + (caughtPokemon.value.filter(p => p.shiny).length / 2) + 1, 1.4)
+
+    // Apply multiplier bonus
+    const bonus = new Multiplier().getBonus('clickAttack', useItem)
+
+    return Math.floor(clickAttack * bonus) 
+  }
 
   return {
     caughtPokemon,
@@ -273,8 +275,9 @@ export const usePartyStore = defineStore('party', () => {
     getPokemonByName,
     alreadyCaughtPokemon,
     calculatePokemonAttack,
-    // ...导出其他state, getters, actions...
+    calculateClickAttack,
   }
+    // ...导出其他state, getters, actions...
 }, {
   persist: {
     serializer: {
