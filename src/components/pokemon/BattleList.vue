@@ -1,7 +1,7 @@
 <template>
   <div class="battle-pokemon-list">
     <div v-for="(pokemon,index) in pokemonList">
-      <div flex justify-center items-center>
+<div flex justify-center items-center @click="handleBattleClick(pokemon)">
         <img :src="pokemonImgUrl(pokemon)" class="avatar">
         <div>{{ t(`pokemon.${pokemon.name}`) }}</div>
         <div ml="2">
@@ -21,7 +21,9 @@ import type { BattlePokemon } from '~/scripts/pokemons/BattlePokemon'
 import { Battle } from '~/scripts/Battle'
 import { useBattleStore } from '~/stores/battle'
 import { usePartyStore } from '~/stores/party'
+import { useGameStore } from '~/stores/game'
 import type { PartyPokemon } from '~/scripts/party/PartyPokemon'
+import type { GameState } from '~/scripts/GameConstants'
 const { t, locale } = useI18n()
 console.log('locale', locale.value)
 const pokemonList = computed(() => {
@@ -37,6 +39,21 @@ const canRemoveBattle = computed(() => {
 const removeBattle = (index: number) => {
   console.log('removeBattle', index)
   usePartyStore().battlePokemon.splice(index, 1)
+}
+
+const handleBattleClick = (pokemon: PartyPokemon) => {
+  console.debug('Battle clicked:', { pokemon })
+  const battleStore = useBattleStore() 
+  const gameStore = useGameStore()
+
+  // Set battle state and start attack
+  gameStore.gameState = GameState.fighting
+  Battle.clickAttack(battleStore, gameStore)
+
+  console.debug('Battle state:', {
+    gameState: gameStore.gameState,
+    battleStore: battleStore.enemyPokemon
+  })
 }
 </script>
 

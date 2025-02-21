@@ -7,3 +7,54 @@ dist-ssr
 node_modules
 .idea/
 *.log
+
+# Clacky configuration
+.1024*
+!.1024
+.breakpoints
+
+# Vue.js and Vite
+.vite/
+*.vue.js
+*.vue.d.ts
+auto-imports.d.ts
+components.d.ts
+
+# TypeScript
+*.tsbuildinfo
+.env.d.ts
+.history/
+coverage/
+
+# Dependencies
+.pnpm-store/
+.pnpm-debug.log*
+.node_repl_history
+.npm/
+.yarn/
+.yarnrc
+.pnp.*
+
+# Build output
+dist/
+public/dist/
+.output/
+.nuxt/
+.cache/
+.temp/
+
+# Editor and IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+
+# System files
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

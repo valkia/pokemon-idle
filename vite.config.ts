@@ -1,11 +1,19 @@
-import path from 'node:path'
-import Vue from '@vitejs/plugin-vue'
-import Unocss from 'unocss/vite'
-import AutoImport from 'unplugin-auto-import/vite'
-import Components from 'unplugin-vue-components/vite'
-import { VueRouterAutoImports } from 'unplugin-vue-router'
-import VueRouter from 'unplugin-vue-router/vite'
+import path from 'path'
 import { defineConfig } from 'vite'
+import Vue from '@vitejs/plugin-vue'
+import Pages from 'vite-plugin-pages'
+import Layouts from 'vite-plugin-vue-layouts'
+import Components from 'unplugin-vue-components/vite'
+import AutoImport from 'unplugin-auto-import/vite'
+import Markdown from 'vite-plugin-md'
+import { VitePWA } from 'vite-plugin-pwa'
+import VueI18n from '@intlify/vite-plugin-vue-i18n'
+import Inspect from 'vite-plugin-inspect'
+import Prism from 'markdown-it-prism'
+import LinkAttributes from 'markdown-it-link-attributes'
+import Unocss from 'unocss/vite'
+
+const markdownWrapperClasses = 'prose prose-sm m-auto text-left'
 
 export default defineConfig({
   resolve: {
@@ -15,9 +23,17 @@ export default defineConfig({
     },
   },
   plugins: [
-    // https://github.com/posva/unplugin-vue-router
-    VueRouter({}),
-    Vue(),
+    Vue({
+      include: [/\.vue$/, /\.md$/],
+    }),
+
+    // https://github.com/hannoeru/vite-plugin-pages
+    Pages({
+      extensions: ['vue', 'md'],
+    }),
+
+    // https://github.com/JohnCampionJr/vite-plugin-vue-layouts
+    Layouts(),
 
     // https://github.com/antfu/unplugin-auto-import
     AutoImport({
@@ -27,7 +43,6 @@ export default defineConfig({
         'vue-i18n',
         '@vueuse/head',
         '@vueuse/core',
-        VueRouterAutoImports,
       ],
       dts: 'src/auto-imports.d.ts',
     }),
@@ -48,7 +63,25 @@ export default defineConfig({
     // https://github.com/antfu/vite-plugin-md
     // Don't need this? Try vitesse-lite: https://github.com/antfu/vitesse-lite
 
+    // https://github.com/intlify/bundle-tools/tree/main/packages/vite-plugin-vue-i18n
+    VueI18n({
+      runtimeOnly: true,
+      compositionOnly: true,
+      include: [path.resolve(__dirname, 'locales/**')],
+    }),
+
+    // https://github.com/antfu/vite-plugin-inspect
+    Inspect({
+      // change this to enable inspect for debugging
+      enabled: false,
+    }),
   ],
+
+  // https://github.com/antfu/vite-ssg
+  ssgOptions: {
+    script: 'async',
+    formatting: 'minify',
+  },
 
   optimizeDeps: {
     include: [
