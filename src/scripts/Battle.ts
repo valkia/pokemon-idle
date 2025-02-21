@@ -101,24 +101,25 @@ public static clickAttack(battleStore = useBattleStore(), gameStore = useGameSto
     const statistics = useStatisticsStore()
     statistics.setRouteKills(player.region, Battle.route)
 
-    // App.game.breeding.progressEggsBattle(Battle.route, player.region)
-    const isShiny: boolean = enemyPokemon.shiny
-    const pokeBall: GameConstants.Pokeball = new Pokeballs().calculatePokeballToUse(enemyPokemon.id, isShiny)
-    console.log('pokeBall', pokeBall)
-    if (pokeBall !== GameConstants.Pokeball.None) {
-      this.prepareCatch(enemyPokemon, pokeBall)
-      setTimeout(
-        () => {
-          this.attemptCatch(enemyPokemon)
-          if (Battle.route != 0)
-            this.generateNewEnemy()
-        },
-        GameConstants.debug ? 200 : new Pokeballs().calculateCatchTime(pokeBall),
-      )
+    // Handle auto-catching defeated Pokemon
+    if (enemyPokemon?.health <= 0 || enemyPokemon?.isAlive() === false) {
+      const isShiny: boolean = enemyPokemon.shiny
+      const pokeBall: GameConstants.Pokeball = new Pokeballs().calculatePokeballToUse(enemyPokemon.id, isShiny)
+
+      if (pokeBall !== GameConstants.Pokeball.None) {
+        this.prepareCatch(enemyPokemon, pokeBall)
+        setTimeout(
+          () => {
+            this.attemptCatch(enemyPokemon)
+            if (Battle.route != 0)
+              this.generateNewEnemy()
+          },
+          GameConstants.debug ? 200 : new Pokeballs().calculateCatchTime(pokeBall),
+        )
+        return
+      }
     }
-    else {
-      this.generateNewEnemy()
-    }
+    this.generateNewEnemy()
     this.gainItem()
     // player.lowerItemMultipliers(MultiplierDecreaser.Battle)
   }
@@ -148,10 +149,13 @@ public static clickAttack(battleStore = useBattleStore(), gameStore = useGameSto
   }
 
   protected static calculateActualCatchRate(enemyPokemon: BattlePokemon, pokeBall: Pokeball): number {
-    const pokeballBonus = new Pokeballs().getCatchBonus(pokeBall)
-    // const oakBonus = App.game.oakItems.calculateBonus(OakItemType.Magic_Ball)
-    const oakBonus = 0
-    const totalChance = clipNumber(enemyPokemon.catchRate + pokeballBonus + oakBonus, 0, 100)
+    const pokeballs = new Pokeballs()
+    const selectedBall = pokeballs.pokeballs[pokeBall]
+    const pokeballBonus = selectedBall.calculateCatchProbability(enemyPokemon.health)
+    const statusBonus = enemyPokemon.status ? 10 : 0 // Bonus for status conditions
+    const oakBonus = App.game.oakItems.calculateBonus(OakItemType.Magic_Ball) || 0
+
+    const totalChance = clipNumber(pokeballBonus + statusBonus + oakBonus, 0, 100)
     return totalChance
   }
 
@@ -163,22 +167,28 @@ public static clickAttack(battleStore = useBattleStore(), gameStore = useGameSto
   }
 
   protected static attemptCatch(enemyPokemon: BattlePokemon, battleStore: any = useBattleStore()) {
-    console.log('attemptCatch', battleStore)
     const partyStore = usePartyStore()
+    const pokeballs = new Pokeballs()
+
     if (enemyPokemon == null) {
       battleStore.catching = false
       return
     }
-    if (Rand.chance(battleStore.catchRateActual / 100)) { // Caught
+
+    const criticalCatch = pokeballs.pokeballs[this.pokeball.value].isCriticalCatch()
+    const catchRate = criticalCatch ? 100 : battleStore.catchRateActual
+
+    if (Rand.chance(catchRate / 100)) {
+      App.game.logbook.newLog(LogBookTypes.CAUGHT, `You caught ${enemyPokemon.shiny ? 'a shiny' : 'a'} ${enemyPokemon.name}!`)
       this.catchPokemon(enemyPokemon)
-    }
-    else if (enemyPokemon.shiny) { // Failed to catch, Shiny
-      // App.game.logbook.newLog(LogBookTypes.ESCAPED, `The Shiny ${enemyPokemon.name} escaped!`)
-      console.log(`The Shiny ${enemyPokemon.name} escaped!`)
-    }
-    else if (!partyStore.alreadyCaughtPokemon(enemyPokemon.id)) { // Failed to catch, Uncaught
-      // App.game.logbook.newLog(LogBookTypes.ESCAPED, `The wild ${enemyPokemon.name} escaped!`)
-      console.log(`The wild ${enemyPokemon.name} escaped!`)
+      this.triggerCatchAnimation(true, criticalCatch)
+    } else {
+      if (enemyPokemon.shiny) {
+        App.game.logbook.newLog(LogBookTypes.ESCAPED, `The Shiny ${enemyPokemon.name} escaped!`)
+      } else if (!partyStore.alreadyCaughtPokemon(enemyPokemon.id)) {
+        App.game.logbook.newLog(LogBookTypes.ESCAPED, `The wild ${enemyPokemon.name} escaped!`)
+      }
+      this.triggerCatchAnimation(false)
     }
     battleStore.catching = false
     battleStore.catchRateActual = (0)

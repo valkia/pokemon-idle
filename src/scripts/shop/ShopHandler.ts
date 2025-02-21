@@ -1,7 +1,10 @@
 import { Shop } from '~/scripts/shop/Shop'
 import { usePlayerStore } from '~/stores/player'
+import { useWalletStore } from '~/stores/wallet'
+import { Pokeballs } from '~/scripts/pokeballs/Pokeballs'
 import Amount from '~/modules/wallet/Amount'
 import GameHelper from '~/scripts/GameHelper'
+import App from '~/scripts/App'
 
 export class ShopHandler {
   static shopObservable: Shop
@@ -11,13 +14,16 @@ export class ShopHandler {
   public static showShop(shop: Shop) {
     this.setSelected(0)
     this.shopObservable = new Shop([])
-    // this.resetAmount()
     this.shopObservable = (shop)
     const player = usePlayerStore()
-    // 根据道具打折
-    /* shop.items.forEach((item) => {
-      item.price(Math.round(item.basePrice * (player.itemMultipliers[item.saveName] || 1)))
-    }) */
+    const wallet = useWalletStore()
+
+    // Apply discounts based on player's multipliers
+    shop.items.forEach((item) => {
+      if (item.basePrice && player.itemMultipliers[item.saveName]) {
+        item.price = Math.round(item.basePrice * player.itemMultipliers[item.saveName])
+      }
+    })
   }
 
   // #region Controls
@@ -27,11 +33,27 @@ export class ShopHandler {
   }
 
   public static buyItem() {
-    const item: Item = this.shopObservable().items[ShopHandler.selected()]
-    item.buy(this.amount())
+    const item = this.shopObservable.items[ShopHandler.selected]
+    const wallet = useWalletStore()
+    const totalCost = item.price * this.amount
 
-    if (Settings.getSetting('resetShopAmountOnPurchase').observableValue())
-      ShopHandler.resetAmount()
+    if (wallet.hasAmount(new Amount(totalCost))) {
+      if (item.type === 'pokeball') {
+        App.game.pokeballs.gainPokeballs(item.ballType, this.amount, true)
+        wallet.loseAmount(new Amount(totalCost))
+      } else {
+        item.buy(this.amount)
+      }
+
+      if (Settings.getSetting('resetShopAmountOnPurchase').observableValue()) {
+        ShopHandler.resetAmount()
+      }
+    } else {
+      Notifier.notify({
+        message: 'Not enough money!',
+        type: NotificationConstants.NotificationOption.danger
+      })
+    }
   }
 
   public static resetAmount() {
