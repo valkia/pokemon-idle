@@ -29,6 +29,7 @@ declare module 'vue' {
     PickStarterTutorialModal: typeof import('./components/PickStarterTutorialModal.vue')['default']
     PokeBallSelector: typeof import('./components/battle/PokeBallSelector.vue')['default']
     PokeBallShop: typeof import('./components/shop/PokeBallShop.vue')['default']
+    PokemonCard: typeof import('./components/pokemon/PokemonCard.vue')['default']
     QuestDisplay: typeof import('./components/QuestDisplay.vue')['default']
     QuestModal: typeof import('./components/QuestModal.vue')['default']
     README: typeof import('./components/README.md')['default']
@@ -39,6 +40,7 @@ declare module 'vue' {
     ShopModal: typeof import('./components/map/ShopModal.vue')['default']
     StarterCaught: typeof import('./components/StarterCaught.vue')['default']
     StartSequence: typeof import('./components/StartSequence.vue')['default']
+    TeamView: typeof import('./components/pokemon/TeamView.vue')['default']
     TownView: typeof import('./components/map/TownView.vue')['default']
   }
 }

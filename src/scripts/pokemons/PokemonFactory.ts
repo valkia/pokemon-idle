@@ -1,34 +1,34 @@
-
-import MapHelper from '~/scripts/worldmap/MapHelper'
-import PokemonType from '~/enums/PokemonType'
 import type { PokemonNameType } from '~/enums/PokemonNameType'
-import Rand from '~/utilities/Rand'
-import Routes from '~/scripts/wildBattle/Routes'
-import { pokemonMap } from '~/scripts/pokemons/PokemonList'
+import type BagItem from '~/interfaces/BagItem'
+import type { DungeonBossPokemon } from '~/scripts/dungeons/DungeonBossPokemon'
+import type RegionRoute from '~/scripts/wildBattle/RegionRoute'
+import ItemType from '~/enums/ItemType'
+import PokemonType from '~/enums/PokemonType'
+import OakItemType from '~/modules/enums/OakItemType'
+import Multiplier from '~/modules/multiplier/Multiplier'
+import NotificationConstants from '~/modules/notifications/NotificationConstants'
+import Notifier from '~/modules/notifications/Notifier'
+import Amount from '~/modules/wallet/Amount'
+import App from '~/scripts/App'
 import * as GameConstants from '~/scripts/GameConstants'
+import { PartyPokemon } from '~/scripts/party/PartyPokemon'
 import { BattlePokemon } from '~/scripts/pokemons/BattlePokemon'
 import { PokemonHelper } from '~/scripts/pokemons/PokemonHelper'
-import App from '~/scripts/App'
-import type RegionRoute from '~/scripts/wildBattle/RegionRoute'
-import { usePlayerStore } from '~/stores/player'
-import type BagItem from '~/interfaces/BagItem'
-import ItemType from '~/enums/ItemType'
-import Multiplier from '~/modules/multiplier/Multiplier'
+import { pokemonMap } from '~/scripts/pokemons/PokemonList'
 import { RoamingPokemonList } from '~/scripts/pokemons/RoamingPokemonList'
 import { RouteHelper } from '~/scripts/wildBattle/RouteHelper'
-import OakItemType from '~/modules/enums/OakItemType'
-import Amount from '~/modules/wallet/Amount'
-import Notifier from '~/modules/notifications/Notifier'
-import NotificationConstants from '~/modules/notifications/NotificationConstants'
-import { PartyPokemon } from '~/scripts/party/PartyPokemon'
-import type { DungeonBossPokemon } from '~/scripts/dungeons/DungeonBossPokemon'
+import Routes from '~/scripts/wildBattle/Routes'
+import MapHelper from '~/scripts/worldmap/MapHelper'
+import { usePlayerStore } from '~/stores/player'
+import Rand from '~/utilities/Rand'
+
 export class PokemonFactory {
   /**
-     * Generate a wild pokemon based on route, region and the dataList.
-     * @param route route that the player is on.
-     * @param region region that the player is in.
-     * @returns {any}
-     */
+   * Generate a wild pokemon based on route, region and the dataList.
+   * @param route route that the player is on.
+   * @param region region that the player is in.
+   * @returns {any}
+   */
   public static generateWildPokemon(route: number, region: GameConstants.Region): BattlePokemon {
     console.log('!MapHelper.validRoute(route, region)', !MapHelper.validRoute(route, region))
     if (!MapHelper.validRoute(route, region))
@@ -42,7 +42,7 @@ export class PokemonFactory {
       name = Rand.fromArray(RouteHelper.getAvailablePokemonList(route, region))
 
     const basePokemon = PokemonHelper.getPokemonByName(name)
-    const id = basePokemon.id
+    const id = basePokemon?.id
     const routeAvgHp = (region, route) => {
       const poke = [...new Set(Object.values(Routes.getRoute(region, route).pokemon).flat().map(p => p.pokemon ?? p).flat())]
       const total = poke.map(p => pokemonMap[p].base.hitpoints).reduce((s, a) => s + a, 0)
@@ -68,19 +68,18 @@ export class PokemonFactory {
       })
 
       // Track shinies encountered, and rate of shinies
-      LogEvent('encountered shiny', 'shiny pokemon', 'wild encounter',
-        Math.floor(App.game.statistics.totalPokemonEncountered() / App.game.statistics.totalShinyPokemonEncountered()))
+      LogEvent('encountered shiny', 'shiny pokemon', 'wild encounter', Math.floor(App.game.statistics.totalPokemonEncountered() / App.game.statistics.totalShinyPokemonEncountered()))
     }
     return new BattlePokemon(name, id, basePokemon.type1, basePokemon.type2, maxHealth, level, catchRate, exp, new Amount(money, GameConstants.Currency.money), shiny, 1, heldItem)
   }
 
   public static routeLevel(route: number, region: GameConstants.Region): number {
-    return Math.floor(MapHelper.normalizeRoute(route, region) * 2 + 20 * Math.pow(region, 2.3))
+    return Math.floor(MapHelper.normalizeRoute(route, region) * 2 + 20 * region ** 2.3)
   }
 
   public static routeHealth(route: number, region: GameConstants.Region): number {
     route = MapHelper.normalizeRoute(route, region)
-    const health: number = Math.max(20, Math.floor(Math.pow((100 * Math.pow(route, 2.2) / 12), 1.15) * (1 + region / 20))) || 20
+    const health: number = Math.max(20, Math.floor((100 * route ** 2.2 / 12) ** 1.15 * (1 + region / 20))) || 20
     return health
   }
 
@@ -88,7 +87,7 @@ export class PokemonFactory {
     route = MapHelper.normalizeRoute(route, region)
     // If it's not random, we take the mean value (truncated)
     const deviation = useRandomDeviation ? Rand.intBetween(-25, 25) : 12
-    const money: number = Math.max(10, 3 * route + 5 * Math.pow(route, 1.15) + deviation)
+    const money: number = Math.max(10, 3 * route + 5 * route ** 1.15 + deviation)
 
     return money
   }
@@ -96,16 +95,16 @@ export class PokemonFactory {
   public static routeDungeonTokens(route: number, region: GameConstants.Region): number {
     route = MapHelper.normalizeRoute(route, region)
 
-    const tokens = Math.max(1, 6 * Math.pow(route * 2 / (2.8 / (1 + region / 3)), 1.08))
+    const tokens = Math.max(1, 6 * (route * 2 / (2.8 / (1 + region / 3))) ** 1.08)
 
     return tokens
   }
 
   /**
-     * Calculate if a shiny has spawned.
-     * @param chance Base chance, should be from GameConstants.SHINY_CHANCE.*
-     * @returns {boolean}
-     */
+   * Calculate if a shiny has spawned.
+   * @param chance Base chance, should be from GameConstants.SHINY_CHANCE.*
+   * @returns {boolean}
+   */
   public static generateShiny(chance: number, skipBonus = false): boolean {
     const bonus = skipBonus ? 1 : new Multiplier().getBonus('shiny')
 
@@ -122,11 +121,11 @@ export class PokemonFactory {
   }
 
   /**
-     * Generate a Gym trainer pokemon based on gymName, index and the dataList.
-     * @param gymName name of the gym that the player is fighting.
-     * @param index index of the Pokémon that is being generated.
-     * @returns {any}
-     */
+   * Generate a Gym trainer pokemon based on gymName, index and the dataList.
+   * @param gymName name of the gym that the player is fighting.
+   * @param index index of the Pokémon that is being generated.
+   * @returns {any}
+   */
   public static generateGymPokemon(gym: Gym, index: number): BattlePokemon {
     const pokemon = gym.pokemons[index]
     const basePokemon = PokemonHelper.getPokemonByName(pokemon.name)
@@ -154,8 +153,7 @@ export class PokemonFactory {
       })
 
       // Track shinies encountered, and rate of shinies
-      LogEvent('encountered shiny', 'shiny pokemon', 'dungeon encounter',
-        Math.floor(App.game.statistics.totalPokemonEncountered() / App.game.statistics.totalShinyPokemonEncountered()))
+      LogEvent('encountered shiny', 'shiny pokemon', 'dungeon encounter', Math.floor(App.game.statistics.totalPokemonEncountered() / App.game.statistics.totalShinyPokemonEncountered()))
     }
     return new BattlePokemon(name, id, basePokemon.type1, basePokemon.type2, maxHealth, level, catchRate, exp, new Amount(money, GameConstants.Currency.money), shiny, GameConstants.DUNGEON_GEMS, heldItem)
   }
@@ -191,8 +189,7 @@ export class PokemonFactory {
       })
 
       // Track shinies encountered, and rate of shinies
-      LogEvent('encountered shiny', 'shiny pokemon', 'dungeon boss encounter',
-        Math.floor(App.game.statistics.totalPokemonEncountered() / App.game.statistics.totalShinyPokemonEncountered()))
+      LogEvent('encountered shiny', 'shiny pokemon', 'dungeon boss encounter', Math.floor(App.game.statistics.totalPokemonEncountered() / App.game.statistics.totalShinyPokemonEncountered()))
     }
     return new BattlePokemon(name, id, basePokemon.type1, basePokemon.type2, maxHealth, bossPokemon.level, catchRate, exp, new Amount(money, GameConstants.Currency.money), shiny, GameConstants.DUNGEON_BOSS_GEMS, heldItem)
   }
@@ -244,7 +241,7 @@ export class PokemonFactory {
 
   private static catchRateHelper(baseCatchRate: number, noVariation = false): number {
     const catchVariation = noVariation ? 0 : Rand.intBetween(-3, 3)
-    const catchRateRaw = Math.floor(Math.pow(baseCatchRate, 0.75)) + catchVariation
+    const catchRateRaw = Math.floor(baseCatchRate ** 0.75) + catchVariation
     return GameConstants.clipNumber(catchRateRaw, 0, 100)
   }
 

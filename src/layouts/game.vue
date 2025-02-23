@@ -1,8 +1,16 @@
+<script setup lang="ts">
+import PartyModal from '~/components/PartyModal.vue'
+import TeamView from '~/components/pokemon/TeamView.vue'
+import { useModalStore } from '~/stores/modal'
+
+const modalStore = useModalStore()
+</script>
+
 <template>
   <main class="px-4 text-center text-gray-700 dark:text-gray-200">
-    <div class="fixed top-4 right-4 z-50">
+    <div class="fixed right-4 top-4 z-50">
       <button
-        class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+        class="rounded-lg bg-blue-500 px-4 py-2 text-white transition-colors hover:bg-blue-600"
         @click="modalStore.setPartyModalFlag(true)"
       >
         View Party
@@ -10,15 +18,9 @@
     </div>
     <router-view />
     <PartyModal />
+    <TeamView />
   </main>
 </template>
-
-<script setup lang="ts">
-import PartyModal from '~/components/PartyModal.vue'
-import { useModalStore } from '~/stores/modal'
-
-const modalStore = useModalStore()
-</script>
 
 <style lang="scss">
 .fixed {
