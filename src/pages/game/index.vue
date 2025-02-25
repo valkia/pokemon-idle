@@ -85,7 +85,7 @@ const gameState = computed(() => {
   <TeamView />
   <button
     class="rounded-lg bg-blue-500 px-4 py-2 text-white transition-colors hover:bg-blue-600"
-    @click="modalStore.setPartyModalFlag(true)"
+    @click="modalStore.teamViewModalFlag = true"
   >
     View Party
   </button>

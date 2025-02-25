@@ -1,9 +1,21 @@
+<script setup lang="ts">
+import { storeToRefs } from 'pinia'
+import { useModalStore } from '~/stores/modal'
+import { usePartyStore } from '~/stores/party'
+import Modal from './common/Modal.vue'
+
+const modalStore = useModalStore()
+const partyStore = usePartyStore()
+</script>
+
 <template>
   <Modal :modal-show="modalStore.partyModalFlag">
     <div class="party-modal">
       <div class="header">
         <h2>Party Pokemon</h2>
-        <button class="close-btn" @click="modalStore.setPartyModalFlag(false)">×</button>
+        <button class="close-btn" @click="modalStore.partyModalFlag = false">
+          ×
+        </button>
       </div>
 
       <div class="pokemon-list">
@@ -12,7 +24,9 @@
           <div class="pokemon-info">
             <h3>{{ pokemon.name }}</h3>
             <p>Level: {{ pokemon.level }}</p>
-            <p v-if="pokemon.shiny" class="shiny-badge">✨ Shiny</p>
+            <p v-if="pokemon.shiny" class="shiny-badge">
+              ✨ Shiny
+            </p>
           </div>
         </div>
       </div>
@@ -23,16 +37,6 @@
     </div>
   </Modal>
 </template>
-
-<script setup lang="ts">
-import { storeToRefs } from 'pinia'
-import Modal from './common/Modal.vue'
-import { useModalStore } from '~/stores/modal'
-import { usePartyStore } from '~/stores/party'
-
-const modalStore = useModalStore()
-const partyStore = usePartyStore()
-</script>
 
 <style lang="scss">
 .party-modal {

@@ -6,6 +6,8 @@ export const useModalStore = defineStore('modal', () => {
   const pickStarterModalFlag = ref(true)
   const receiveBadgeModal = ref(false)
   const hallOfFameModal = ref(false)
+  const teamViewModalFlag = ref(false)
+  const partyModalFlag = ref(false)
 
   const setShopModalFlag = (value: boolean) => {
     shopModalFlag.value = value
@@ -23,7 +25,11 @@ export const useModalStore = defineStore('modal', () => {
     pickStarterModalFlag.value = !pickStarterModalFlag.value
   }
 
-  return { shopModalFlag, pickStarterModalFlag, receiveBadgeModal, hallOfFameModal, setShopModalFlag, setPickStarterModalFlag, toggleShopModal, togglePickStarterModal }
+  const toggleTeamViewModal = () => {
+    teamViewModalFlag.value = !teamViewModalFlag.value
+  }
+
+  return { shopModalFlag, pickStarterModalFlag, receiveBadgeModal, hallOfFameModal, teamViewModalFlag, partyModalFlag, setShopModalFlag, setPickStarterModalFlag, toggleShopModal, togglePickStarterModal, toggleTeamViewModal }
 })
 
 if (import.meta.hot)

@@ -1,24 +1,10 @@
-<template>
-  <div @click="enemyClick">
-    <img
-      v-if="catching"
-      class="pokeball-animated"
-      :src="pokeballImgUrl"
-    >
-    <img v-else :src="pokemonImgUrl" class="avatar">
-
-    <div>{{ t(`pokemon.${pokemon.name}`) }}</div>
-    <div>{{ pokemon.health }}/{{ pokemon.maxHealth }}</div>
-  </div>
-</template>
-
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
 import type { BattlePokemon } from '~/scripts/pokemons/BattlePokemon'
+import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { Battle } from '~/scripts/Battle'
-import { useBattleStore } from '~/stores/battle'
 import { GameState, Pokeball } from '~/scripts/GameConstants'
+import { useBattleStore } from '~/stores/battle'
 import { useGameStore } from '~/stores/game'
 
 const { t, locale } = useI18n()
@@ -40,22 +26,55 @@ const pokeballImgUrl = computed(() => {
 const pokemonImgUrl = computed(() => {
   return `/src/assets/images/pokemon/${pokemon.value.id}.png`
 })
-const enemyClick = () => {
+
+// 添加震动状态
+const isShaking = ref(false)
+
+function enemyClick() {
   console.log('[Enemy] Click event triggered')
   console.log('[Enemy] Current game state:', gameState.value)
   console.log('[Enemy] Current pokemon:', pokemon.value)
   if (gameState.value === GameState.fighting) {
     Battle.clickAttack()
     console.log('[Enemy] Attack initiated')
-  } else {
+
+    // 触发震动动画
+    isShaking.value = true
+
+    // 500毫秒后停止震动（延长时间以便更容易观察到效果）
+    setTimeout(() => {
+      isShaking.value = false
+      console.warn('Shake animation ended')
+    }, 500)
+  }
+  else {
     console.log('[Enemy] Attack blocked - not in fighting state')
   }
 }
 </script>
 
+<template>
+  <div @click="enemyClick">
+    <img
+      v-if="catching"
+      class="pokeball-animated"
+      :src="pokeballImgUrl"
+    >
+    <img
+      v-else
+      :src="pokemonImgUrl"
+      :class="isShaking ? 'avatar shake-animation' : 'avatar'"
+    >
+
+    <div>{{ t(`pokemon.${pokemon.name}`) }}</div>
+    <div>{{ pokemon.health }}/{{ pokemon.maxHealth }}</div>
+  </div>
+</template>
+
 <style scoped>
-.avatar{
+.avatar {
   margin: 0 auto;
+  display: block;
 }
 
 .pokeball-animated {
@@ -63,13 +82,47 @@ const enemyClick = () => {
   height: 96px;
   width: 96px;
   padding: 10px;
-  -webkit-animation:spin 1s linear infinite;
-  -moz-animation:spin 1s linear infinite;
-  animation:spin 1s linear infinite;
+  -webkit-animation: spin 1s linear infinite;
+  -moz-animation: spin 1s linear infinite;
+  animation: spin 1s linear infinite;
 }
 
-@-moz-keyframes spin { 100% { -moz-transform: rotate(20deg); } }
-@-webkit-keyframes spin { 100% { -webkit-transform: rotate(20deg); } }
+/* 增强震动动画效果 */
+.shake-animation {
+  animation: shake 0.5s ease-in-out;
+  transform-origin: 50% 50%;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-10px);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(10px);
+  }
+}
+
+@-moz-keyframes spin {
+  100% {
+    -moz-transform: rotate(20deg);
+  }
+}
+@-webkit-keyframes spin {
+  100% {
+    -webkit-transform: rotate(20deg);
+  }
+}
 
 @keyframes spin {
   0% {

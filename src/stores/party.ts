@@ -1,13 +1,13 @@
-import { acceptHMRUpdate, defineStore } from 'pinia'
-import { computed, ref } from 'vue'
 import type { PokemonNameType } from '~/enums/PokemonNameType'
-import PokemonType from '~/enums/PokemonType'
-import Multiplier from '~/modules/multiplier/Multiplier'
 import type * as GameConstants from '~/scripts/GameConstants'
 import type { PartyPokemon } from '~/scripts/party/PartyPokemon'
+import type WeatherType from '~/scripts/weather/WeatherType'
+import { acceptHMRUpdate, defineStore } from 'pinia'
+import { computed, ref } from 'vue'
+import PokemonType from '~/enums/PokemonType'
+import Multiplier from '~/modules/multiplier/Multiplier'
 import { PokemonHelper } from '~/scripts/pokemons/PokemonHelper'
 import { pokemonMap } from '~/scripts/pokemons/PokemonList'
-import type WeatherType from '~/scripts/weather/WeatherType'
 import NotificationConstants from '../modules/notifications/NotificationConstants'
 import Notifier from '../modules/notifications/Notifier'
 import GameHelper from '../scripts/GameHelper'
@@ -265,7 +265,7 @@ export const usePartyStore = defineStore('party', () => {
     // Shiny pokemon help with a 50% boost
     //  * (1 + AchievementHandler.achievementBonus())
 
-    const debugValue = 100000000
+    const debugValue = 1
 
     const clickAttack = (caughtPokemon.value.length + (caughtPokemon.value.filter(p => p.shiny).length / 2) + 1) ** 1.4 + debugValue
 
