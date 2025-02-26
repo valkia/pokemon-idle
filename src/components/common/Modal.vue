@@ -1,26 +1,42 @@
-<template>
-  <div v-if="props.modalShow" id="popup-modal" tabindex="-1" class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full justify-center items-center flex">
-    <div class="relative  w-full max-w-md h-full md:h-auto">
-      <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-700">
-        <slot />
-      </div>
-    </div>
-  </div>
-  <div v-if="props.modalShow" modal-backdrop="" class="bg-gray-900 bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40" />
-</template>
-
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { StartSequenceRunner } from '~/scripts/StartSequenceRunner'
-import { usePlayerStore } from '~/stores/player'
 import * as GameConstants from '~/scripts/GameConstants'
+import { StartSequenceRunner } from '~/scripts/StartSequenceRunner'
 import { useModalStore } from '~/stores/modal'
+import { usePlayerStore } from '~/stores/player'
+
+const props = defineProps({
+  modalShow: {
+    type: Boolean,
+    default: false,
+  },
+  closeBtn: {
+    type: Boolean,
+    default: false,
+  },
+})
+// 定义关闭事件
+const emit = defineEmits(['close'])
 const show = computed(() => {
   return useModalStore().pickStarterModalFlag
 })
 const toggleShow = useModalStore().togglePickStarterModal
-const props = defineProps<{ modalShow: Boolean;closeBtn: false }>()
+
+function closeModal() {
+  emit('close')
+}
 </script>
+
+<template>
+  <div v-if="props.modalShow" id="popup-modal" tabindex="-1" class="h-modal fixed left-0 right-0 top-0 z-50 w-full flex items-center justify-center overflow-x-hidden overflow-y-auto md:inset-0 md:h-full">
+    <div class="relative h-full max-w-md w-full md:h-auto">
+      <div class="relative rounded-lg bg-white p-4 shadow dark:bg-gray-700">
+        <slot />
+      </div>
+    </div>
+  </div>
+  <div v-if="props.modalShow" modal-backdrop="" class="fixed inset-0 z-40 bg-gray-900 bg-opacity-50 dark:bg-opacity-80" />
+</template>
 
 <style scoped lang="scss">
 

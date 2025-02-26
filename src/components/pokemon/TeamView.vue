@@ -1,9 +1,9 @@
 <!-- TeamView.vue -->
 <script setup lang="ts">
+import type { ModalProps } from '~/types/modal'
 import { computed, ref } from 'vue'
 import Modal from '~/components/common/Modal.vue'
 import PokemonType from '~/enums/PokemonType'
-import { useModalStore } from '~/stores/modal'
 import PokemonCard from './PokemonCard.vue'
 
 export interface Pokemon {
@@ -36,10 +36,21 @@ export interface Pokemon {
 
 export type CandyType = 'mighty' | 'tough' | 'smart' | 'courage' | 'quick'
 
-// 使用modalStore来控制弹窗显示
-const modalStore = useModalStore()
-const show = computed(() => modalStore.teamViewModalFlag)
-const toggleShow = () => modalStore.toggleTeamViewModal()
+// 接收props
+const props = defineProps<{
+  modalShow: boolean
+} & ModalProps['team-view']>()
+
+// 定义事件
+const emit = defineEmits<{
+  (e: 'close'): void
+  (e: 'select', pokemon: Pokemon): void
+}>()
+
+// 关闭弹窗
+function closeModal() {
+  emit('close')
+}
 
 // teamGenerator.ts
 
@@ -262,7 +273,8 @@ function getRandomCandy(): CandyType {
   return candies[Math.floor(Math.random() * candies.length)]
 }
 
-const team = ref<Pokemon[]>(generateTeam())
+// 使用传入的initialTeam或生成新的team
+const team = ref<Pokemon[]>(props.initialTeam || generateTeam())
 const selectedId = ref<number | null>(null)
 
 const selectedPokemon = computed(() =>
@@ -272,6 +284,11 @@ const selectedPokemon = computed(() =>
 function handleSelect(pokemonId: number) {
   console.warn('Selected pokemon:', pokemonId)
   selectedId.value = pokemonId
+
+  // 如果提供了onSelect回调，调用它
+  if (props.onSelect && selectedPokemon.value) {
+    props.onSelect(selectedPokemon.value)
+  }
 }
 
 function generateNewTeam() {
@@ -280,18 +297,18 @@ function generateNewTeam() {
 }
 
 function confirmTeam() {
-  // 这里可以添加确认团队的逻辑
-  toggleShow()
+  // 确认团队的逻辑
+  closeModal()
 }
 </script>
 
 <template>
-  <Modal :modal-show="show">
+  <Modal :modal-show="modalShow" @close="closeModal">
     <button
       type="button"
       class="absolute right-2.5 top-3 ml-auto inline-flex items-center rounded-lg bg-transparent p-1.5 text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-white"
       data-modal-toggle="popup-modal"
-      @click="toggleShow()"
+      @click="closeModal"
     >
       <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
         <path
